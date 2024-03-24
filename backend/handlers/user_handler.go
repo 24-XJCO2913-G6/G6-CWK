@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 	. "main/backend/models"
 	"net/http"
 )
@@ -32,7 +33,12 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	AddUser(name, email, passwd)
+	hashedPasswd, err := bcrypt.GenerateFromPassword([]byte(passwd), bcrypt.DefaultCost)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
+		return
+	}
+	AddUser(name, email, string(hashedPasswd))
 
 	c.JSON(http.StatusOK, gin.H{"message": "Register Successfully"})
 }

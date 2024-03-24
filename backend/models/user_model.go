@@ -1,6 +1,7 @@
 package models
 
 import (
+	"golang.org/x/crypto/bcrypt"
 	"regexp"
 )
 
@@ -39,7 +40,12 @@ func IsRight(email string, passwd string) bool {
 	for _, v := range Slice {
 		if v.Email == email {
 			//先确认姓名一致，密码相同返回true
-			return v.Passwd == passwd
+			err := bcrypt.CompareHashAndPassword([]byte(v.Passwd), []byte(passwd))
+			if err != nil {
+				return false
+			} else {
+				return true
+			}
 		}
 	}
 	return false
