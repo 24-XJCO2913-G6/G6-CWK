@@ -12,52 +12,46 @@ func Register(c *gin.Context) {
 	passwd := c.Request.FormValue("Passwd")
 	rePasswd := c.Request.FormValue("RePasswd")
 
-	if name == " " {
-		State["state"] = 0
-		State["text"] = "Invalid name!"
-
-	} else if !IsValidEmail(email) {
-		State["state"] = 0
-		State["text"] = "Invalid email!"
-
-	} else if passwd != rePasswd {
-		State["state"] = 0
-		State["text"] = "Wrong password repetition!"
-	} else {
-		Flag := IsExist(email)
-		if Flag {
-			State["state"] = 0
-			State["text"] = "Email had been used!"
-		} else {
-			//用户不存在即添加用户
-			AddUser(name, email, passwd)
-			State["state"] = 1
-			State["text"] = "Register Successfully!"
-		}
+	if name == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid name"})
+		return
 	}
-	c.XML(http.StatusOK, State)
+
+	if !IsValidEmail(email) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email"})
+		return
+	}
+
+	if passwd != rePasswd {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Passwords do not match"})
+		return
+	}
+
+	if IsExist(email) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Email has been used"})
+		return
+	}
+
+	AddUser(name, email, passwd)
+
+	c.JSON(http.StatusOK, gin.H{"message": "Register Successfully"})
 }
 
 func Login(c *gin.Context) {
 	email := c.Request.FormValue("Email")
 	passwd := c.Request.FormValue("Passwd")
-	//先判断用户是否存在，存在再判断密码是否正确
-	Bool := IsExist(email)
-	if Bool {
-		Bool_Pwd := IsRight(email, passwd)
-		if Bool_Pwd {
-			State["state"] = 1
-			State["text"] = "Login Successfully!"
-		} else {
-			State["state"] = 0
-			State["text"] = "Wrong Password!"
-		}
-	} else {
-		State["state"] = 0
-		State["text"] = "Unregister Email!"
+
+	if !IsExist(email) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Unregistered email"})
+		return
 	}
 
-	c.XML(http.StatusOK, State)
+	if !IsRight(email, passwd) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Wrong password"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Login Successfully"})
 }
 
 func AddUser(name string, email string, passwd string) {
