@@ -17,6 +17,8 @@ func main() {
 
 	engine.GET("/login", ToLogin)
 	engine.GET("/register", ToRegister)
+	engine.POST("/login", Login)
+	engine.POST("/register", Register)
 
 	engine.GET("/profile/:uid", func(c *gin.Context) {
 		uid := c.Param("uid")
