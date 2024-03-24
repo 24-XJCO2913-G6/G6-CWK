@@ -1,7 +1,12 @@
 package models
 
+import (
+	"regexp"
+)
+
 type User struct {
 	Uid    int64  `xorm:"pk autoincr"`     //主键，UID
+	Name   string `xorm:"NOT NULL"`        // 用户名
 	Email  string `xorm:"UNIQUE NOT NULL"` // 邮箱，唯一键
 	Passwd string `xorm:"NOT NULL"`        // 密码
 
@@ -38,4 +43,16 @@ func IsRight(email string, passwd string) bool {
 		}
 	}
 	return false
+}
+
+func IsValidEmail(email string) bool {
+	// 正则表达式验证邮箱格式
+	// 标准的电子邮件地址格式包含一个或多个字母、数字、下划线、连字符和点，后跟 @ 符号，
+	// 然后是一个或多个字母、数字、连字符和点，最后是一个点和两个到四个字母
+	pattern := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
+	match, err := regexp.MatchString(pattern, email)
+	if err != nil {
+		return false
+	}
+	return match
 }

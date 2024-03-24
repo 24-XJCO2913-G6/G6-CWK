@@ -8,19 +8,34 @@ import (
 
 func Register(c *gin.Context) {
 	email := c.Request.FormValue("Email")
+	name := c.Request.FormValue("Name")
 	passwd := c.Request.FormValue("Passwd")
+	rePasswd := c.Request.FormValue("RePasswd")
 
-	Flag := IsExist(email)
-	if Flag {
-		State["state"] = 1
-		State["text"] = "Email had been used!"
+	if name == " " {
+		State["state"] = 0
+		State["text"] = "Invalid name!"
+
+	} else if !IsValidEmail(email) {
+		State["state"] = 0
+		State["text"] = "Invalid email!"
+
+	} else if passwd != rePasswd {
+		State["state"] = 0
+		State["text"] = "Wrong password repetition!"
 	} else {
-		//用户不存在即添加用户
-		AddUser(email, passwd)
-		State["state"] = 1
-		State["text"] = "Register Successfully!"
+		Flag := IsExist(email)
+		if Flag {
+			State["state"] = 0
+			State["text"] = "Email had been used!"
+		} else {
+			//用户不存在即添加用户
+			AddUser(name, email, passwd)
+			State["state"] = 1
+			State["text"] = "Register Successfully!"
+		}
 	}
-	c.String(http.StatusOK, "%v", State)
+	c.XML(http.StatusOK, State)
 }
 
 func Login(c *gin.Context) {
@@ -38,18 +53,19 @@ func Login(c *gin.Context) {
 			State["text"] = "Wrong Password!"
 		}
 	} else {
-		State["state"] = 2
+		State["state"] = 0
 		State["text"] = "Unregister Email!"
 	}
 
-	c.String(http.StatusOK, "%v", State)
+	c.XML(http.StatusOK, State)
 }
 
-func AddUser(email string, passwd string) {
+func AddUser(name string, email string, passwd string) {
 	var user User
-	user.Email = email
-	user.Passwd = passwd
 	user.Uid = int64(len(Slice) + 1)
+	user.Email = email
+	user.Name = name
+	user.Passwd = passwd
 	user.IsAdmin = false
 	Slice = append(Slice, user)
 }
