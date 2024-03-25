@@ -36,3 +36,33 @@ func ToBill(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "checkout.html", gin.H{})
 }
+
+func ToDownload(c *gin.Context) {
+
+	c.HTML(http.StatusOK, "app-download.html", gin.H{})
+}
+
+func ToHelp(c *gin.Context) {
+
+	c.HTML(http.StatusOK, "help.html", gin.H{})
+}
+
+func ToHelpDetails(c *gin.Context, searchText string) {
+
+	c.HTML(http.StatusOK, "help-details.html", gin.H{})
+}
+
+func ToMessages(c *gin.Context) {
+
+	c.HTML(http.StatusOK, "messaging.html", gin.H{})
+}
+
+func ToNotifications(c *gin.Context) {
+
+	c.HTML(http.StatusOK, "notifications.html", gin.H{})
+}
+
+func ToSetting(c *gin.Context) {
+
+	c.HTML(http.StatusOK, "settings.html", gin.H{})
+}

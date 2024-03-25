@@ -28,6 +28,18 @@ func main() {
 	engine.GET("/vip", ToVip)
 	engine.GET("/bill", ToBill)
 
+	engine.GET("/download", ToDownload)
+
+	engine.GET("/help", ToHelp)
+	engine.GET("/help/:searchText", func(c *gin.Context) {
+		searchText := c.Param("searchText")
+		ToHelpDetails(c, searchText)
+	})
+
+	engine.GET("/messages", ToMessages)
+	engine.GET("/notifications", ToNotifications)
+	engine.GET("/setting", ToSetting)
+
 	err := engine.Run()
 	if err != nil {
 		return
