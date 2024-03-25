@@ -1,7 +1,7 @@
 /**
 * Social 
 *
-* 更多精品模板：http://www.bootstrapmb.com
+* 锟斤拷锟洁精品模锟藉：http://www.bootstrapmb.com
 * @version 1.0.0
 **/
 
@@ -427,9 +427,9 @@ var e = {
 			var changeThemeToDark = () => {
 				document.documentElement.setAttribute("data-theme", "dark") // set theme to dark
 				if(dir == 'rtl') {
-						style.setAttribute('href', 'assets/css/style-dark-rtl.css');
+						style.setAttribute('href', 'static/css/style-dark-rtl.css');
 				} else {
-						style.setAttribute('href', 'assets/css/style-dark.css');
+						style.setAttribute('href', 'static/css/style-dark.css');
 				}
 				localStorage.setItem("data-theme", "dark") // save theme to local storage
 			}
@@ -437,11 +437,11 @@ var e = {
 			var changeThemeToLight = () => {
 				document.documentElement.setAttribute("data-theme", "light") // set theme light
 				if(dir == 'rtl') {
-						style.setAttribute('href', 'assets/css/style-rtl.css');
+						style.setAttribute('href', 'static/css/style-rtl.css');
 				} else {
-						style.setAttribute('href', 'assets/css/style.css');
+						style.setAttribute('href', 'static/css/style.css');
 				}
-				
+
 				localStorage.setItem("data-theme", 'light') // save theme to local storage
 			}
 
@@ -474,8 +474,8 @@ var e = {
 				var mode = document.getElementsByTagName("BODY")[0];
 				sb.addEventListener("click", function(){
 						mode.classList.toggle("sidebar-start-enabled");
-				}); 
-		}        
+				});
+		}
 	},
 	// END: Sidebar Toggle
 
@@ -487,8 +487,8 @@ var e = {
 				var mode = document.getElementsByTagName("BODY")[0];
 				sb.addEventListener("click", function(){
 						mode.classList.toggle("sidebar-end-enabled");
-				}); 
-		}        
+				});
+		}
 	},
 	// END: Sidebar Toggle end
 
@@ -561,7 +561,7 @@ var e = {
 						new Dropzone(e, c);
 					}));
 			}
-	
+
 			// 2. Custom cover and list previews Dropzone Initialization
 			if (e.isVariableDefined(e.select(".dropzone-custom"))) {
 				e.selectAll(".dropzone-custom").forEach((d => {
@@ -596,7 +596,7 @@ var e = {
 		}
 	},
 	// END: Drop Zone
-  
+
 
 	// START: 14 Flat picker
 	flatPicker: function () {
@@ -625,11 +625,11 @@ var e = {
 	// START: 15 Avatar Image
 	avatarImg: function () {
 		if (e.isVariableDefined(e.select('#avatarUpload'))) {
-		
+
 			var avtInput = e.select('#avatarUpload'),
 			avtReset = e.select("#avatar-reset-img"),
 			avtPreview = e.select('#avatar-preview');
-		
+
 			// Avatar upload and replace
 			avtInput.addEventListener('change', readURL, true);
 			function readURL(){
@@ -637,19 +637,19 @@ var e = {
 					const files = avtInput.files;
 					const reader = new FileReader();
 					reader.onloadend = function(){
-							avtPreview.src = reader.result; 
+							avtPreview.src = reader.result;
 					}
-		
+
 					if(file && files){
 							reader.readAsDataURL(file);
 					} else { }
-		
+
 					avtInput.value = '';
 			}
-		
+
 			// Avatar remove functionality
 			avtReset.addEventListener("click", function(){
-				avtPreview.src = "/assets/images/avatar/placeholder.jpg";
+				avtPreview.src = "/static/images/avatar/placeholder.jpg";
 			});
 		}			
 	},
