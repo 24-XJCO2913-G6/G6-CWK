@@ -9,6 +9,8 @@ func main() {
 
 	engine := gin.Default()
 
+	engine.Use(JwtToken())
+
 	engine.Static("/static", "frontend/static")
 	engine.LoadHTMLGlob("frontend/*.html")
 
