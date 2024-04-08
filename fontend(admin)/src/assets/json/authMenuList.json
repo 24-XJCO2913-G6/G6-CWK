@@ -1,0 +1,212 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "path": "/home/index",
+      "name": "home",
+      "component": "/home/index",
+      "meta": {
+        "icon": "HomeFilled",
+        "title": "Index",
+        "isLink": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": true,
+        "isKeepAlive": true
+      }
+    },
+    {
+      "path": "/dataScreen",
+      "name": "dataScreen",
+      "component": "/dataScreen/index",
+      "meta": {
+        "icon": "Histogram",
+        "title": "Data prediction",
+        "isLink": "",
+        "isHide": false,
+        "isFull": true,
+        "isAffix": false,
+        "isKeepAlive": true
+      }
+    },
+    {
+      "path": "/proTable",
+      "name": "proTable",
+      "redirect": "/proTable/useProTable",
+      "meta": {
+        "icon": "MessageBox",
+        "title": "Data Table",
+        "isLink": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "children": [
+        {
+          "path": "/proTable/useProTable",
+          "name": "useProTable",
+          "component": "/proTable/useProTable/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "User data",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": true
+          }
+        },
+        {
+          "path": "/proTable/orderProTable",
+          "name": "orderProTable",
+          "component": "/proTable/orderProTable/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "Order data",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": true
+          }
+        }
+      ]
+    },
+    {
+      "path": "/auth",
+      "name": "auth",
+      "redirect": "/auth/menu",
+      "meta": {
+        "icon": "Lock",
+        "title": "Post Review",
+        "isLink": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "children": [
+        {
+          "path": "/auth/menu",
+          "name": "authMenu",
+          "component": "/auth/menu/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "Pending post",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": true
+          }
+        }
+      ]
+    },
+    {
+      "path": "/dashboard",
+      "name": "dashboard",
+      "redirect": "/dashboard/dataVisualize",
+      "meta": {
+        "icon": "TrendCharts",
+        "title": "Logs",
+        "isLink": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "children": [
+        {
+          "path": "/dashboard/dataVisualize",
+          "name": "dataVisualize",
+          "component": "/dashboard/dataVisualize/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "Log detail",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": true
+          }
+        }
+      ]
+    },
+    {
+      "path": "/echarts",
+      "name": "echarts",
+      "redirect": "/echarts/waterChart",
+      "meta": {
+        "icon": "TrendCharts",
+        "title": "Data analysis",
+        "isLink": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "children": [
+        {
+          "path": "/echarts/lineChart",
+          "name": "lineChart",
+          "component": "/echarts/lineChart/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "Revenue forecast",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": true
+          }
+        },
+        {
+          "path": "/echarts/pieChart",
+          "name": "pieChart",
+          "component": "/echarts/pieChart/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "Income category",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": true
+          }
+        }
+      ]
+    },
+    {
+      "path": "/link",
+      "name": "link",
+      "redirect": "/link/bing",
+      "meta": {
+        "icon": "Paperclip",
+        "title": "External link",
+        "isLink": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "children": [
+        {
+          "path": "/link/bing",
+          "name": "bing",
+          "component": "/link/bing/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "Been",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": true
+          }
+        }
+      ]
+    }
+  ],
+  "msg": "成功"
+}
