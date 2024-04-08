@@ -1,0 +1,8 @@
+# db.yaml
+
+database:
+  host:
+  port:
+  user: 
+  password:
+  dbname:
