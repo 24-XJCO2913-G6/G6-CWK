@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Social - Network, Community and Event Theme</title>
@@ -24,10 +24,10 @@
     <link id="style-switch" rel="stylesheet" type="text/css" href="static/css/style.css">
 
     <style>
-
         .my-map {
             margin: 0 auto;
             text-align: center;
+            max-width: 100%; /* 使用百分比宽度 */
             width: 735px;
             height: 640px;
         }
@@ -63,6 +63,21 @@
             line-height: 20px;
             font-size: 13px;
             color: #6f6f6f;
+        }
+
+        /* 响应式样式 */
+        @media screen and (max-width: 768px) {
+            .my-map {
+                width: 100%; /* 在较小屏幕上，将地图容器的宽度设置为100% */
+                height: 400px; /* 可以根据需要调整地图容器的高度 */
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .my-map {
+                width: 100%; /* 在更小的屏幕上，将地图容器的宽度设置为100% */
+                height: 300px; /* 在更小的屏幕上，将地图容器的高度设置为300px */
+            }
         }
     </style>
 
@@ -382,8 +397,7 @@ Header END -->
                         <h1 class="h4">Speedily say has suitable disposal add boy. On forth doubt miles of child.</h1>
                         <p>Exercise joy man children rejoiced. Yet uncommonly his ten who diminution astonished.
                             Speedily say has suitable disposal add boy. On forth doubt miles of child. </p>
-                        <div id="carouselExampleFade" class="carousel slide carousel-fade" style="margin-bottom: 20px"
-                             data-ride="carousel">
+                        <div id="carouselExampleFade" class="carousel slide carousel-fade" style="margin-bottom: 20px" data-ride="carousel">
                             <div class="carousel-inner">
 
                                 <div class="carousel-item active">
@@ -638,55 +652,7 @@ JS libraries, plugins and custom scripts -->
     !function () {
         var infoWindow, map, level = 16,
             center = {lng: 103.985895, lat: 30.763873},
-            features = [{
-                "icon": "anc",
-                "color": "red",
-                "name": "Start",
-                "desc": "start point",
-                "lnglat": {"Q": 30.76077449963026, "R": 103.98824286639689, "lng": 103.988243, "lat": 30.760774},
-                "offset": {"x": -9, "y": -31},
-                "type": "Marker"
-            }, {
-                "icon": "flg",
-                "color": "red",
-                "name": "End",
-                "desc": "end point",
-                "lnglat": {"Q": 30.766013344951006, "R": 103.98602278858425, "lng": 103.986023, "lat": 30.766013},
-                "offset": {"x": -9, "y": -31},
-                "type": "Marker"
-            }];
-        var path = [
-            new AMap.LngLat(103.988262, 30.760812),
-            new AMap.LngLat(103.988793, 30.760914),
-            new AMap.LngLat(103.989314, 30.761052),
-            new AMap.LngLat(103.989748, 30.76119),
-            new AMap.LngLat(103.990424, 30.761522),
-            new AMap.LngLat(103.990821, 30.761835),
-            new AMap.LngLat(103.991234, 30.762158),
-            new AMap.LngLat(103.991524, 30.762435),
-            new AMap.LngLat(103.991534, 30.762545),
-            new AMap.LngLat(103.991556, 30.762684),
-            new AMap.LngLat(103.991518, 30.762803),
-            new AMap.LngLat(103.991427, 30.763002),
-            new AMap.LngLat(103.991245, 30.763347),
-            new AMap.LngLat(103.991078, 30.763707),
-            new AMap.LngLat(103.990826, 30.764186),
-            new AMap.LngLat(103.990478, 30.764952),
-            new AMap.LngLat(103.990284, 30.765353),
-            new AMap.LngLat(103.990134, 30.765638),
-            new AMap.LngLat(103.989828, 30.766256),
-            new AMap.LngLat(103.989641, 30.766597),
-            new AMap.LngLat(103.98934, 30.76727),
-            new AMap.LngLat(103.989206, 30.767547),
-            new AMap.LngLat(103.989002, 30.767381),
-            new AMap.LngLat(103.988675, 30.767224),
-            new AMap.LngLat(103.987608, 30.766786),
-            new AMap.LngLat(103.987334, 30.766666),
-            new AMap.LngLat(103.986604, 30.766385),
-            new AMap.LngLat(103.986433, 30.766307),
-            new AMap.LngLat(103.986004, 30.766049),
-        ];
-
+            features = [];
 
         function loadFeatures() {
             for (var feature, data, i = 0, len = features.length, j, jl, path; i < len; i++) {
@@ -761,13 +727,6 @@ JS libraries, plugins and custom scripts -->
         });
 
         loadFeatures();
-        var polyline = new AMap.Polyline({
-            path: path,
-            strokeWeight: 8, //线条宽度
-            strokeColor: "green", //线条颜色
-            lineJoin: "round", //折线拐点连接处样式
-        });
-        map.add(polyline);
 
         map.on('complete', function () {
             map.plugin(["AMap.ToolBar", "AMap.OverView", "AMap.Scale"], function () {
