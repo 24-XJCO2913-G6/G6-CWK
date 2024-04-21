@@ -53,3 +53,12 @@ func IsValidEmail(email string) bool {
 	}
 	return match
 }
+
+func FindUid(email string) int64 {
+	for _, v := range Slice {
+		if v.Email == email {
+			return v.Uid
+		}
+	}
+	return 0
+}

@@ -5,6 +5,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	. "main/backend/models"
 	"net/http"
+	"strconv"
 )
 
 func Register(c *gin.Context) {
@@ -24,7 +25,7 @@ func Register(c *gin.Context) {
 	}
 
 	if passwd != rePasswd {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Passwords do not match"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Passwords does not match"})
 		return
 	}
 
@@ -38,9 +39,11 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
 		return
 	}
-	AddUser(name, email, string(hashedPasswd))
+	Uid := AddUser(name, email, string(hashedPasswd))
 
-	c.JSON(http.StatusOK, gin.H{"message": "Register Successfully"})
+	atoken, rtoken, _ := SetToken(strconv.FormatInt(Uid, 10), string(hashedPasswd))
+
+	c.JSON(http.StatusOK, gin.H{"message": "Register Successfully", "atoken": atoken, "rtoken": rtoken})
 }
 
 func Login(c *gin.Context) {
@@ -57,15 +60,22 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Login Successfully"})
+	Uid := FindUid(email)
+
+	hashedPasswd, _ := bcrypt.GenerateFromPassword([]byte(passwd), bcrypt.DefaultCost)
+	atoken, rtoken, _ := SetToken(strconv.FormatInt(Uid, 10), string(hashedPasswd))
+
+	c.JSON(http.StatusOK, gin.H{"message": "Login Successfully", "atoken": atoken, "rtoken": rtoken})
 }
 
-func AddUser(name string, email string, passwd string) {
+func AddUser(name string, email string, passwd string) int64 {
 	var user User
 	user.Uid = int64(len(Slice) + 1)
 	user.Email = email
 	user.Name = name
 	user.Passwd = passwd
 	user.IsAdmin = false
+
 	Slice = append(Slice, user)
+	return user.Uid
 }
