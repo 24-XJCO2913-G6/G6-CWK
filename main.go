@@ -9,7 +9,11 @@ func main() {
 
 	engine := gin.Default()
 
+	// 中间件
 	engine.Use(JwtToken())
+	engine.Use(Cors())
+	// 数据库
+	InitDB()
 
 	engine.Static("/static", "frontend/static")
 	engine.LoadHTMLGlob("frontend/*.html")
