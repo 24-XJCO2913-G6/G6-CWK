@@ -1,232 +1,474 @@
 <template>
 	<view>
-		<!-- 导航 -->
-		<uni-nav-bar :border="false" :fixed="true" :statusBar="true" @click-right="openAddInput">
-			<view class="flex align-center justify-center font-weight-bold w-100">
-				<view class="mx-1" @click="changeTab(index)"
-				v-for="(item,index) in tabBars" :key="index"
-				:class="tabIndex === index ? 'font-lg text-main' : 'font-md text-light-muted'">
-					{{item.name}}
-				</view>
-			</view>
-			<text slot="right" class="iconfont icon-fatie_icon"></text>
+		<!-- 自定义导航 -->
+		<!-- #ifdef MP -->
+
+		<!-- #endif -->
+		<!-- #ifndef MP -->
+		<uni-nav-bar left-icon="back" statusBar :border="false" @click-left="goBack">
+
 		</uni-nav-bar>
-		
-		<swiper :current="tabIndex" :duration="150" :style="'height:'+scrollH+'px;'" @change="onChangeTab">
-			<!-- 关注 -->
-			<swiper-item>
-				<scroll-view scroll-y="true" :style="'height:'+scrollH+'px;'"
-				@scrolltolower="loadmoreEvent">
-					<block v-for="(item,index) in list" :key="index">
-						<common-list :item="item" :index="index" @doSupport="doSupport"></common-list>
-						<divider></divider>
-					</block>
-					<load-more v-if="list.length" :loadmore="loadmore"></load-more>
-					<no-thing v-else></no-thing>
-				</scroll-view>
-			</swiper-item>
-			<!-- 话题 -->
-			<swiper-item>
-				<scroll-view scroll-y="true" :style="'height:'+scrollH+'px;'">
-					
-					<!-- 热门分类 -->
-					<hot-cate :hotCate="hotCate"></hot-cate>
-					<!-- 搜索框 -->
-					<view class="p-2">
-						<view class="bg-light rounded flex align-center justify-center py-2 text-secondary" @click="openSearch">
-							<text class="iconfont icon-sousuo mr-2"></text>
-							搜索话题
-						</view>
-					</view>
-					<!-- 轮播图 -->
-					<swiper class="px-2 pb-2" :indicator-dots="true" 
-					:autoplay="true" 
-					:interval="3000" :duration="1000">
-						<swiper-item v-for="(item,index) in swiperList"
-						:key="index">
-							<image :src="item.src"
-							style="height: 300rpx;" 
-							class="w-100 rounded"></image>
-						</swiper-item>
-					</swiper>
-					<divider></divider>
-					<!-- 最近更新 -->
-					<view class="p-2 font-md">最近更新</view>
-					<!-- 话题列表组件 -->
-					<block v-for="(item,index) in topicList" :key="index">
-						<topic-list :item="item" :index="index"></topic-list>
-					</block>
-					
-				</scroll-view>
-			</swiper-item>
-		</swiper>
-		
-		
+		<!-- #endif -->
+		<!-- 文本域 -->
+		<mymap :path="path" :center='center' :zoom='16' :mapheight='80'></mymap>
+		<br><br>
+
+
+		<!-- Fixed框 -->
+		<view style="position: fixed; bottom: 0; width: 100%; height: 100px; background-color: #eaeff5; padding: 12px;">
+			<view v-if="!isRecording" class="flex justify-between align-center">
+				<!-- Options for cycling, running, and driving -->
+				<view class="option" @click="mode=1" >Cycling</view>
+				<view class="option" @click="mode=2">Running</view>
+				<view class="option" @click="mode=3">Driving</view>
+
+				<!-- 开始行程按钮 -->
+				<button @click="startRecording" style="background-color: #4ba3c7; color: #fff;">Start</button>
+			</view>
+			<view v-else class="flex justify-between align-center">
+				<view style="flex: 1;">
+					<text style="color: #555;">里程: {{distance}} km</text>
+				</view>
+				<view style="flex: 1;">
+					<text style="color: #555;">时间: {{formattedTime}} </text>
+				</view>
+				<!-- <view class="info">
+					<text class="info-label" style="display: block;">Distance:</text>
+					<br> 
+					<text class="info-value" style="display: block;">{{ distance }} km</text>
+				</view>
+				<view class="info">
+					<text class="info-label" style="display: block;">Time:</text>
+					<br> 
+					<text class="info-value" style="display: block;">{{ formattedTime }} </text>
+				</view> -->
+				<view style="flex: 1; text-align: center;">
+					<!-- <button @click="toggleRecording"
+						:style="{ backgroundColor: isPaused ? '#33cc33' : '#4ba3c7', color: '#fff' }">{{ isPaused ? 'Resume' : 'Pause' }}</button> -->
+					<image @tap="toggleRecording"
+						:src="isPaused ?  '/static/images/resume.png':'/static/images/pause.png' " mode="aspectFit"
+						style="width: 50px; height: 50px; background-color: #eaeff5">
+					</image>
+				</view>
+				<view style="flex: 1;">
+					<button @click="stopRecording" style="background-color: #4ba3c7; color: #fff;" :disabled="mydisabled">End</button>
+				</view>
+				<!-- <view class="button-group">
+					<button @click="toggleRecording"
+						:style="{ backgroundColor: isPaused ? '#33cc33' : '#4ba3c7', color: '#fff' }">{{ isPaused ? 'Resume' : 'Pause' }}</button>
+					<button @click="stopRecording" style="background-color: #4ba3c7; color: #fff;">End Journey</button>
+				</view> -->
+			</view>
+		</view>
+
+
+		<view>
+			<!-- Countdown display -->
+			<div class='mybox'>
+				<div v-if="showflag" class="countdown">{{currentCountdown==0?"Go":currentCountdown}}</div>
+			</div>
+		</view>
 	</view>
 </template>
 
-<script>
 
+
+
+
+<script>
+	const isOpenArray = ['Public', 'Only me', "Only friends"];
 	import uniNavBar from '@/components/uni-ui/uni-nav-bar/uni-nav-bar.vue';
-	import commonList from '@/components/common/common-list.vue';
-	import loadMore from '@/components/common/load-more.vue';
-	
-	import hotCate from '@/components/news/hot-cate.vue';
-	import topicList from '@/components/news/topic-list.vue';
-	import noThing from '@/components/common/no-thing.vue';
+	import uploadImage from '@/components/common/upload-image.vue';
+	import mymap from '../../components/map/mymap.vue';
+
+
 	export default {
 		components: {
 			uniNavBar,
-			commonList,
-			loadMore,
-			hotCate,
-			topicList,
-			noThing
+			uploadImage,
+			mymap
 		},
 		data() {
 			return {
-				scrollH:500,
-				tabIndex:0,
-				tabBars:[{
-					name:"关注"
-				},{
-					name:"话题"
-				}],
-				// 关注列表
-				list:[],
-				// 1.上拉加载更多  2.加载中... 3.没有更多了
-				loadmore:"上拉加载更多",
-				page:1,
-				
-				hotCate:[],
-				
-				topicList:[],
-				
-				swiperList:[]
+				mode:0,
+				mydisabled:true,
+				showflag: false,
+				currentCountdown: 3,
+				isRecording: false,
+				distance: 0,
+				time: 0,
+				timer: null,
+				isPaused: false, // Track whether the timer is paused
+				content: "",
+				imageList: [],
+				// 是否已经弹出提示框
+				showBack: false,
+				isopen: 1,
+				topic: {
+					id: 0,
+					title: ""
+				},
+				title: '',
+				post_class_list: [],
+				post_class_index: -1,
+				startDate: '',
+				startTime: '',
+				endTime: '',
+				endDate: '',
+				path: [
+					[103.985895, 30.763873], // 起点坐标
+					[103.986895, 30.764873], // 中间点坐标
+					[103.987895, 30.765873] // 终点坐标
+				],
+				center: [103.985895, 30.763873],
+
+
 			}
 		},
-		onLoad() {
-			uni.getSystemInfo({
-				success:res=>{
-					this.scrollH = res.windowHeight - res.statusBarHeight - 44
+		computed: {
+			formattedTime() {
+				const hours = Math.floor(this.time / 3600);
+				const minutes = Math.floor((this.time % 3600) / 60);
+				const seconds = this.time % 60;
+
+				return `${hours}:${minutes}:${seconds}`;
+			},
+			show() {
+				return this.imageList.length > 0
+			},
+			isopenText() {
+				return isOpenArray[this.isopen]
+			},
+			// 文章分类可选项
+			range() {
+				return this.post_class_list.map(item => {
+					return item.classname
+				})
+			},
+			post_class_id() {
+				if (this.post_class_index !== -1) {
+					return this.post_class_list[this.post_class_index].id
 				}
-			})
-			// 获取数据
-			this.getTopicNav()
-			this.getSwipers()
-			this.getHotTopic()
-		},
-		onShow() {
-			this.page = 1
-			this.getList()
-		},
-		methods: {
-			// 获取关注好友文章列表
-			getList(){
-				let isrefresh = this.page === 1
-				this.$H.get('/followpost/'+this.page,{},{
-					token:true,
-					notoast:true
-				}).then(res=>{
-					let list = res.list.map(v=>{
-						return this.$U.formatCommonList(v)
-					})
-					this.list = isrefresh ? list : [...this.list,...list];
-					this.loadmore  = list.length < 10 ? '没有更多了' : '上拉加载更多';
-				}).catch(err=>{
-					if(!isrefresh){
-						this.page--;
+			},
+			post_class_name() {
+				if (this.post_class_index !== -1) {
+					return this.post_class_list[this.post_class_index].classname
+				}
+			},
+			imgListIds() {
+				return this.imageList.map(item => {
+					return {
+						id: item.id
 					}
 				})
-			},
-			// 获取热门分类
-			getTopicNav(){
-				this.$H.get('/topicclass').then(res=>{
-					this.hotCate = res.list.map(item=>{
-						return {
-							id:item.id,
-							name:item.classname
+			}
+		},
+		// 监听返回
+		onBackPress() {
+			if ((this.content !== '' || this.imageList.length > 0) && !this.showBack) {
+				uni.showModal({
+					content: 'Do you want to save as a draft?',
+					showCancel: true,
+					cancelText: "Don't save",
+					confirmText: 'Save',
+					success: res => {
+						// 点击确认
+						if (res.confirm) {
+							this.store()
+						} else { // 点击取消，清除缓存
+							uni.removeStorage({
+								key: "add-input"
+							})
 						}
-					})
-				})
-			},
-			// 获取热门话题
-			getHotTopic(){
-				this.$H.get('/hottopic').then(res=>{
-					this.topicList = res.list.map(item=>{
-						return {
-							id:item.id,
-							cover:item.titlepic,
-							title:item.title,
-							desc:item.desc,
-							today_count:item.todaypost_count,
-							news_count:item.post_count
-						}
-					})
-				})
-			},
-			// 获取轮播图
-			getSwipers(){
-				this.$H.get('/adsense/0').then(res=>{
-					this.swiperList = res.list
-				})
-			},
-			// 打开发布页
-			openAddInput(){
-				uni.navigateTo({
-					url: '../add-input/add-input',
+						// 手动执行返回
+						uni.navigateBack({
+							delta: 1
+						});
+					},
 				});
-			},
-			// 切换选项卡
-			changeTab(index){
-				this.tabIndex = index
-			},
-			// 滑动
-			onChangeTab(e){
-				this.tabIndex = e.detail.current
-			},
-			// 顶踩操作
-			doSupport(e){
-				// 拿到当前对象
-				let item = this.list[e.index]
-				let msg = e.type === 'support' ? '顶' : '踩'
-				// 之前没有操作过
-				if (item.support.type === '') {
-					item.support[e.type+'_count']++
-				} else if (item.support.type ==='support' && e.type === 'unsupport') {
-					// 顶 - 1
-					item.support.support_count--;
-					// 踩 + 1
-					item.support.unsupport_count++;
-				} else if(item.support.type ==='unsupport' && e.type === 'support'){ 					// 之前踩了
-					// 顶 + 1
-					item.support.support_count++;
-					// 踩 - 1
-					item.support.unsupport_count--;
+				this.showBack = true
+				return true
+			}
+		},
+		// 页面加载时
+		onLoad() {
+			uni.getStorage({
+				key: "add-input",
+				success: (res) => {
+					if (res.data) {
+						let result = JSON.parse(res.data)
+						this.content = result.content
+						this.imageList = result.imageList
+					}
 				}
-				item.support.type = e.type
-				uni.showToast({ title: msg + '成功' });
+			})
+			// 监听选择话题事件
+			uni.$on('chooseTopic', (e) => {
+				this.topic.id = e.id
+				this.topic.title = e.title
+			})
+			// 获取所有分类
+			this.getPostClass()
+		},
+		beforeDestroy() {
+			uni.$off('chooseTopic', (e) => {})
+		},
+		methods: {
+
+			startTimer() {
+				this.showflag = true;
+				let t = setInterval(() => {
+					this.currentCountdown--;
+					if (this.currentCountdown <= -1) {
+						this.showflag = false
+						this.currentCountdown = 3
+						clearInterval(t);
+						this.mydisabled=false;
+					}
+
+				}, 1000)
 			},
-			// 上拉加载
-			loadmoreEvent(){
-				// 验证当前是否处于可加载状态
-				if (this.loadmore !== '上拉加载更多') return;
-				// 设置加载状态
-				this.loadmore = '加载中...'
-				// 请求数据
-				this.page++
-				this.getList()
+
+			startRecording() {
+				console.log(this.mode)
+				
+				this.startTimer()
+				this.isRecording = true;
+			
+				setTimeout(() => {
+					this.timer = setInterval(() => {
+						this.time++;
+						
+					}, 1000); // Update the current time every minute (adjust as needed)
+
+				}, 4000)
+
+				// You can add logic to start recording distance and time here
 			},
-			// 打开搜索页
-			openSearch(){
-				uni.navigateTo({
-					url: '../search/search?type=topic',
+			// Method to pause the recording
+			pauseRecording() {
+				// Clear the existing timer to pause the recording
+				clearInterval(this.timer);
+				// Update the state to indicate that recording is paused
+				// You might want to store this state to resume recording later
+				this.isRecording = false;
+			},
+			// Method to toggle recording (pause/resume)
+			toggleRecording() {
+				if(this.mydisabled==false){
+				if (this.isPaused) {
+					// If paused, resume the timer
+					this.timer = setInterval(() => {
+						this.time++;
+					}, 1000);
+				} else {
+					// If not paused, pause the timer
+					clearInterval(this.timer);
+				}
+				// Toggle the paused state
+				this.isPaused = !this.isPaused;
+				}
+			},
+			stopRecording() {
+				this.isRecording = false;
+				this.time = 0;
+				clearInterval(this.timer);
+				// You can add logic to stop recording distance and time here
+				// Once stopped, you can update the distance and time values accordingly
+			},
+
+			// 发布
+			submit() {
+				// if(this.post_class_id == 0){
+				// 	return uni.showToast({
+				// 		title: '请选择分类',
+				// 		icon: 'none'
+				// 	});
+				// }
+				uni.showLoading({
+					title: 'Submitting...',
+					mask: false
 				});
+				this.$H.post('/post/create', {
+					imglist: JSON.stringify(this.imgListIds),
+					text: this.content,
+					isopen: this.isopen,
+					post_class_id: this.post_class_id
+				}, {
+					token: true
+				}).then(res => {
+					uni.hideLoading()
+					uni.$emit('updateIndex')
+					uni.showToast({
+						title: 'Submit successfully!',
+						icon: "none"
+					});
+					this.showBack = true
+					uni.navigateBack({
+						delta: 1
+					});
+				}).catch(err => {
+					uni.hideLoading()
+				})
+			},
+			// 获取所有文章分类
+			getPostClass() {
+				this.$H.get('/postclass').then(res => {
+					this.post_class_list = res.list
+				})
+			},
+			// 选择文章分类
+			choosePostClass(e) {
+				this.post_class_index = e.detail.value
+			},
+			// 选择话题
+			chooseTopic() {
+				uni.navigateTo({
+					url: '../topic-nav/topic-nav?choose=true',
+				});
+			},
+			// 切换可见性
+			changeIsopen() {
+				uni.showActionSheet({
+					itemList: isOpenArray,
+					success: (res) => {
+						this.isopen = res.tapIndex
+					}
+				});
+			},
+			// 底部图片点击事件
+			iconClickEvent(e) {
+				switch (e) {
+					case 'uploadImage':
+						this.$refs.uploadImage.chooseImage()
+						break;
+				}
+			},
+			// 返回上一步
+			goBack() {
+				// uni.navigateBack({ delta: 1 });
+				this.navigateTo({
+					url: "../index/index"
+				})
+			},
+			// 选中图片
+			changeImage(e) {
+				this.imageList = e
+			},
+			onStartDateChange(e) {
+				this.startDate = e.detail.value
+			},
+			onStartTimeChange(e) {
+				this.startTime = e.detail.value
+			},
+			onEndDateChange(e) {
+				this.endDate = e.detail.value
+			},
+			onEndTimeChange(e) {
+				this.endTime = e.detail.value
+			},
+			// 保存操作
+			store() {
+				// 保存为本地存储
+				let obj = {
+					content: this.content,
+					imageList: this.imageList
+				}
+				uni.setStorage({
+					key: 'add-input',
+					data: JSON.stringify(obj)
+				})
 			}
 		}
 	}
 </script>
 
 <style>
+	/* Custom styles for options */
+	.option {
+		padding: 8px 12px;
+		background-color: #fff;
+		border-radius: 20px;
+		margin-right: 10px;
+		color: #4ba3c7;
+		font-size: 14px;
+		cursor: pointer;
+		transition: background-color 0.3s, color 0.3s;
+	}
 
+	.button-group {
+		display: flex;
+		align-items: center;
+	}
+
+	.button-group button {
+		margin-right: 10px;
+	}
+
+	.option:hover {
+		background-color: #4ba3c7;
+		color: #fff;
+	}
+
+	.info {
+		display: flex;
+		align-items: center;
+		margin-right: 20px;
+	}
+
+	.info-label {
+		color: #666;
+		font-size: 14px;
+	}
+
+	.info-value {
+		margin-left: 5px;
+		font-size: 14px;
+		white-space: pre-wrap;
+		/* Allow line breaks */
+		color: #333;
+	}
+
+	.footer-btn {
+		width: 86rpx;
+		height: 86rpx;
+		display: flex;
+		justify-content: center;
+		align-content: center;
+		font-size: 50rpx;
+	}
+
+	.custom-picker {
+		font-size: 14px;
+		border: 1px solid #333;
+		/* Change border color to a darker shade */
+		border-radius: 5px;
+		/* Add border radius for rounded corners */
+		padding: 5px;
+		/* Add padding inside the picker */
+		margin-right: 10px;
+		/* Spacing between pickers */
+		background-color: #f2f2f2;
+		/* Set a light background color */
+	}
+
+	.mybox {
+		display: flex;
+		justify-content: center;
+	}
+
+	.countdown {
+		width: 220px;
+		height: 220px;
+		border-radius: 100%;
+		background-color: rgba(70, 130, 180, 0.8);
+		color: white;
+		position: fixed;
+		top: 30%;
+		text-align: center;
+		line-height: 220px;
+		font-size: 120px;
+		font-weight: bold;
+
+	}
 </style>

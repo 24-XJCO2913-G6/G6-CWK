@@ -12,9 +12,9 @@
 				<view class="iconfont icon-sousuo mr-1"></view>搜索帖子
 			</view>
 			<!-- 右边图标 -->
-			<!-- <block slot="right">
+			<block slot="right">
 				<view class="icon iconfont icon-bianji1 text-dark" style="font-size: 22px;"></view>
-			</block> -->
+			</block>
 		</uni-nav-bar>
 		<!-- #endif -->
 		<!-- 顶部选项卡 -->
@@ -172,6 +172,8 @@
 						})
 					}
 					this.newsList = arr
+					console.log(arr[0])
+					console.log(arr[0].list)
 					// 获取第一个分类的数据
 					if (this.tabBars.length) {
 						this.getList()

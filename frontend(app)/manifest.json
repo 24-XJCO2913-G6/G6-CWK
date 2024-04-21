@@ -61,7 +61,12 @@
         "setting" : {
             "urlCheck" : false
         },
-        "usingComponents" : true
+        "usingComponents" : true,
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "用于位置效果演示"
+            }
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true
@@ -71,5 +76,17 @@
     },
     "mp-toutiao" : {
         "usingComponents" : true
+    },
+    "h5" : {
+        "sdkConfigs" : {
+            "maps" : {
+                "amap" : {
+                    "key" : "b22dc976c0090ec2a8d130f4de04a4d3",
+                    "securityJsCode" : "",
+                    "serviceHost" : ""
+                }
+            }
+        }
     }
+	  
 }

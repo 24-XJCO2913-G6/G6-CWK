@@ -301,6 +301,7 @@
 			"selectedIconPath":"static/tabbar/feed.png"
 		},{
 			"pagePath":"pages/add-input/add-input",
+			
 			"text":"Add",
 			"iconPath":"static/tabbar/add.png",
 			"selectedIconPath":"static/tabbar/add.png"

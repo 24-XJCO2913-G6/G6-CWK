@@ -1,5 +1,5 @@
-<template>
-	<view>
+<template  >
+	<view class="mybody" style="height: 100vh;">
 		<!-- 自定义导航 -->
 		<!-- #ifdef MP -->
 		<uni-nav-bar :border="false">
@@ -18,27 +18,29 @@
 		</uni-nav-bar>
 		<!-- #endif -->
 		<!-- 文本域 -->
-		<input v-model="title" placeholder="Title" class="uni-textarea px-2" style='border:1px dotted;margin:5px; width:200px;'/>
-		<textarea v-model="content" placeholder="Say something" class="uni-textarea px-2" style='border:1px dotted;margin:5px'/>
-		<!-- 选中的分类 -->
-		<view class="font-md px-2 py-1 flex">
-			<view class="border px-3 py main-color main-border-color flex align-center justify-center" style="border-radius: 50rpx;">
-				<text class="iconfont icon-huati mr-1"></text>
-				{{post_class_name ? "所属分类："+post_class_name : "Choose classification"}}
-			</view>
-		</view>
-	<view class="font-md px-2 py-1">
-	    <view  style="margin-bottom: 10px;">
-	        <h6>Start date:</h6>
-	        <picker mode="date"class='custom-picker' style="font-size: 14px; border: 1px solid black; margin-right: 10px;" :value='startDate' @change="onStartDateChange">{{startDate==''?'select':startDate}}</picker> 
-	         <h6>Start time:</h6>
-			<picker mode="time" class='custom-picker' style="font-size: 14px; border: 1px solid black;" :value='startTime' @change="onStartTimeChange">{{startTime==''?'select':startTime}}</picker>
+		<mymap :path="path" :center='center':zoom='16' :mapheight='30'></mymap>
+		
+		 <h4 style='margin-left:10px;margin-top: 20px;'>Title:</h4> 
+		<input v-model="title" placeholder="Title" class="uni-textarea px-2" style='margin:5px; width:90%; height:40px;'/>
+		 <h4 style='margin-left:10px'>Desciption:</h4> 
+		<textarea v-model="content" placeholder="Say something" class="uni-textarea px-2" style='margin:10px;width:90%'/>
+		
+	<view class="font-md px-2 py-1" style="display: flex; flex-wrap: wrap;">
+	    <view style="margin-bottom: 10px; flex-basis: 50%;">
+	        <h4>Start date:</h4>
+	        <picker mode="date" class='custom-picker' style="font-size: 14px; border:none; margin-right: 10px; background-color: white;" :value='startDate' @change="onStartDateChange">{{startDate==''?'select':startDate}}</picker> 
 	    </view>
-	    <view  style="margin-bottom: 10px;">
-	        <h6>End date:</h6> 
-	        <picker mode="date" class='custom-picker' style="font-size: 14px; border: 1px solid black; margin-right: 10px;" :value='endDate' @change="onEndDateChange">{{endDate==''?'select':endDate}}</picker> 
-	         <h6>End time:</h6> 
-			<picker mode="time" class='custom-picker' style="font-size: 14px; border: 1px solid black;" :value='endTime' @change="onEndTimeChange">{{endTime==''?'select':endTime}}</picker>
+	    <view style="margin-bottom: 10px; flex-basis: 50%;">
+	        <h4>Start time:</h4>
+	        <picker mode="time" class='custom-picker' style="font-size: 14px; background-color: white; border:none;" :value='startTime' @change="onStartTimeChange">{{startTime==''?'select':startTime}}</picker>
+	    </view>
+	    <view style="margin-bottom: 10px; flex-basis: 50%;">
+	        <h4>End date:</h4> 
+	        <picker mode="date" class='custom-picker' style="font-size: 14px; margin-right: 10px; border:none; background-color: white;" :value='endDate' @change="onEndDateChange">{{endDate==''?'select':endDate}}</picker> 
+	    </view>
+	    <view style="margin-bottom: 10px; flex-basis: 50%;">
+	        <h4>End time:</h4>
+	        <picker mode="time" class='custom-picker' style="font-size: 14px; background-color: white; border:none;" :value='endTime' @change="onEndTimeChange">{{endTime==''?'select':endTime}}</picker>
 	    </view>
 	</view>
 
@@ -77,10 +79,14 @@
 	const isOpenArray = ['Public','Only me',"Only friends"];
 	import uniNavBar from '@/components/uni-ui/uni-nav-bar/uni-nav-bar.vue';
 	import uploadImage from '@/components/common/upload-image.vue';
+	import mymap from '../../components/map/mymap.vue';
+	
+	
 	export default {
 		components: {
 			uniNavBar,
-			uploadImage
+			uploadImage,
+			mymap
 		},
 		data() {
 			return {
@@ -100,6 +106,13 @@
 				startTime:'',
 				endTime:'',
 				endDate:'',
+				path:[
+				    [103.985895, 30.763873], // 起点坐标
+				    [103.986895, 30.764873], // 中间点坐标
+				    [103.987895, 30.765873]  // 终点坐标
+				],
+				center:[103.985895, 30.763873],
+				
 				
 			}
 		},
@@ -287,6 +300,9 @@
 </script>
 
 <style>
+.mybody{
+	background-color:#EFF4F5;
+}
 .footer-btn{
 	width: 86rpx;
 	height: 86rpx;
