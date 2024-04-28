@@ -11,6 +11,8 @@ func Cors() gin.HandlerFunc {
 		method := c.Request.Method
 		origin := c.Request.Header.Get("Origin")
 
+		//c.JSON(200, gin.H{"form": c.DefaultPostForm("email", "123@123")})
+
 		if origin != "" {
 			// 允许 Origin 字段中的域发送请求
 			c.Writer.Header().Add("Access-Control-Allow-Origin", c.GetHeader("origin"))

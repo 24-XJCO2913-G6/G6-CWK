@@ -9,34 +9,38 @@ import (
 )
 
 func Register(c *gin.Context) {
-	email := c.Request.FormValue("email")
-	name := c.Request.FormValue("name")
-	passwd := c.Request.FormValue("passwd")
-	rePasswd := c.Request.FormValue("rePasswd")
+	err := c.Request.ParseForm()
+	if err != nil {
+		return
+	}
+	email := c.PostForm("email")
+	name := c.PostForm("name")
+	passwd := c.PostForm("passwd")
+	rePasswd := c.PostForm("rePasswd")
 
 	if name == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid name"})
+		c.JSON(http.StatusOK, gin.H{"error": "Invalid name"})
 		return
 	}
 
 	if !IsValidEmail(email) {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email"})
+		c.JSON(http.StatusOK, gin.H{"error": "Invalid email"})
 		return
 	}
 
 	if passwd != rePasswd {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Passwords does not match"})
+		c.JSON(http.StatusOK, gin.H{"error": "Passwords does not match"})
 		return
 	}
 
 	if IsExist(email) {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Email has been used"})
+		c.JSON(http.StatusOK, gin.H{"error": "Email has been used"})
 		return
 	}
 
 	hashedPasswd, err := bcrypt.GenerateFromPassword([]byte(passwd), bcrypt.DefaultCost)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
+		c.JSON(http.StatusOK, gin.H{"error": "Failed to hash password"})
 		return
 	}
 	AddUser(name, email, string(hashedPasswd))
@@ -45,16 +49,20 @@ func Register(c *gin.Context) {
 }
 
 func Login(c *gin.Context) {
-	email := c.Request.FormValue("Email")
-	passwd := c.Request.FormValue("Passwd")
+	err := c.Request.ParseForm()
+	if err != nil {
+		return
+	}
+	email := c.PostForm("email")
+	passwd := c.PostForm("passwd")
 
 	if !IsExist(email) {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Unregistered email"})
+		c.JSON(http.StatusOK, gin.H{"error": "Unregistered email", "email": email})
 		return
 	}
 
 	if !IsRight(email, passwd) {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Wrong password"})
+		c.JSON(http.StatusOK, gin.H{"error": "Wrong password"})
 		return
 	}
 
