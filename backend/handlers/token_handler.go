@@ -98,19 +98,20 @@ func JwtToken() gin.HandlerFunc {
 
 		if aToken == "" || rToken == "" {
 			c.JSON(200, gin.H{
-				"msg":  "没有携带 aToken 或者 rToken",
-				"code": 400,
+				"message": "visitor",
+				"code":    400,
 			})
 			c.Abort()
 			return
 		}
 
-		parasToken, err := CheckToken(aToken) // 解析 access_token
-		if err == nil {                       // 当前的 access_token 格式对，没有过期
+		_, err := CheckToken(aToken) // 解析 access_token
+		if err == nil {              // 当前的 access_token 格式对，没有过期
 			c.JSON(200, gin.H{
-				"msg":  "aToken 和 rToken 没有过期",
-				"data": parasToken,
-				"code": 400,
+				"message": "user",
+				"aToken":  aToken,
+				"rToken":  rToken,
+				"code":    400,
 			})
 			c.Next()
 			return
@@ -119,17 +120,17 @@ func JwtToken() gin.HandlerFunc {
 		aToken, rNewToken, err := RefreshToken(aToken, rToken)
 		if err != nil {
 			c.JSON(200, gin.H{
-				"msg":  "Need sign in again",
-				"code": 400,
+				"message": "visitor",
+				"code":    400,
 			})
 			c.Abort()
 			return
 		} else {
 			c.JSON(200, gin.H{
-				"msg":    "aToken 和 rToken 没有过期",
-				"aToken": aToken,
-				"rToken": rNewToken,
-				"code":   400,
+				"message": "user",
+				"aToken":  aToken,
+				"rToken":  rNewToken,
+				"code":    400,
 			})
 			c.Next()
 			return
