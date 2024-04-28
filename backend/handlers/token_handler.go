@@ -97,10 +97,13 @@ func JwtToken() gin.HandlerFunc {
 		rToken := c.DefaultQuery("rtoken", "")
 
 		if aToken == "" || rToken == "" {
-			c.JSON(200, gin.H{
-				"message": "visitor",
-				"code":    400,
-			})
+			//c.JSON(200, gin.H{
+			//	"message": "visitor",
+			//	"code":    400,
+			//})
+			c.Set("message", "visitor")
+			c.Set("aToken", "")
+			c.Set("rToken", "")
 			c.Set("Uid", -1)
 			c.Next()
 			return
@@ -108,32 +111,42 @@ func JwtToken() gin.HandlerFunc {
 
 		_, err := CheckToken(aToken) // 解析 access_token
 		if err == nil {              // 当前的 access_token 格式对，没有过期
-			c.JSON(200, gin.H{
-				"message": "user",
-				"aToken":  aToken,
-				"rToken":  rToken,
-				"code":    400,
-			})
+			//c.JSON(200, gin.H{
+			//	"message": "user",
+			//	"aToken":  aToken,
+			//	"rToken":  rToken,
+			//	"code":    400,
+			//})
+			c.Set("message", "user")
+			c.Set("aToken", aToken)
+			c.Set("rToken", rToken)
 			c.Next()
 			return
 		}
 
 		aToken, rNewToken, err := RefreshToken(aToken, rToken)
 		if err != nil {
-			c.JSON(200, gin.H{
-				"message": "visitor",
-				"code":    400,
-			})
+			//c.JSON(200, gin.H{
+			//	"message": "visitor",
+			//	"code":    400,
+			//})
+
+			c.Set("message", "visitor")
+			c.Set("aToken", "")
+			c.Set("rToken", "")
 			c.Set("Uid", -1)
 			c.Next()
 			return
 		} else {
-			c.JSON(200, gin.H{
-				"message": "user",
-				"aToken":  aToken,
-				"rToken":  rNewToken,
-				"code":    400,
-			})
+			//c.JSON(200, gin.H{
+			//	"message": "user",
+			//	"aToken":  aToken,
+			//	"rToken":  rNewToken,
+			//	"code":    400,
+			//})
+			c.Set("message", "user")
+			c.Set("aToken", aToken)
+			c.Set("rToken", rNewToken)
 			c.Next()
 			return
 		}
