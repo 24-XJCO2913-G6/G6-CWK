@@ -19,8 +19,8 @@ func Cors() gin.HandlerFunc {
 			// 设置允许请求的方法
 			c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, UPDATE, PATCH")
 			// 设置允许请求的 Header
-			c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, atoken, rtoken")
-			c.Writer.Header().Set("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Headers, atoken, rtoken")
+			c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, aToken, rToken")
+			c.Writer.Header().Set("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Headers, aToken, rToken")
 			// 配置是否可以带认证信息
 			c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		}
