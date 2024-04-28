@@ -9,10 +9,10 @@ import (
 )
 
 func Register(c *gin.Context) {
-	email := c.Request.FormValue("Email")
-	name := c.Request.FormValue("Name")
-	passwd := c.Request.FormValue("Passwd")
-	rePasswd := c.Request.FormValue("RePasswd")
+	email := c.Request.FormValue("email")
+	name := c.Request.FormValue("name")
+	passwd := c.Request.FormValue("passwd")
+	rePasswd := c.Request.FormValue("rePasswd")
 
 	if name == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid name"})
@@ -43,7 +43,8 @@ func Register(c *gin.Context) {
 
 	atoken, rtoken, _ := SetToken(strconv.FormatInt(Uid, 10), string(hashedPasswd))
 
-	c.JSON(http.StatusOK, gin.H{"message": "Register Successfully", "atoken": atoken, "rtoken": rtoken})
+	c.Set("Uid", Uid)
+	c.JSON(http.StatusOK, gin.H{"message": "Register Successfully", "aToken": atoken, "rToken": rtoken})
 }
 
 func Login(c *gin.Context) {
@@ -63,9 +64,10 @@ func Login(c *gin.Context) {
 	Uid := FindUid(email)
 
 	hashedPasswd, _ := bcrypt.GenerateFromPassword([]byte(passwd), bcrypt.DefaultCost)
-	atoken, rtoken, _ := SetToken(strconv.FormatInt(Uid, 10), string(hashedPasswd))
+	aToken, rToken, _ := SetToken(strconv.FormatInt(Uid, 10), string(hashedPasswd))
 
-	c.JSON(http.StatusOK, gin.H{"message": "Login Successfully", "atoken": atoken, "rtoken": rtoken})
+	c.Set("Uid", Uid)
+	c.JSON(http.StatusOK, gin.H{"message": "Login Successfully", "aToken": aToken, "rToken": rToken})
 }
 
 func AddUser(name string, email string, passwd string) int64 {
