@@ -10,13 +10,18 @@ func main() {
 	engine := gin.Default()
 
 	// 中间件
-	//engine.Use(JwtToken())
-	//engine.Use(Cors())
+
 	// 数据库
 	//InitDB()
 
-	engine.Static("/static", "frontend(web)/static")
+	engine.Static("/web/static", "frontend(web)/static")
 	engine.LoadHTMLGlob("frontend(web)/*.html")
+
+	engine.Use(Cors())
+	engine.Use(JwtToken())
+
+	engine.POST("/login", Login)
+	engine.POST("/register", Register)
 
 	webGroup := engine.Group("/web")
 	{
@@ -45,9 +50,6 @@ func main() {
 		webGroup.GET("/notifications", ToNotifications)
 		webGroup.GET("/setting", ToSetting)
 	}
-
-	engine.POST("/login", Login)
-	engine.POST("/register", Register)
 
 	err := engine.Run()
 	if err != nil {
