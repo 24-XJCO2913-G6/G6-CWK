@@ -22,7 +22,7 @@
 
     <!-- Theme CSS -->
     <link id="style-switch" rel="stylesheet" type="text/css" href="static/css/style.css">
-    <script src="./static/js/axios.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <style>
         .modal-container {
             display: none;
@@ -136,7 +136,7 @@
                         </div>
                         <!-- Button -->
                         <div class="d-grid" id="sign_up">
-                            <button type="submit" class="btn btn-lg btn-primary" id="mysubmit">Sign me up</button>
+                            <button type="button" class="btn btn-lg btn-primary" id="mysubmit">Sign me up</button>
 
                         </div>
                         <!-- Copyright -->
@@ -215,44 +215,70 @@
 <!-- =======================
 JS libraries, plugins and custom scripts -->
 <script>
+    console.log("{{ .message }}")
+    console.log("{{ .aToken }}")
 
     var submit_btn = document.getElementById('mysubmit');
     var form = document.getElementById('myform');
     var errormsg = document.getElementById('errormsg');
 
-    submit_btn.addEventListener('click', function (e) {
+    submit_btn.addEventListener('click', function () {
         var email = document.getElementById('email').value
-        console.log('点了')
-        e.preventDefault();
         var regExp = /^\w{5,10}@\w+\.(com|net|org)$/;
+
         var flag = regExp.test(email);
+
         console.log(flag, email)
         if (flag == false) {
             errormsg.innerHTML = "Invalid email";
         } else {
             errormsg.innerHTML = "";
         }
-        const formData = new FormData(form);
-        const formDataObject = Object.fromEntries(formData.entries());
+
+        const formDataObject = {
+            "name": form.elements["name"].value,
+            "email": form.elements["email"].value,
+            "passwd": form.elements["passwd"].value,
+            "rePasswd": form.elements["rePasswd"].value
+        };
         console.log(formDataObject)
+        var fg = false;
 
-        axios.post('https://localhost:8080/register', formDataObject, {
+        axios({
+            method: 'POST',
+            url: 'http://localhost:8080/register',
+            data: formDataObject,
             headers: {
-                'Content-Type': 'application/json',
-                'aToken': localStorage.aToken,
-                'rToken': localStorage.rToken,
-
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+        }).then(function (response) {
+            var data = response.data;
+            console.log(data);
+            if (data.error) {
+                //TODO 登录问题报错
+            } else {
+                fg = true;
             }
         })
-            .then(function (response) {
-                axios.get("https://localhost:8080/web/login")
-                alert(1);
-            })
             .catch(function (error) {
                 errormsg.innerHTML = error.data.error;
-                alert(2);
             });
 
+        axios({
+            method: 'GET',
+            url: 'http://localhost:8080/web/login',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+        }).then(function (response) {
+            // 请求成功后的处理逻辑
+            console.log('Request to second route successful:', response);
+            window.location.href = 'http://localhost:8080/web/login';
+        })
+            .catch(function (error) {
+                // 请求失败的处理逻辑
+                console.error('Error:', error);
+            });
     });
 
 </script>
