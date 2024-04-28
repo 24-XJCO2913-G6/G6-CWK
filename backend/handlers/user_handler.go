@@ -39,12 +39,9 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
 		return
 	}
-	Uid := AddUser(name, email, string(hashedPasswd))
+	AddUser(name, email, string(hashedPasswd))
 
-	atoken, rtoken, _ := SetToken(strconv.FormatInt(Uid, 10), string(hashedPasswd))
-
-	c.Set("Uid", Uid)
-	c.JSON(http.StatusOK, gin.H{"message": "Register Successfully", "aToken": atoken, "rToken": rtoken})
+	c.JSON(http.StatusOK, gin.H{"message": "Register Successfully"})
 }
 
 func Login(c *gin.Context) {
