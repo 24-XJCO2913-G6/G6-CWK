@@ -101,6 +101,7 @@ func JwtToken() gin.HandlerFunc {
 				"message": "visitor",
 				"code":    400,
 			})
+			c.Set("Uid", -1)
 			c.Abort()
 			return
 		}
@@ -123,6 +124,7 @@ func JwtToken() gin.HandlerFunc {
 				"message": "visitor",
 				"code":    400,
 			})
+			c.Set("Uid", -1)
 			c.Abort()
 			return
 		} else {
