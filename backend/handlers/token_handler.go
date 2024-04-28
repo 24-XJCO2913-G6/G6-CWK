@@ -102,7 +102,7 @@ func JwtToken() gin.HandlerFunc {
 				"code":    400,
 			})
 			c.Set("Uid", -1)
-			c.Abort()
+			c.Next()
 			return
 		}
 
@@ -125,7 +125,7 @@ func JwtToken() gin.HandlerFunc {
 				"code":    400,
 			})
 			c.Set("Uid", -1)
-			c.Abort()
+			c.Next()
 			return
 		} else {
 			c.JSON(200, gin.H{
