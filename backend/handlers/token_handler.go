@@ -47,10 +47,15 @@ func SetToken(uid, password string) (aToken, rToken string, err error) {
 	aToken, err = token.SignedString([]byte(os.Getenv("MySecret")))
 
 	// rToken 不需要存储任何自定义数据
-	rToken, err = jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
+	refreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		ExpiresAt: time.Now().Add(ReTokenExpireDuration).Unix(), // 过期时间
 		Issuer:    os.Getenv("BEEN_ISSUER"),                     // 签发人
-	}).SignedString(MySecret)
+	})
+	rToken, err = refreshToken.SignedString([]byte(os.Getenv("MySecret")))
+	if err != nil {
+		return "", "", err
+	}
+
 	return aToken, rToken, nil
 }
 
