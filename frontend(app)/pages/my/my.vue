@@ -40,8 +40,11 @@
 		<uni-list-item title="View History" showExtraIcon @click="openHistory">
 			<text slot="icon" class="iconfont icon-liulan"></text>
 		</uni-list-item>
-		<uni-list-item title="Vip" showExtraIcon>
+		<uni-list-item title="VIP" showExtraIcon @click="openVIP">
 			<text slot="icon" class="iconfont icon-huiyuanvip"></text>
+		</uni-list-item>
+		<uni-list-item title="badge" showExtraIcon @click="openBadge">
+			<text slot="icon" class="iconfont icon-user-detail"></text>
 		</uni-list-item>
 		<uni-list-item title="Moderate Posts" showExtraIcon>
 			<text slot="icon" class="iconfont icon-keyboard"></text>
@@ -136,9 +139,14 @@
 					url: '../login/login',
 				});
 			},
-			openHistory(){
+			openVIP(){
 				uni.navigateTo({
-					url: '../history/history'
+					url: '../vip/vip',
+				});
+			},
+			openBadge(){
+				uni.navigateTo({
+					url: '../badge/badge'
 				});
 			}
 		}

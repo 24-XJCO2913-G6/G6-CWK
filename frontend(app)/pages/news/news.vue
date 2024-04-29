@@ -2,78 +2,87 @@
 	<view>
 		<!-- 自定义导航 -->
 		<!-- #ifdef MP -->
-
+		<uni-nav-bar :border="false">
+			<view class="flex align-center j·1·	ustify-center w-100" @click="changeIsopen">
+				{{isopenText}}<text class="iconfont icon-shezhi"></text>
+			</view>
+		</uni-nav-bar>
 		<!-- #endif -->
 		<!-- #ifndef MP -->
 		<uni-nav-bar left-icon="back" statusBar :border="false" @click-left="goBack">
-
+			<view class="flex align-center justify-center w-100" @click="changeIsopen">
+				{{isopenText}}<text class="iconfont icon-shezhi"></text>
+			</view>
 		</uni-nav-bar>
 		<!-- #endif -->
 		<!-- 文本域 -->
-		<mymap :path="path" :center='center' :zoom='16' :mapheight='80'></mymap>
+		<mymap :path="path" :center='center' :zoom='16' :mapheight='30'></mymap>
 		<br><br>
 
 
-		<!-- Fixed框 -->
-		<view style="position: fixed; bottom: 0; width: 100%; height: 100px; background-color: #eaeff5; padding: 12px;">
-			<view v-if="!isRecording" class="flex justify-between align-center">
-				<!-- Options for cycling, running, and driving -->
-				<view class="option" @click="mode=1" >Cycling</view>
-				<view class="option" @click="mode=2">Running</view>
-				<view class="option" @click="mode=3">Driving</view>
 
-				<!-- 开始行程按钮 -->
-				<button @click="startRecording" style="background-color: #4ba3c7; color: #fff;">Start</button>
+
+		<input v-model="title" placeholder="Title" class="uni-textarea px-2"
+			style='border:1px dotted;margin:5px; width:200px;' />
+		<textarea v-model="content" placeholder="Say something" class="uni-textarea px-2"
+			style='border:1px dotted;margin:5px' />
+		<!-- 选中的分类 -->
+		<view class="font-md px-2 py-1 flex">
+			<view class="border px-3 py main-color main-border-color flex align-center justify-center"
+				style="border-radius: 50rpx;">
+				<text class="iconfont icon-huati mr-1"></text>
+				{{post_class_name ? "所属分类："+post_class_name : "Choose classification"}}
 			</view>
-			<view v-else class="flex justify-between align-center">
-				<view style="flex: 1;">
-					<text style="color: #555;">里程: {{distance}} km</text>
-				</view>
-				<view style="flex: 1;">
-					<text style="color: #555;">时间: {{formattedTime}} </text>
-				</view>
-				<!-- <view class="info">
-					<text class="info-label" style="display: block;">Distance:</text>
-					<br> 
-					<text class="info-value" style="display: block;">{{ distance }} km</text>
-				</view>
-				<view class="info">
-					<text class="info-label" style="display: block;">Time:</text>
-					<br> 
-					<text class="info-value" style="display: block;">{{ formattedTime }} </text>
-				</view> -->
-				<view style="flex: 1; text-align: center;">
-					<!-- <button @click="toggleRecording"
-						:style="{ backgroundColor: isPaused ? '#33cc33' : '#4ba3c7', color: '#fff' }">{{ isPaused ? 'Resume' : 'Pause' }}</button> -->
-					<image @tap="toggleRecording"
-						:src="isPaused ?  '/static/images/resume.png':'/static/images/pause.png' " mode="aspectFit"
-						style="width: 50px; height: 50px; background-color: #eaeff5">
-					</image>
-				</view>
-				<view style="flex: 1;">
-					<button @click="stopRecording" style="background-color: #4ba3c7; color: #fff;" :disabled="mydisabled">End</button>
-				</view>
-				<!-- <view class="button-group">
-					<button @click="toggleRecording"
-						:style="{ backgroundColor: isPaused ? '#33cc33' : '#4ba3c7', color: '#fff' }">{{ isPaused ? 'Resume' : 'Pause' }}</button>
-					<button @click="stopRecording" style="background-color: #4ba3c7; color: #fff;">End Journey</button>
-				</view> -->
+		</view>
+		<view class="font-md px-2 py-1">
+			<view style="margin-bottom: 10px;">
+				<h6>Start date:</h6>
+				<picker mode="date" class='custom-picker'
+					style="font-size: 14px; border: 1px solid black; margin-right: 10px;" :value='startDate'
+					@change="onStartDateChange">{{startDate==''?'select':startDate}}</picker>
+				<h6>Start time:</h6>
+				<picker mode="time" class='custom-picker' style="font-size: 14px; border: 1px solid black;"
+					:value='startTime' @change="onStartTimeChange">{{startTime==''?'select':startTime}}</picker>
+			</view>
+			<view style="margin-bottom: 10px;">
+				<h6>End date:</h6>
+				<picker mode="date" class='custom-picker'
+					style="font-size: 14px; border: 1px solid black; margin-right: 10px;" :value='endDate'
+					@change="onEndDateChange">{{endDate==''?'select':endDate}}</picker>
+				<h6>End time:</h6>
+				<picker mode="time" class='custom-picker' style="font-size: 14px; border: 1px solid black;"
+					:value='endTime' @change="onEndTimeChange">{{endTime==''?'select':endTime}}</picker>
 			</view>
 		</view>
 
+		<!-- 选中的话题 -->
+		<!-- <view class="font-md px-2 py-1 flex">
+			<view class="border px-3 py main-color main-border-color flex align-center justify-center" style="border-radius: 50rpx;">
+				<text class="iconfont icon-huati mr-1"></text>
+				{{topic.title ? "所属话题："+topic.title : "Choose topic"}}
+			</view>
+		</view> -->
 
-		<view>
-			<!-- Countdown display -->
-			<div class='mybox'>
-				<div v-if="showflag" class="countdown">{{currentCountdown==0?"Go":currentCountdown}}</div>
-			</div>
+		<!-- 多图上传 -->
+		<upload-image :show="show" ref="uploadImage" :list="imageList" @change="changeImage"></upload-image>
+
+		<!-- 底部操作条 -->
+		<view class="fixed-bottom bg-white flex align-center" style="height: 85rpx;">
+			<picker mode="selector" :range="range" @change="choosePostClass">
+				<view class="iconfont icon-caidan footer-btn animated" hover-class="jello"></view>
+			</picker>
+			<!-- 		
+			<view class="iconfont icon-huati footer-btn animated"
+			hover-class="jello" @click="chooseTopic"></view> -->
+			<view class="iconfont icon-tupian footer-btn animated" hover-class="jello"
+				@click="iconClickEvent('uploadImage')"></view>
+			<view class="iconfont icon-dizhi footer-btn animated" hover-class="jello" @click=""></view>
+			<view class="bg-main text-white ml-auto flex justify-center align-center rounded mr-2 animated"
+				hover-class="jello" style="width: 140rpx;height: 60rpx;" @click="submit">Submit</view>
 		</view>
+
 	</view>
 </template>
-
-
-
-
 
 <script>
 	const isOpenArray = ['Public', 'Only me', "Only friends"];
@@ -90,15 +99,6 @@
 		},
 		data() {
 			return {
-				mode:0,
-				mydisabled:true,
-				showflag: false,
-				currentCountdown: 3,
-				isRecording: false,
-				distance: 0,
-				time: 0,
-				timer: null,
-				isPaused: false, // Track whether the timer is paused
 				content: "",
 				imageList: [],
 				// 是否已经弹出提示框
@@ -126,13 +126,6 @@
 			}
 		},
 		computed: {
-			formattedTime() {
-				const hours = Math.floor(this.time / 3600);
-				const minutes = Math.floor((this.time % 3600) / 60);
-				const seconds = this.time % 60;
-
-				return `${hours}:${minutes}:${seconds}`;
-			},
 			show() {
 				return this.imageList.length > 0
 			},
@@ -214,69 +207,6 @@
 			uni.$off('chooseTopic', (e) => {})
 		},
 		methods: {
-
-			startTimer() {
-				this.showflag = true;
-				let t = setInterval(() => {
-					this.currentCountdown--;
-					if (this.currentCountdown <= -1) {
-						this.showflag = false
-						this.currentCountdown = 3
-						clearInterval(t);
-						this.mydisabled=false;
-					}
-
-				}, 1000)
-			},
-
-			startRecording() {
-				console.log(this.mode)
-				
-				this.startTimer()
-				this.isRecording = true;
-			
-				setTimeout(() => {
-					this.timer = setInterval(() => {
-						this.time++;
-						
-					}, 1000); // Update the current time every minute (adjust as needed)
-
-				}, 4000)
-
-				// You can add logic to start recording distance and time here
-			},
-			// Method to pause the recording
-			pauseRecording() {
-				// Clear the existing timer to pause the recording
-				clearInterval(this.timer);
-				// Update the state to indicate that recording is paused
-				// You might want to store this state to resume recording later
-				this.isRecording = false;
-			},
-			// Method to toggle recording (pause/resume)
-			toggleRecording() {
-				if(this.mydisabled==false){
-				if (this.isPaused) {
-					// If paused, resume the timer
-					this.timer = setInterval(() => {
-						this.time++;
-					}, 1000);
-				} else {
-					// If not paused, pause the timer
-					clearInterval(this.timer);
-				}
-				// Toggle the paused state
-				this.isPaused = !this.isPaused;
-				}
-			},
-			stopRecording() {
-				this.isRecording = false;
-				this.time = 0;
-				clearInterval(this.timer);
-				// You can add logic to stop recording distance and time here
-				// Once stopped, you can update the distance and time values accordingly
-			},
-
 			// 发布
 			submit() {
 				// if(this.post_class_id == 0){
@@ -329,11 +259,14 @@
 			},
 			// 切换可见性
 			changeIsopen() {
-				uni.showActionSheet({
-					itemList: isOpenArray,
-					success: (res) => {
-						this.isopen = res.tapIndex
-					}
+				// uni.showActionSheet({
+				//     itemList: isOpenArray,
+				//     success: (res)=> {
+				//         this.isopen = res.tapIndex
+				//     }
+				// });
+				uni.navigateTo({
+					url: '../index/index',
 				});
 			},
 			// 底部图片点击事件
@@ -347,9 +280,9 @@
 			// 返回上一步
 			goBack() {
 				// uni.navigateBack({ delta: 1 });
-				this.navigateTo({
-					url: "../index/index"
-				})
+				uni.reLaunch({
+					url: '/pages/index/index' // 首页的路径
+				});
 			},
 			// 选中图片
 			changeImage(e) {
@@ -384,51 +317,6 @@
 </script>
 
 <style>
-	/* Custom styles for options */
-	.option {
-		padding: 8px 12px;
-		background-color: #fff;
-		border-radius: 20px;
-		margin-right: 10px;
-		color: #4ba3c7;
-		font-size: 14px;
-		cursor: pointer;
-		transition: background-color 0.3s, color 0.3s;
-	}
-
-	.button-group {
-		display: flex;
-		align-items: center;
-	}
-
-	.button-group button {
-		margin-right: 10px;
-	}
-
-	.option:hover {
-		background-color: #4ba3c7;
-		color: #fff;
-	}
-
-	.info {
-		display: flex;
-		align-items: center;
-		margin-right: 20px;
-	}
-
-	.info-label {
-		color: #666;
-		font-size: 14px;
-	}
-
-	.info-value {
-		margin-left: 5px;
-		font-size: 14px;
-		white-space: pre-wrap;
-		/* Allow line breaks */
-		color: #333;
-	}
-
 	.footer-btn {
 		width: 86rpx;
 		height: 86rpx;
@@ -450,25 +338,5 @@
 		/* Spacing between pickers */
 		background-color: #f2f2f2;
 		/* Set a light background color */
-	}
-
-	.mybox {
-		display: flex;
-		justify-content: center;
-	}
-
-	.countdown {
-		width: 220px;
-		height: 220px;
-		border-radius: 100%;
-		background-color: rgba(70, 130, 180, 0.8);
-		color: white;
-		position: fixed;
-		top: 30%;
-		text-align: center;
-		line-height: 220px;
-		font-size: 120px;
-		font-weight: bold;
-
 	}
 </style>
