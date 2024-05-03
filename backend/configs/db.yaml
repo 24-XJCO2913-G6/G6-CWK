@@ -1,8 +1,8 @@
 # db.yaml
 
 database:
-  host:
-  port:
-  user: 
-  password:
-  dbname:
+  host: 120.46.81.37
+  port: 3306
+  user: root
+  password: SEg6123456
+  dbname: main
