@@ -16,5 +16,5 @@ var Db *xorm.Engine
 
 func BuildModel() {
 	BuildModelUser()
-
+	BuildModelTrack()
 }

@@ -6,7 +6,7 @@ import (
 )
 
 type User struct {
-	Uid         string `xorm:"pk"`                     //主键，UID
+	Uid         int64  `xorm:"pk"`                     //主键，UID
 	Name        string `xorm:"NOT NULL"`               // 用户名
 	Email       string `xorm:"UNIQUE NOT NULL"`        // 邮箱，唯一键
 	Passwd      string `xorm:"NOT NULL"`               // 密码
@@ -48,14 +48,14 @@ func IsRight(email string, passwd string) (bool, error) {
 	return true, nil
 }
 
-func FindUid(email string) (string, error) {
+func FindUid(email string) (int64, error) {
 	user := &User{Email: email}
 	has, err := Db.Get(user)
 	if err != nil {
-		return "-1", err
+		return -1, err
 	}
 	if !has {
-		return "-1", nil
+		return -1, nil
 	}
 	return user.Uid, nil
 }
