@@ -12,7 +12,7 @@ func main() {
 	// 中间件
 
 	// 数据库
-	//InitDB()
+	InitDB()
 
 	engine.Static("/web/static", "frontend(web)/static")
 	engine.LoadHTMLGlob("frontend(web)/*.html")
@@ -60,6 +60,10 @@ func main() {
 		appGroup.GET("/profile_detail")
 		appGroup.GET("/rank")
 
+		appGroup.GET("/vip/:uid", func(c *gin.Context) {
+			//TODO check whether the user is vip by uid.
+			c.JSON(200, gin.H{"isVip": true})
+		})
 	}
 
 	err := engine.Run()

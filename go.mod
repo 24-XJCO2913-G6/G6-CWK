@@ -6,7 +6,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-sql-driver/mysql v1.8.1
-	github.com/golang-jwt/jwt/v5 v5.2.1
+	github.com/go-xorm/xorm v0.7.9
 	github.com/gorilla/websocket v1.5.1
 	github.com/spf13/viper v1.18.2
 	golang.org/x/crypto v0.16.0
@@ -52,4 +52,6 @@ require (
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	xorm.io/builder v0.3.6 // indirect
+	xorm.io/core v0.7.2-0.20190928055935-90aeac8d08eb // indirect
 )

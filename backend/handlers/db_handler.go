@@ -1,24 +1,15 @@
 package handlers
 
 import (
-	"database/sql"
 	"fmt"
+	"github.com/go-xorm/xorm"
 	"github.com/spf13/viper"
 	"log"
+	. "main/backend/models"
 )
 
-type DatabaseConfig struct {
-	Host     string
-	Port     int
-	User     string
-	Password string
-	DBName   string
-}
-
-var db *sql.DB
-
 func InitDB() {
-	viper.SetConfigFile("./backend/handlers/configs/db.yaml")
+	viper.SetConfigFile("./backend/configs/db.yaml")
 	if err := viper.ReadInConfig(); err != nil {
 		panic(fmt.Errorf("fatal error config file: %s", err))
 	}
@@ -32,7 +23,7 @@ func InitDB() {
 		fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", dbConfig.User, dbConfig.Password,
 			dbConfig.Host, dbConfig.Port, dbConfig.DBName)
 	var err error
-	db, err = sql.Open("mysql", dataSourceName)
+	Db, err = xorm.NewEngine("mysql", dataSourceName)
 	if err != nil {
 		log.Fatal("Error")
 	}
