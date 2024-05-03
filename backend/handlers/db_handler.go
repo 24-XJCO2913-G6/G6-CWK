@@ -27,4 +27,6 @@ func InitDB() {
 	if err != nil {
 		log.Fatal("Error")
 	}
+
+	BuildModel()
 }

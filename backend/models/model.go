@@ -13,3 +13,8 @@ type DatabaseConfig struct {
 }
 
 var Db *xorm.Engine
+
+func BuildModel() {
+	BuildModelUser()
+
+}

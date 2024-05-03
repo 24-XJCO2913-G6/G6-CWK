@@ -6,14 +6,21 @@ import (
 )
 
 type User struct {
-	Uid         int64  `xorm:"pk autoincr"`            //主键，UID
+	Uid         string `xorm:"pk"`                     //主键，UID
 	Name        string `xorm:"NOT NULL"`               // 用户名
 	Email       string `xorm:"UNIQUE NOT NULL"`        // 邮箱，唯一键
 	Passwd      string `xorm:"NOT NULL"`               // 密码
 	IsAdmin     bool   `xorm:"NOT NULL DEFAULT false"` // 管理员标记
-	IsVIP       bool   `xorm:"NOT NULL DEFAULT false"` // VIP标记
-	CreatTime   string `xorm:"UNIQUE NOT NULL"`        // 创造日期
+	IsVip       bool   `xorm:"NOT NULL DEFAULT false"` // VIP标记
+	CreatedTime string `xorm:"UNIQUE NOT NULL"`        // 创造日期
 	ProfilePhot string `xorm:""`                       // 个人头像
+}
+
+func BuildModelUser() {
+	err := Db.Sync2(new(User))
+	if err != nil {
+		panic(err)
+	}
 }
 
 func IsExist(email string) (bool, error) {
@@ -41,14 +48,14 @@ func IsRight(email string, passwd string) (bool, error) {
 	return true, nil
 }
 
-func FindUid(email string) (int64, error) {
+func FindUid(email string) (string, error) {
 	user := &User{Email: email}
 	has, err := Db.Get(user)
 	if err != nil {
-		return 0, err
+		return "-1", err
 	}
 	if !has {
-		return 0, nil
+		return "-1", nil
 	}
 	return user.Uid, nil
 }
@@ -59,8 +66,8 @@ func AddUser(name string, email string, passwd string) int64 {
 		Name:        name,
 		Passwd:      passwd,
 		IsAdmin:     false,
-		IsVIP:       false,
-		CreatTime:   time.Now().Format("YYYY-MM-DD hh:mm:ss"),
+		IsVip:       false,
+		CreatedTime: time.Now().Format("2006-01-02 15:04:05"),
 		ProfilePhot: "",
 	}
 

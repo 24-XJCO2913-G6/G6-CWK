@@ -6,7 +6,6 @@ import (
 	. "main/backend/models"
 	"net/http"
 	"regexp"
-	"strconv"
 )
 
 func Register(c *gin.Context) {
@@ -73,7 +72,7 @@ func Login(c *gin.Context) {
 	Uid, _ := FindUid(email)
 
 	hashedPasswd, _ := bcrypt.GenerateFromPassword([]byte(passwd), bcrypt.DefaultCost)
-	aToken, rToken, _ := SetToken(strconv.FormatInt(Uid, 10), string(hashedPasswd))
+	aToken, rToken, _ := SetToken(Uid, string(hashedPasswd))
 
 	c.Set("Uid", Uid)
 	c.JSON(http.StatusOK, gin.H{"message": "Login Successfully", "aToken": aToken, "rToken": rToken})
