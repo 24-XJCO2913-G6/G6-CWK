@@ -2,7 +2,6 @@ package models
 
 import (
 	"golang.org/x/crypto/bcrypt"
-	. "main/backend/handlers"
 	"time"
 )
 
