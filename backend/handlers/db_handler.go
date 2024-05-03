@@ -18,7 +18,7 @@ type DatabaseConfig struct {
 var db *sql.DB
 
 func InitDB() {
-	viper.SetConfigFile("../config/db.yaml")
+	viper.SetConfigFile("./backend/handlers/configs/db.yaml")
 	if err := viper.ReadInConfig(); err != nil {
 		panic(fmt.Errorf("fatal error config file: %s", err))
 	}
