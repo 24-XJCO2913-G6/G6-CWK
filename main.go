@@ -51,6 +51,17 @@ func main() {
 		webGroup.GET("/setting", ToSetting)
 	}
 
+	appGroup := engine.Group("/app")
+	{
+		appGroup.GET("/")
+		appGroup.GET("/index")
+		appGroup.GET("post_detail")
+		appGroup.GET("/profile")
+		appGroup.GET("/profile_detail")
+		appGroup.GET("/rank")
+
+	}
+
 	err := engine.Run()
 	if err != nil {
 		return
