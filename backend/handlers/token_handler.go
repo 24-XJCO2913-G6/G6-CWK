@@ -98,8 +98,14 @@ func RefreshToken(aToken, rToken string) (newToken, newrToken string, err error)
 // JwtToken jwt中间件
 func JwtToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		aToken := c.DefaultQuery("atoken", "")
-		rToken := c.DefaultQuery("rtoken", "")
+
+		//origin := c.Request.Header
+
+		// 读取请求体中的 aToken 和 rToken
+		aToken := c.GetHeader("aToken")
+		rToken := c.GetHeader("rToken")
+
+		//c.JSON(200, gin.H{"header": origin, "rToken": rToken})
 
 		if aToken == "" || rToken == "" {
 			//c.JSON(200, gin.H{
