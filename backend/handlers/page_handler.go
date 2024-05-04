@@ -2,14 +2,20 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
+	. "main/backend/models"
 	"net/http"
 )
 
 func ToIndex(c *gin.Context) {
+	Claim, _ := CheckToken(c.GetString("aToken"))
+	Uid := Claim.Uid
+
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"message": c.GetString("message"),
 		"aToken":  c.GetString("aToken"),
 		"rToken":  c.GetString("rToken"),
+		"Uid":     Uid,
+		//"Count":   User_info,
 	})
 }
 
@@ -79,11 +85,20 @@ func ToHelpDetails(c *gin.Context, searchText string) {
 }
 
 func ToMessages(c *gin.Context) {
+	usernameCookie := http.Cookie{
+		Name:  "username",
+		Value: "zjy",
+		Path:  "/",
+	}
+	http.SetCookie(c.Writer, &usernameCookie)
 	c.HTML(http.StatusOK, "messaging.html", gin.H{
 		"message": c.GetString("message"),
 		"aToken":  c.GetString("aToken"),
 		"rToken":  c.GetString("rToken"),
 	})
+	//Claim, _ := CheckToken(c.GetString("aToken"))
+	//Uid := Claim.Uid
+
 }
 
 func ToNotifications(c *gin.Context) {
@@ -99,5 +114,23 @@ func ToSetting(c *gin.Context) {
 		"message": c.GetString("message"),
 		"aToken":  c.GetString("aToken"),
 		"rToken":  c.GetString("rToken"),
+	})
+}
+
+func ToWs(c *gin.Context) {
+	wshandler(c.Writer, c.Request)
+}
+
+func ToManage(c *gin.Context) {
+	users := []User{
+		{Uid: 1, Name: "Alice", Email: "email1"},
+		{Uid: 2, Name: "Bob", Email: "email2"},
+		{Uid: 3, Name: "Charlie", Email: "email3"},
+	}
+	c.HTML(http.StatusOK, "manage.html", gin.H{
+		"message": c.GetString("message"),
+		"aToken":  c.GetString("aToken"),
+		"rToken":  c.GetString("rToken"),
+		"users":   users,
 	})
 }

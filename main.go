@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 	. "main/backend/handlers"
+	. "main/backend/models"
 )
 
 func main() {
@@ -22,6 +25,31 @@ func main() {
 
 	engine.POST("/login", Login)
 	engine.POST("/register", Register)
+	go func() {
+		for {
+			msg := <-MsgChan // 改为 Message 类型
+
+			// 将消息存储到数据库中
+			//insertQuery := "INSERT INTO messages (sender, recipient, message) VALUES (?, ?, ?)"
+			//_, err := Db.Exec(insertQuery, msg.Sender, msg.Recipient, msg.Content)
+			//if err != nil {
+			//	fmt.Printf("Failed to insert message to database: %v", err)
+			//	continue
+			//}
+
+			// 根据接收人发送消息
+			Conns.RLock()
+			for Conn, username := range Conns.M {
+				if username == msg.Recipient {
+					if err := Conn.WriteMessage(websocket.TextMessage, []byte(msg.Content)); err != nil {
+						fmt.Printf("Failed to send message: %+v\n", err)
+					}
+					break
+				}
+			}
+			Conns.RUnlock()
+		}
+	}()
 
 	webGroup := engine.Group("/web")
 	{
@@ -49,6 +77,7 @@ func main() {
 		webGroup.GET("/messages", ToMessages)
 		webGroup.GET("/notifications", ToNotifications)
 		webGroup.GET("/setting", ToSetting)
+		webGroup.GET("/ws", ToWs)
 	}
 
 	appGroup := engine.Group("/app")

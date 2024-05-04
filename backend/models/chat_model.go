@@ -13,7 +13,7 @@ var (
 	}
 	MsgChan = make(chan Message) // 定义全局的消息通道
 
-	// 建立一个WebSocket连接的映射，并使用互斥锁进行保护
+	// 建立一个 WebSocket 连接的映射，并使用互斥锁进行保护
 	Conns = struct {
 		sync.RWMutex
 		M map[*websocket.Conn]string
@@ -21,6 +21,7 @@ var (
 )
 
 type Message struct {
-	Sender  string
-	Content string
+	Sender    string
+	Recipient string // 接收人
+	Content   string
 }

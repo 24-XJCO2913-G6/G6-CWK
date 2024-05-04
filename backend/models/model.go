@@ -17,4 +17,9 @@ var Db *xorm.Engine
 func BuildModel() {
 	BuildModelUser()
 	BuildModelTrack()
+	BuildModelBlog()
+	BuildModelLike()
+	BuildModelLog()
+	BuildModelMessages()
+	BuildModelVip()
 }
