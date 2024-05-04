@@ -22,46 +22,17 @@
 					style="width: 400rpx;" @click="openUserInfo">
 						Edit Profile
 					</button>
-					
-					<button v-else
-					type="default" size="mini" 
-					:class="userinfo.isFollow ? 'bg-light text-dark' : 'bg-main'"
-					style="width: 400rpx;" @click="doFollow">
-						{{userinfo.isFollow ? '' : 'Follow'}}
-					</button>
+			
 
 				</view>
 			</view>
 		</view>
 		
-		<!-- tab -->
-		<view class="flex align-center" style="height: 100rpx;">
-			<view class="flex-1 flex align-center justify-center"
-			v-for="(item,index) in tabBars" :key="index"
-			:class="index === tabIndex ? 'font-lg font-weight-bold text-main':'font-md'"
-			@click="changeTab(index)">
-			{{item.name}}</view>
-		</view>
 		
-		<template v-if="tabIndex === 0">
+
+		<template >
 			<view class="animated fast fadeIn">
-				<view class="p-3 border-bottom">
-					<view class="font-md">Information</view>
-					<view class="font">Age：{{userinfo.regtime}}</view>
-					<view class="font">id：{{user_id}}</view>
-				</view>
-				<view class="p-3 border-bottom">
-					<view class="font-md">Information</view>
-					<view class="font">Birthday：{{userinfo.birthday}}</view>
-					<view class="font">Job：{{userinfo.job}}</view>
-					<view class="font">Hometown：{{userinfo.path}}</view>
-					<view class="font">Emotion：{{userinfo.qg}}</view>
-				</view>
-			</view>
-		</template>
-		<template v-else>
-			<view class="animated fast fadeIn">
-				<common-list v-for="(item,index) in list" :key="index" :item="item" :index="index" @follow="follow" @doSupport="doSupport"></common-list>
+				<common-list v-for="(item,index) in posts" :key="index" :item="item" :index="index" @follow="follow" @doSupport="doSupport"></common-list>
 				<divider></divider>
 				<load-more :loadmore="loadmore"></load-more>
 			</view>
@@ -101,6 +72,62 @@
 		},
 		data() {
 			return {
+				posts:[
+					{
+					post_id:1,
+					name:'Alice',
+					visibility:1,
+					time:'2022-01-12',
+					like:19,
+					userpic:'',
+					collect:13,
+					content:'WOw',
+					comments:5,
+					center:[103.985895, 30.763873]	,
+					path:[
+									    [103.985895, 30.763873], // 起点坐标
+									    [103.986895, 30.764873], // 中间很多点坐标
+									    [103.987895, 30.765873]],
+				},
+				{	
+					post_id:2,
+					name:'Jack',
+					visibility:0,
+					time:'2022-01-12',
+					like:20,
+					userpic:'',
+					collect:3,
+					content:'Nice place to go',
+					comments:5,
+					center:[103.985805, 30.763883]	,
+					path:[
+									    [103.985895, 31.763873], // 起点坐标
+									    [103.986895, 31.764873], // 中间很多点坐标
+									    [103.987895, 30.765873]],
+				
+										
+					
+				
+				},	{
+					post_id:3,
+					name:'Mike',
+					visibility:1,
+					time:'2022-01-12',
+					like:5,
+					userpic:'',
+					collect:8,
+					content:'I like it',
+					comments:5,
+					center:[103.985895, 30.763873]	,
+					path:[
+									    [103.985895, 30.763873], // 起点坐标
+									    [103.986895, 30.764873], // 中间很多点坐标
+									    [103.987895, 30.765873]],
+				
+										
+					
+				
+				}],
 				user_id:0,
 				userinfo:{
 					userpic:"/static/default.jpg",
@@ -126,15 +153,7 @@
 				}],
 				tabIndex:0,
 				tabBars:[{
-					name:"Home",
-				},{
 					name:"Post",
-					list:[],
-					// 1.上拉加载更多  2.加载中... 3.没有更多了
-					loadmore:"Load more",
-					page:1
-				},{
-					name:"News",
 					list:[],
 					// 1.上拉加载更多  2.加载中... 3.没有更多了
 					loadmore:"Load more",
@@ -149,12 +168,7 @@
 			...mapState({
 				user:state=>state.user
 			}),
-			list() {
-				return this.tabBars[this.tabIndex].list 
-			},
-			loadmore(){
-				return this.tabBars[this.tabIndex].loadmore
-			}
+		
 		},
 		filters: {
 			formatNum(value) {
@@ -184,18 +198,7 @@
 						break;
 				}
 			})
-			// 监听评论数变化
-			uni.$on('updateCommentsCount',({id,count})=>{
-				this.tabBars.forEach(tab=>{
-					if(tab.list){
-						tab.list.forEach((item)=>{
-							if(item.id === id){
-								item.comment_count = count
-							}
-						})
-					}
-				})
-			})
+		
 		},
 		onUnload() {
 			uni.$off('updateFollowOrSupport',(e)=>{})
@@ -244,68 +247,7 @@
 					})
 				})
 			},
-			changeTab(index){
-				this.tabIndex = index
-				this.getList()
-			},
-			// 关注
-			follow(user_id){
-				// 找到当前作者的所有列表
-				this.tabBars.forEach(tab=>{
-					if(tab.list){
-						tab.list.forEach((item)=>{
-							if(item.user_id === user_id){
-								item.isFollow = true
-							}
-						})
-					}
-				})
-				uni.showToast({ title: '关注成功' })
-			},
-			// 顶踩操作
-			doSupport(e){
-				// 拿到当前的选项卡对应的list
-				this.tabBars[this.tabIndex].list.forEach(item=>{
-					if(item.id === e.id){
-						// 之前没有操作过
-						if (item.support.type === '') {
-							item.support[e.type+'_count']++
-						} else if (item.support.type ==='support' && e.type === 'unsupport') {
-							// 顶 - 1
-							item.support.support_count--;
-							// 踩 + 1
-							item.support.unsupport_count++;
-						} else if(item.support.type ==='unsupport' && e.type === 'support'){ 					// 之前踩了
-							// 顶 + 1
-							item.support.support_count++;
-							// 踩 - 1
-							item.support.unsupport_count--;
-						}
-						item.support.type = e.type
-					}
-				})
-				let msg = e.type === 'support' ? 'Like' : 'Dislike'
-				uni.showToast({ title: msg + 'Success' });
-			},
-			// 获取文章列表
-			getList(){
-				let index = this.tabIndex
-				if(index === 0) return;
-				let page = this.tabBars[index].page
-				let isrefresh = page === 1
-				this.$H.get('/user/'+this.user_id+'/post/'+page)
-				.then(res=>{
-					let list = res.list.map(v=>{
-						return this.$U.formatCommonList(v)
-					})
-					this.tabBars[index].list = isrefresh ? [...list] : [...this.tabBars[index].list,...list]
-					this.tabBars[index].loadmore = list.length < 10 ? 'No more' : 'Load more'
-				}).catch(err=>{
-					if(!isrefresh){
-						this.tabBars[index].page--
-					}
-				})
-			},
+	
 			// 关注/取消关注
 			doFollow(){
 				this.checkAuth(()=>{

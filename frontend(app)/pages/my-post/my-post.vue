@@ -1,16 +1,6 @@
 <template>
 	<view>
-		
-		<!-- 顶部选项卡 -->
-		<scroll-view scroll-x :scroll-into-view="scrollInto" scroll-with-animation
-		class="scroll-row border-bottom border-light-secondary" 
-		style="height: 100rpx;">
-			<view v-for="(item,index) in tabBars" :key="index" 
-			class="scroll-row-item px-3 py-2 font-md" :id="'tab'+index"
-			:class="tabIndex === index?'text-main font-lg font-weight-bold':''"
-			@click="changeTab(index)">{{item.classname}}</view>
-		</scroll-view>
-		
+
 		<swiper :duration="150" :current="tabIndex" @change="onChangeTab"
 		:style="'height:'+scrollH+'px;'">
 			<swiper-item v-for="(item,index) in newsList" :key="index">
@@ -21,7 +11,9 @@
 						<!-- 列表 -->
 						<block v-for="(item2,index2) in item.list" :key="index2">
 							<!-- 列表样式 -->
-							<topic-list :choose="choose" :item="item2" :index="index2"></topic-list>
+							<common-list :item="item2" :index="index2" @follow="follow" @doSupport="doSupport"></common-list>
+							<!-- 全局分割线 -->
+							<divider></divider>
 						</block>
 						<!-- 上拉加载 -->
 						<load-more :loadmore="item.loadmore"></load-more>
@@ -44,12 +36,14 @@
 </template>
 
 <script>
-	import topicList from '@/components/news/topic-list.vue';
+	import commonList from '@/components/common/common-list.vue';
 	import loadMore from '@/components/common/load-more.vue';
+	import uniNavBar from '@/components/uni-ui/uni-nav-bar/uni-nav-bar.vue';
 	export default {
 		components: {
-			topicList,
-			loadMore
+			commonList,
+			loadMore,
+			uniNavBar
 		},
 		data() {
 			return {
@@ -59,63 +53,107 @@
 				scrollInto:"",
 				tabIndex:0,
 				tabBars: [],
-				newsList:[],
-				choose:false
+				newsList:[]
 			}
 		},
 		// 监听点击导航栏搜索框
 		onNavigationBarSearchInputClicked() {
 			uni.navigateTo({
-				url: '../search/search',
+				url: '../search/search?type=post',
 			})
 		},
 		// 监听导航按钮点击事件
 		onNavigationBarButtonTap() {
-			uni.navigateTo({
+			this.navigateTo({
 				url: '../add-input/add-input',
 			})
 		},
-		onLoad(e) {
+		onLoad() {
 			uni.getSystemInfo({
 				success:res=>{
 					this.scrollH = res.windowHeight - uni.upx2px(101)
+					// #ifdef MP
+					this.scrollH -= 44
+					// #endif
 				}
+			})
+			// 监听刷新首页
+			uni.$on('updateIndex',()=>{
+				this.getData()
 			})
 			// 根据选项生成列表
 			this.getData()
-			
-			if(e.choose){
-				uni.setNavigationBarTitle({
-					title:'选择话题'
+			// 监听关注和顶踩操作
+			uni.$on('updateFollowOrSupport',(e)=>{
+				// console.log('接收到了');
+				switch (e.type){
+					case 'follow': // 关注
+					this.follow(e.data.user_id)
+						break;
+					case 'support': // 顶踩
+					this.doSupport(e.data)
+						break;
+				}
+			})
+			// 监听评论数变化
+			uni.$on('updateCommentsCount',({id,count})=>{
+				this.newsList.forEach(tab=>{
+					tab.list.forEach((item)=>{
+						if(item.id === id){
+							item.comment_count = count
+						}
+					})
 				})
-				this.choose = true
-			}
+			})
+		},
+		onUnload() {
+			uni.$off('updateFollowOrSupport',(e)=>{})
+			uni.$off('updateIndex',(e)=>{})
+			uni.$off('updateCommentsCount',(e)=>{})
 		},
 		methods: {
+			// #ifndef APP-PLUS
+			clickLeft(){
+				// console.log('左边事件')
+			},
+			clickRight(){
+				// 打开发布页面
+				this.navigateTo({
+					url: '../add-input/add-input',
+				})
+			},
+			openSearch(){
+				uni.navigateTo({
+					url: '../search/search',
+				});
+			},
+			// #endif
 			// 获取数据
 			getData(){
 				// 获取分类
-				this.$H.get('/topicclass').then(res=>{
-					// 渲染分类
+				this.$H.get('/postclass').then(res=>{
 					this.tabBars = res.list
+					// 根据分类生成列表
 					var arr = []
 					for (let i = 0; i < this.tabBars.length; i++) {
 						// 生成列表模板
-						let obj = {
+						arr.push({
 							// 1.上拉加载更多  2.加载中... 3.没有更多了
 							loadmore:"上拉加载更多",
 							list:[],
 							page:1,
 							firstLoad:false
-						}
-						arr.push(obj)
+						})
 					}
 					this.newsList = arr
+					console.log(arr[0])
+					console.log(arr[0].list)
 					// 获取第一个分类的数据
 					if (this.tabBars.length) {
 						this.getList()
 					}
 				})
+
 			},
 			// 获取指定分类下的列表
 			getList(){
@@ -123,20 +161,16 @@
 				let id = this.tabBars[index].id
 				let page = this.newsList[index].page
 				let isrefresh = page === 1
-				this.$H.get('/topicclass/'+id+'/topic/'+page)
+				this.$H.get('/postclass/'+id+'/post/'+page,{},{
+					token:true,
+					noCheck:true
+				})
 				.then(res=>{
 					let list = res.list.map(v=>{
-						return {
-							id:v.id,
-							cover:v.titlepic,
-							title:v.title,
-							desc:v.desc,
-							today_count:v.todaypost_count,
-							news_count:v.post_count
-						}
+						return this.$U.formatCommonList(v)
 					})
-			
-					this.newsList[index].list = isrefresh ? [...list] : [...this.newsList[index].list,...list];
+
+					this.newsList[index].list = isrefresh ? list : [...this.newsList[index].list,...list];
 					
 					this.newsList[index].loadmore  = list.length < 10 ? '没有更多了' : '上拉加载更多';
 					
@@ -165,6 +199,43 @@
 				if (!this.newsList[this.tabIndex].firstLoad) {
 					this.getList()
 				}
+			},
+			// 关注
+			follow(user_id){
+				// 找到当前作者的所有列表
+				this.newsList.forEach(tab=>{
+					tab.list.forEach((item)=>{
+						if(item.user_id === user_id){
+							item.isFollow = true
+						}
+					})
+				})
+				uni.showToast({ title: '关注成功' })
+			},
+			// 顶踩操作
+			doSupport(e){
+				// 拿到当前的选项卡对应的list
+				this.newsList[this.tabIndex].list.forEach(item=>{
+					if(item.id === e.id){
+						// 之前没有操作过
+						if (item.support.type === '') {
+							item.support[e.type+'_count']++
+						} else if (item.support.type ==='support' && e.type === 'unsupport') {
+							// 顶 - 1
+							item.support.support_count--;
+							// 踩 + 1
+							item.support.unsupport_count++;
+						} else if(item.support.type ==='unsupport' && e.type === 'support'){ 					// 之前踩了
+							// 顶 + 1
+							item.support.support_count++;
+							// 踩 - 1
+							item.support.unsupport_count--;
+						}
+						item.support.type = e.type
+					}
+				})
+				let msg = e.type === 'support' ? '顶' : '踩'
+				uni.showToast({ title: msg + '成功' });
 			},
 			// 上拉加载更多
 			loadmore(index){

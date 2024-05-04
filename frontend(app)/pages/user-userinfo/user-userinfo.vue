@@ -75,13 +75,15 @@
 			return {
 				themeColor: '#007AFF',
 				cityPickerValueDefault: [0, 0, 1],
-				pickerText: '',
-				
+				avatar:'',
 				username:"昵称",
 				sex:0,
-				emotion:0,
 				job:"保密",
-				birthday:"2019-03-18"
+				birthday:"2019-03-18",
+				hometown:'',
+				relationship:'',
+			
+				
 			}
 		},
 		// 监听返回
@@ -98,15 +100,33 @@
 			}
 		},
 		onLoad() {
-			let userinfo = this.user.userinfo
-			if(userinfo){
-				this.pickerText = userinfo.path
-				this.username = this.user.username
-				this.sex =  userinfo.sex
-				this.emotion = userinfo.qg
-				this.job  = userinfo.job
-				this.birthday  = userinfo.birthday
-			}
+			console.log('aa')
+			// let userinfo = this.user.userinfo
+			// if(userinfo){
+			// 	this.pickerText = userinfo.path
+			// 	this.username = this.user.username
+			// 	this.sex =  userinfo.sex
+			// 	this.emotion = userinfo.qg
+			// 	this.job  = userinfo.job
+			// 	this.birthday  = userinfo.birthday
+			// }
+			uni.request({
+				  url: 'http://localhost:8080/app/profile_detail',
+				  method: 'GET',
+				  success: (res) => {
+					 this.avatar =res.avatar
+					 this.username = res.nickname
+					 this.sex =  res.sex
+					 this.job  = res.job
+					 this.birthday  =res.birthday
+					 this.hometown=res.hometown
+					 this.relationship=res.relationship
+				  },
+				  fail: (err) => {
+					  console.error('Error fetching person info:', err);
+					
+				  }
+			})
 		},
 		computed: {
 			...mapState({

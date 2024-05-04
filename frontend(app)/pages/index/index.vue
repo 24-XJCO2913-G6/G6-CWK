@@ -1,5 +1,12 @@
 <template>
 	<view>
+		  <view class="modal" v-if="showModal" style='padding:10px; '>
+		     <view class="modal-content">
+		       <text style='font-size: 30px;font-weight: bold;text-shadow: 2px 2px black;'>Welcome to Been</text>
+			   <p style='padding:10px;font-size:20px; background-color: rgba(255,255,255,0.5);color:black'>We are thrilled to have you join our vibrant community of travelers and sports enthusiasts. Explore, connect, and share your adventures with like-minded individuals around the world. Let's embark on unforgettable journeys together. Enjoy your stay! 🌍🎉</p>
+		       <button @click="showModal=false">Close</button>
+		     </view>
+		   </view>
 		<!-- #ifdef MP -->
 		<uni-nav-bar :shadow="false" :border="false" 
 		@click-left="clickLeft" @click-right="clickRight">
@@ -12,9 +19,9 @@
 				<view class="iconfont icon-sousuo mr-1"></view>搜索帖子
 			</view>
 			<!-- 右边图标 -->
-			<!-- <block slot="right">
+			<block slot="right">
 				<view class="icon iconfont icon-bianji1 text-dark" style="font-size: 22px;"></view>
-			</block> -->
+			</block>
 		</uni-nav-bar>
 		<!-- #endif -->
 		<!-- 顶部选项卡 -->
@@ -26,37 +33,13 @@
 			:class="tabIndex === index?'text-main font-lg font-weight-bold':''"
 			@click="changeTab(index)">{{item.classname}}</view>
 		</scroll-view> -->
-		
-		<swiper :duration="150" :current="tabIndex" @change="onChangeTab"
-		:style="'height:'+scrollH+'px;'">
-			<swiper-item v-for="(item,index) in newsList" :key="index">
-				<scroll-view scroll-y="true" :style="'height:'+scrollH+'px;'"
-				@scrolltolower="loadmore(index)">
-				
-					<template v-if="item.list.length > 0">
-						<!-- 列表 -->
-						<block v-for="(item2,index2) in item.list" :key="index2">
-							<!-- 列表样式 -->
-							<common-list :item="item2" :index="index2" @follow="follow" @doSupport="doSupport"></common-list>
-							<!-- 全局分割线 -->
-							<divider></divider>
-						</block>
-						<!-- 上拉加载 -->
-						<load-more :loadmore="item.loadmore"></load-more>
-					</template>
-					<!-- 加载中 -->
-					<template v-else-if="!item.firstLoad">
-						<view class="text-light-muted flex align-center justify-center font-md" style="height: 200rpx;">加载中...</view>
-					</template>
-					<!-- 无数据 -->
-					<template v-else>
-						<no-thing></no-thing>
-					</template>
-				</scroll-view>
-			</swiper-item>
-		</swiper>
-		
-		
+		<view>
+			
+	<common-list :item="myitem" v-for="myitem in posts" :key="myitem.post_id"></common-list>
+		111
+
+		</view>
+		 
 		
 	</view>
 </template>
@@ -65,14 +48,77 @@
 	import commonList from '@/components/common/common-list.vue';
 	import loadMore from '@/components/common/load-more.vue';
 	import uniNavBar from '@/components/uni-ui/uni-nav-bar/uni-nav-bar.vue';
+	import uniPopup  from '@/components/uni-ui/uni-popup/uni-popup.vue';
 	export default {
 		components: {
 			commonList,
 			loadMore,
-			uniNavBar
+			uniNavBar,
+			uniPopup,
 		},
 		data() {
 			return {
+				showModal:true,
+				posts:[
+					{
+					post_id:1,
+					name:'Alice',
+					visibility:1,
+					time:'2022-01-12',
+					like:19,
+					userpic:'',
+					title: 'WOw',
+					collect:13,
+					content:'44444444444444444',
+					comments:5,
+					center:[103.985895, 30.765873]	,
+					path:[
+									    [103.985895, 30.763873], // 起点坐标
+									    [103.986895, 30.764873], // 中间很多点坐标
+									    [103.987895, 30.766573]],
+				},
+				{	
+					post_id:2,
+					name:'Jack',
+					visibility:0,
+					time:'2022-01-12',
+					like:20,
+					title: 'Nice place to go',
+					userpic:'',
+					collect:3,
+					content:'33333333333333333',
+					comments:5,
+					path:[
+					  [103.983895, 30.763873], // 起点坐标
+					  [103.987895, 30.764874], // 中间点坐标
+					  [103.988894, 30.763873]  // 终点坐标
+					 ],
+					center:[103.987895, 30.764874], 
+				
+										
+					
+				
+				},	{
+					post_id:3,
+					name:'Mike',
+					visibility:1,
+					time:'2022-01-12',
+					like:5,
+					title: 'I like it',
+					userpic:'',
+					collect:8,
+					content:'121212121212121',
+					comments:5,
+					path:[
+					 [103.982895, 30.763873], // 起点坐标
+					 [103.986895, 30.765574], // 中间点坐标
+					 [103.987694, 30.766872]  // 终点坐标
+					],
+					 center: [103.983895, 30.765574], 
+										
+					
+				
+				}],
 				// 列表高度
 				scrollH:600,
 				// 顶部选项卡
@@ -94,6 +140,7 @@
 				url: '../add-input/add-input',
 			})
 		},
+		
 		onLoad() {
 			uni.getSystemInfo({
 				success:res=>{
@@ -138,6 +185,9 @@
 			uni.$off('updateCommentsCount',(e)=>{})
 		},
 		methods: {
+			 closeModal() {
+			      this.showModal = false;
+			    },
 			// #ifndef APP-PLUS
 			clickLeft(){
 				// console.log('左边事件')
@@ -172,6 +222,8 @@
 						})
 					}
 					this.newsList = arr
+					console.log(arr[0])
+					console.log(arr[0].list)
 					// 获取第一个分类的数据
 					if (this.tabBars.length) {
 						this.getList()
@@ -278,5 +330,50 @@
 </script>
 
 <style>
+
+	.modal {
+	    z-index: 100;
+	    position: fixed;
+	    top: 50%;
+	    left: 50%;
+	    transform: translate(-50%, -50%);
+	    width: 80%;
+	    height: 50%;
+	    background-color: rgba(255, 255, 255, 0.9);
+	    border: blue solid 1px;
+	    border-radius: 10px;
+	    display: flex;
+	    justify-content: center;
+	    color: white;
+	    align-items: center;
+	   
+	}
 	
+	.modal::before {
+	    content: "";
+	    position: absolute;
+	    top: 0;
+	    left: 0;
+	    width: 100%;
+	    height: 100%;
+	    background-image: url("../../static/images/landing.jpeg");
+	    background-size: 100% 100%;
+	    filter: blur(1px); /* 调整模糊程度 */
+	    z-index: -1; /* 将虚化的背景置于底层 */
+	}
+	
+	
+	.modal-content {
+	  text-align: center;
+	}
+	
+	.text-welcome {
+	  font-size: 24px;
+	}
+	
+	button {
+	  width: 100px;
+	  padding: 5px 10px;
+	  margin-top: 10px;
+	}
 </style>
