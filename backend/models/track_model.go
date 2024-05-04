@@ -1,14 +1,14 @@
 package models
 
-import "strings"
-
 type Track struct {
-	Tid         string  `xorm:"pk"` // 轨迹的唯一标识符，被标记为主键
-	Uid         string  // 用户的唯一标识符
-	StrTime     string  // 轨迹的起始时间
-	EndTime     string  // 轨迹的结束时间
-	Distance    float64 // 轨迹的距离
-	Coordinates string  // 轨迹的坐标信息
+	Tid         int64 `xorm:"pk"` // 轨迹的唯一标识符，被标记为主键
+	Uid         int64 // 用户的唯一标识符
+	StrDate     string
+	StrTime     string // 轨迹的起始时间
+	EndDate     string
+	EndTime     string // 轨迹的结束时间
+	Distance    string // 轨迹的距离
+	Coordinates string // 轨迹的坐标信息
 	// 如[x,y],[x,y]
 }
 
@@ -19,10 +19,12 @@ func BuildModelTrack() {
 	}
 }
 
-func AddTrack(Uid string, StrTime string, EndTime string, Distance float64, Coordinates string) int64 {
+func AddTrack(Uid int64, StrDate string, StrTime string, EndDate string, EndTime string, Distance string, Coordinates string) int64 {
 	track := &Track{
 		Uid:         Uid,
+		StrDate:     StrDate,
 		StrTime:     StrTime,
+		EndDate:     EndDate,
 		EndTime:     EndTime,
 		Distance:    Distance,
 		Coordinates: Coordinates,
@@ -33,16 +35,4 @@ func AddTrack(Uid string, StrTime string, EndTime string, Distance float64, Coor
 		return -1
 	}
 	return Tid
-}
-
-func CombineTime(date string, time string) string {
-	dateTime := date + " " + time
-
-	return dateTime
-}
-
-func DivideTime(dateTime string) (string, string) {
-	times := strings.Split(dateTime, " ")
-
-	return times[0], times[1]
 }
