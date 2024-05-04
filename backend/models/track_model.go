@@ -1,5 +1,7 @@
 package models
 
+import "strings"
+
 type Track struct {
 	Tid         string  `xorm:"pk"` // 轨迹的唯一标识符，被标记为主键
 	Uid         string  // 用户的唯一标识符
@@ -31,4 +33,16 @@ func AddTrack(Uid string, StrTime string, EndTime string, Distance float64, Coor
 		return -1
 	}
 	return Tid
+}
+
+func CombineTime(date string, time string) string {
+	dateTime := date + " " + time
+
+	return dateTime
+}
+
+func DivideTime(dateTime string) (string, string) {
+	times := strings.Split(dateTime, " ")
+
+	return times[0], times[1]
 }
