@@ -11,11 +11,15 @@ func ToIndex(c *gin.Context) {
 	Uid := Claim.Uid
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"message": c.GetString("message"),
-		"aToken":  c.GetString("aToken"),
-		"rToken":  c.GetString("rToken"),
-		"Uid":     Uid,
-		//"Count":   User_info,
+		"message":     c.GetString("message"),
+		"aToken":      c.GetString("aToken"),
+		"rToken":      c.GetString("rToken"),
+		"Uid":         Uid,
+		"BlogCount":   BlogCount(c),
+		"FollowCount": FollowCount(c),
+		"FansCount":   FollowByCount(c),
+		"Signature":   SignatureCheck(c),
+		"tracks":      RankCheck(c),
 	})
 }
 

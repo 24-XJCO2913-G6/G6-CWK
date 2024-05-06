@@ -22,4 +22,5 @@ func BuildModel() {
 	BuildModelLog()
 	BuildModelMessages()
 	BuildModelVip()
+	BuildModelFollow()
 }

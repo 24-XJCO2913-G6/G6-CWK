@@ -11,6 +11,11 @@ type Track struct {
 	Coordinates string // 轨迹的坐标信息
 	// 如[x,y],[x,y]
 }
+type Records struct {
+	Uid      int64
+	Distance string
+	Name     string
+}
 
 func BuildModelTrack() {
 	err := Db.Sync2(new(Track))

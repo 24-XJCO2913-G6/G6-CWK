@@ -14,6 +14,7 @@ type User struct {
 	IsVip       bool   `xorm:"NOT NULL DEFAULT false"` // VIP标记
 	CreatedTime string `xorm:"UNIQUE NOT NULL"`        // 创造日期
 	ProfilePhot string `xorm:""`                       // 个人头像
+	Signature   string `xorm:""`                       //签名
 }
 
 func BuildModelUser() {
@@ -70,7 +71,6 @@ func AddUser(name string, email string, passwd string) int64 {
 		CreatedTime: time.Now().Format("2006-01-02 15:04:05"),
 		ProfilePhot: "",
 	}
-
 	Uid, err := Db.Insert(user)
 	if err != nil {
 		return Uid

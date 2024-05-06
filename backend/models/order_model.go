@@ -1,0 +1,38 @@
+package models
+
+type Order struct {
+	Oid     int64 `xorm:"pk"`
+	Uid     int64
+	Content string
+	Time    string
+	Price   string
+	State   string
+}
+
+func BuildModelOrder() {
+	err := Db.Sync2(new(Order))
+	if err != nil {
+		panic(err)
+	}
+}
+
+func AddOrder(Oid int64,
+	Uid int64,
+	Content string,
+	Time string,
+	Price string,
+	State string) int64 {
+	order := &Order{
+		Uid:     Uid,
+		Content: Content,
+		Time:    Time,
+		Price:   Price,
+		State:   State,
+	}
+
+	Oid, err := Db.Insert(order)
+	if err != nil {
+		return -1
+	}
+	return Oid
+}
