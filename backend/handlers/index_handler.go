@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	. "main/backend/models"
+	"sort"
 	"strconv"
 )
 
@@ -85,7 +86,7 @@ func SignatureCheck(c *gin.Context) (string, error) {
 	return Signature, nil
 }
 
-func RankCheck(c *gin.Context) ([]Records, error) {
+func RankCheck() ([]Records, error) {
 	var recordlist []Records
 	var tracks []Track
 	var totaldis float64
@@ -108,6 +109,9 @@ func RankCheck(c *gin.Context) ([]Records, error) {
 		record := Records{Uid: user.Uid, Distance: DisSum, Name: user.Name}
 		recordlist = append(recordlist, record)
 	}
+	sort.Slice(recordlist, func(i, j int) bool {
+		return recordlist[i].Distance > recordlist[j].Distance
+	})
 	// 输出结果
 
 	return recordlist, nil

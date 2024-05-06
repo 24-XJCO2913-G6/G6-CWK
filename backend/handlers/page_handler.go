@@ -19,7 +19,7 @@ func ToIndex(c *gin.Context) {
 		"FollowCount": FollowCount(c),
 		"FansCount":   FollowByCount(c),
 		"Signature":   SignatureCheck(c),
-		"tracks":      RankCheck(c),
+		"records":     RankCheck(),
 	})
 }
 
