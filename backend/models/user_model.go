@@ -14,7 +14,7 @@ type User struct {
 	IsVip       bool   `xorm:"NOT NULL DEFAULT false"` // VIP标记
 	CreatedTime string `xorm:"UNIQUE NOT NULL"`        // 创造日期
 	ProfilePhot string `xorm:""`                       // 个人头像
-	Signature   string `xorm:""`                       //签名
+	Signature   string `xorm:""`                       // 签名
 }
 
 func BuildModelUser() {

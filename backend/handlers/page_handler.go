@@ -41,10 +41,14 @@ func ToRegister(c *gin.Context) {
 
 func ToProfile(c *gin.Context, uid string) {
 	c.HTML(http.StatusOK, "my-profile.html", gin.H{
-		"uid":     uid,
-		"message": c.GetString("message"),
-		"aToken":  c.GetString("aToken"),
-		"rToken":  c.GetString("rToken"),
+		"uid":       uid,
+		"message":   c.GetString("message"),
+		"aToken":    c.GetString("aToken"),
+		"rToken":    c.GetString("rToken"),
+		"name":      GetName(c),
+		"email":     GetEmail(c),
+		"photo":     GetPhoto(c),
+		"signature": GetSignature(c),
 	})
 }
 
