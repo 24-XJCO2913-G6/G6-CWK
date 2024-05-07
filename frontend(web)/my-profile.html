@@ -354,17 +354,17 @@ Header END -->
                             </div>
                             <div class="ms-sm-4 mt-sm-3">
                                 <!-- Info -->
-                                <h1 class="mb-0 h5">Sam Lanson <i class="bi bi-patch-check-fill text-success small"></i>
+                                <h1 class="mb-0 h5">{{ .username}} <i class="bi bi-patch-check-fill text-success small"></i>
                                 </h1>
-                                <p>Personal motto(Nothing)</p>
+                                <p>{{ .motto}}</p>
                             </div>
                             <!-- Button -->
 
                         </div>
                         <!-- List profile -->
                         <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
-                            <li class="list-inline-item"><i class="bi bi-geo-alt me-1"></i> New Hampshire</li>
-                            <li class="list-inline-item"><i class="bi bi-calendar2-plus me-1"></i> Joined on Nov 26,
+                            <li class="list-inline-item"><i class="bi bi-geo-alt me-1"></i> {{ .address}}New Hampshire</li>
+                            <li class="list-inline-item"><i class="bi bi-calendar2-plus me-1"></i> {{ .joinDate}}Joined on Nov 26,
                                 2019
                             </li>
                         </ul>
@@ -400,7 +400,7 @@ Header END -->
                                 <div class="d-flex align-items-center rounded border px-3 py-2">
                                     <!-- Date -->
                                     <p class="mb-0">
-                                        <i class="bi bi-calendar-date fa-fw me-2"></i> Born: <strong> October 20,
+                                        <i class="bi bi-calendar-date fa-fw me-2"></i> Born: <strong> {{ .birthday }}October 20,
                                         1990 </strong>
                                     </p>
                                     <div class="dropdown ms-auto">
@@ -425,7 +425,7 @@ Header END -->
                                 <div class="d-flex align-items-center rounded border px-3 py-2">
                                     <!-- Date -->
                                     <p class="mb-0">
-                                        <i class="bi bi-heart fa-fw me-2"></i> Status: <strong> Single </strong>
+                                        <i class="bi bi-heart fa-fw me-2"></i> Status: <strong>{{ .status }} Single </strong>
                                     </p>
                                     <div class="dropdown ms-auto">
                                         <!-- Card share action menu -->
@@ -473,7 +473,7 @@ Header END -->
                                 <div class="d-flex align-items-center rounded border px-3 py-2">
                                     <!-- Date -->
                                     <p class="mb-0">
-                                        <i class="bi bi-geo-alt fa-fw me-2"></i> Lives in: <strong> New
+                                        <i class="bi bi-geo-alt fa-fw me-2"></i> Lives in: <strong>{{ .address }} New
                                         Hampshire </strong>
                                     </p>
                                     <div class="dropdown ms-auto">
@@ -498,7 +498,7 @@ Header END -->
                                 <div class="d-flex align-items-center rounded border px-3 py-2">
                                     <!-- Date -->
                                     <p class="mb-0">
-                                        <i class="bi bi-geo-alt fa-fw me-2"></i> Joined on: <strong> Nov 26,
+                                        <i class="bi bi-geo-alt fa-fw me-2"></i> Joined on: <strong>{{ .joinDate }} Nov 26,
                                         2019 </strong>
                                     </p>
                                     <div class="dropdown ms-auto">
@@ -524,7 +524,7 @@ Header END -->
                                     <!-- Date -->
                                     <p class="mb-0">
                                         <i class="bi bi-envelope fa-fw me-2"></i> Email: <strong>
-                                        webestica@gmail.com </strong>
+                                        {{ .email }}webestica@gmail.com </strong>
                                     </p>
                                     <div class="dropdown ms-auto">
                                         <!-- Card share action menu -->
@@ -573,7 +573,7 @@ Header END -->
                                 <!-- Info -->
                                 <div>
                                     <div class="nav nav-divider">
-                                        <h6 class="nav-item card-title mb-0"><a href="#!"> Lori Ferguson </a></h6>
+                                        <h6 class="nav-item card-title mb-0"><a href="#!"> {{ .username}}Lori Ferguson </a></h6>
                                         <span class="nav-item small"> 2hr</span>
                                     </div>
                                     <p class="mb-0 small">Web Developer at Webestica</p>
@@ -608,7 +608,7 @@ Header END -->
                     <!-- Card header END -->
                     <!-- Card body START -->
                     <div class="card-body">
-                        <p>I'm thrilled to share that I've completed a graduate certificate course in project management
+                        <p>{{ .postContent}}I'm thrilled to share that I've completed a graduate certificate course in project management
                             with the president's honor roll.</p>
                         <!-- Card img -->
                         <img class="card-img" src="static/images/post/3by2/01.jpg" alt="Post">
