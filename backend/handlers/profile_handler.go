@@ -111,3 +111,19 @@ func GetLike(c *gin.Context) ([]Liked, error) {
 	}
 	return likedBlogs, nil
 }
+
+func GetJourney(c *gin.Context) (string, error) {
+
+	var users []User
+	aToken := c.GetString("aToken")
+	Claims, _ := CheckToken(aToken)
+	Uid, err := strconv.ParseInt(Claims.Uid, 10, 64)
+	if (Uid == -1) || (err != nil) {
+		err := Db.Where("Uid = ?", Uid).Find(&users)
+		if err != nil {
+			return "null", err
+		}
+	}
+	Signature := users[0].Signature
+	return Signature, nil
+}

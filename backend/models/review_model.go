@@ -7,6 +7,12 @@ type Review struct {
 	Time    string
 	Content string
 }
+type ReviewInBlog struct {
+	Time           string
+	Content        string
+	Reviewer       string
+	Reviewer_photo string
+}
 
 func BuildModelReview() {
 	err := Db.Sync2(new(Review))

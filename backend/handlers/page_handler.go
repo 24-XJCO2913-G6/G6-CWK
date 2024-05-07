@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	. "main/backend/models"
 	"net/http"
+	"strconv"
 )
 
 func ToIndex(c *gin.Context) {
@@ -40,6 +41,7 @@ func ToRegister(c *gin.Context) {
 }
 
 func ToProfile(c *gin.Context, uid string) {
+	Uid, _ := strconv.ParseInt(uid, 10, 64)
 	c.HTML(http.StatusOK, "my-profile.html", gin.H{
 		"uid":       uid,
 		"message":   c.GetString("message"),
@@ -50,6 +52,7 @@ func ToProfile(c *gin.Context, uid string) {
 		"photo":     GetPhoto(c),
 		"signature": GetSignature(c),
 		"likeList":  GetLike(c),
+		"journey":   GetTracks(Uid),
 	})
 }
 
@@ -141,5 +144,19 @@ func ToManage(c *gin.Context) {
 		"aToken":  c.GetString("aToken"),
 		"rToken":  c.GetString("rToken"),
 		"users":   users,
+	})
+}
+func ToPostDetails(Id string, c *gin.Context) {
+	Bid, _ := strconv.ParseInt(Id, 10, 64)
+	blog, _ := GetBlog(Bid)
+	track, _ := GetTrack(blog.Tid)
+	c.HTML(http.StatusOK, "post-details.html", gin.H{
+		"message": c.GetString("message"),
+		"aToken":  c.GetString("aToken"),
+		"rToken":  c.GetString("rToken"),
+		"photo":   GetPhoto(c),
+		"blog":    blog,
+		"track":   track,
+		"reviews": GetReviews(Bid), //评论者.Reviewer 评论者头像.Reviewer_photo 时间.Time 内容.Content
 	})
 }

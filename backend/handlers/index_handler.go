@@ -89,7 +89,7 @@ func SignatureCheck(c *gin.Context) (string, error) {
 func RankCheck() ([]Records, error) {
 	var recordlist []Records
 	var tracks []Track
-	var totaldis float64
+	var totaldis float64 = 0
 	// 查询并按照 i 值进行分组，并将 distance 求和
 	var users []User
 	err := Db.Find(&users)

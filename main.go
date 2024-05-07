@@ -78,13 +78,17 @@ func main() {
 		webGroup.GET("/notifications", ToNotifications)
 		webGroup.GET("/setting", ToSetting)
 		webGroup.GET("/ws", ToWs)
+		webGroup.GET("/post_detail/:Id", func(c *gin.Context) {
+			Id := c.Param("Id")
+			ToPostDetails(Id, c)
+		})
 	}
 
 	appGroup := engine.Group("/app")
 	{
 		appGroup.GET("/")
 		appGroup.GET("/index")
-		appGroup.GET("post_detail")
+		appGroup.GET("/post_detail")
 		appGroup.GET("/profile")
 		appGroup.GET("/profile_detail")
 		appGroup.GET("/rank")
