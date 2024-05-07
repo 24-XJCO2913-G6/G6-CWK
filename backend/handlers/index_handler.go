@@ -106,7 +106,7 @@ func RankCheck() ([]Records, error) {
 			totaldis += Dis
 		}
 		DisSum := strconv.FormatFloat(totaldis, 'f', -1, 64)
-		record := Records{Uid: user.Uid, Distance: DisSum, Name: user.Name}
+		record := Records{Uid: user.Uid, Distance: DisSum, Name: user.Name, Photo: user.ProfilePhot}
 		recordlist = append(recordlist, record)
 	}
 	sort.Slice(recordlist, func(i, j int) bool {
@@ -115,4 +115,26 @@ func RankCheck() ([]Records, error) {
 	// 输出结果
 
 	return recordlist, nil
+}
+
+func BlogDisplay() ([]Blog_display, error) {
+	var blogs []Blog
+	var authors []User
+	var blogs_dis []Blog_display
+	err := Db.Find(&blogs)
+	if err != nil {
+		return []Blog_display{}, err
+	}
+	for _, blog := range blogs {
+		Uid := blog.Uid
+		err := Db.Where("Uid = ?", Uid).Find(&authors)
+		if err != nil {
+			return []Blog_display{}, err
+		}
+		author := authors[0].Name
+		photo := authors[0].ProfilePhot
+		blog_dis := Blog_display{Author: author, Photo: photo, Pub_time: blog.Pub_time, Visibility: blog.Visibility, Content: blog.Content, Picture: blog.Picture, Tag: blog.Tag}
+		blogs_dis = append(blogs_dis, blog_dis)
+	}
+	return []Blog_display{}, nil
 }

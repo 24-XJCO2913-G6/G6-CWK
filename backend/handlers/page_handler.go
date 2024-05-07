@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
-	. "main/backend/models"
 	"net/http"
 	"strconv"
 )
@@ -16,11 +15,12 @@ func ToIndex(c *gin.Context) {
 		"aToken":      c.GetString("aToken"),
 		"rToken":      c.GetString("rToken"),
 		"Uid":         Uid,
-		"BlogCount":   BlogCount(c),
-		"FollowCount": FollowCount(c),
-		"FansCount":   FollowByCount(c),
-		"Signature":   SignatureCheck(c),
-		"records":     RankCheck(),
+		"BlogCount":   BlogCount(c),      //发帖数
+		"FollowCount": FollowCount(c),    //关注数
+		"FansCount":   FollowByCount(c),  //粉丝数
+		"Signature":   SignatureCheck(c), //个签
+		"records":     RankCheck(),       //排名(降序) 距离：.Distance 用户名：.Name 头像：.Photo
+		"blogs":       BlogDisplay(),     //所有blog 用户名：.Author 头像：.Photo 发布时间：.Pub_time 可见性：.Visibility 内容：.Content 图片：.Picture 标签：.Tag
 	})
 }
 
@@ -133,19 +133,6 @@ func ToWs(c *gin.Context) {
 	wshandler(c.Writer, c.Request)
 }
 
-func ToManage(c *gin.Context) {
-	users := []User{
-		{Uid: 1, Name: "Alice", Email: "email1"},
-		{Uid: 2, Name: "Bob", Email: "email2"},
-		{Uid: 3, Name: "Charlie", Email: "email3"},
-	}
-	c.HTML(http.StatusOK, "manage.html", gin.H{
-		"message": c.GetString("message"),
-		"aToken":  c.GetString("aToken"),
-		"rToken":  c.GetString("rToken"),
-		"users":   users,
-	})
-}
 func ToPostDetails(Id string, c *gin.Context) {
 	Bid, _ := strconv.ParseInt(Id, 10, 64)
 	blog, _ := GetBlog(Bid)
@@ -158,5 +145,15 @@ func ToPostDetails(Id string, c *gin.Context) {
 		"blog":    blog,
 		"track":   track,
 		"reviews": GetReviews(Bid), //评论者.Reviewer 评论者头像.Reviewer_photo 时间.Time 内容.Content
+	})
+}
+
+func ToLog(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"message": c.GetString("message"),
+		"aToken":  c.GetString("aToken"),
+		"rToken":  c.GetString("rToken"),
+		"photo":   GetPhoto(c),
+		"browser": GetBrowser(c),
 	})
 }

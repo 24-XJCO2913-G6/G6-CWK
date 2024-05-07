@@ -15,6 +15,7 @@ type Records struct {
 	Uid      int64
 	Distance string
 	Name     string
+	Photo    string
 }
 
 func BuildModelTrack() {
