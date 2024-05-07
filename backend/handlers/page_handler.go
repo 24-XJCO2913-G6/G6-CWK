@@ -49,6 +49,7 @@ func ToProfile(c *gin.Context, uid string) {
 		"email":     GetEmail(c),
 		"photo":     GetPhoto(c),
 		"signature": GetSignature(c),
+		"likeList":  GetLike(c),
 	})
 }
 

@@ -54,7 +54,7 @@ func FollowCount(c *gin.Context) (int64, error) {
 	aToken := c.GetString("aToken")
 	Claims, _ := CheckToken(aToken)
 	Uid, err := strconv.ParseInt(Claims.Uid, 10, 64)
-	var TotalamountFollow int64
+	var TotalamountFollow int64 = 0
 	if (Uid == -1) || (err != nil) {
 		err := Db.Where("FollowById = ?", Uid).Find(&followList)
 		if err != nil {

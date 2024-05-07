@@ -24,4 +24,5 @@ func BuildModel() {
 	BuildModelVip()
 	BuildModelFollow()
 	BuildModelCollect()
+	BuildModelReview()
 }

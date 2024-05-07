@@ -17,6 +17,18 @@ type User struct {
 	Signature   string `xorm:""`                       // 签名
 }
 
+type Liked struct {
+	Bid         int64
+	Content     string
+	LikeCount   int64
+	ReviewCount int64
+	Review      []Review
+	Picture     string
+	Tag         string
+	Visibility  int64
+	Time        string
+}
+
 func BuildModelUser() {
 	err := Db.Sync2(new(User))
 	if err != nil {
