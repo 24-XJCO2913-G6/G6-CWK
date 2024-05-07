@@ -11,6 +11,16 @@ type Blog struct {
 	Tid        int64
 }
 
+type Blog_display struct {
+	Author     string
+	Photo      string
+	Pub_time   string
+	Visibility int64 //
+	Content    string
+	Picture    string //
+	Tag        string //
+}
+
 func BuildModelBlog() {
 	err := Db.Sync2(new(Blog))
 	if err != nil {
