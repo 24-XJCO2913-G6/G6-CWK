@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	. "main/backend/models"
@@ -56,6 +57,7 @@ func Login(c *gin.Context) {
 		return
 	}
 	email := c.PostForm("email")
+	fmt.Printf("type: %T\n", email)
 	passwd := c.PostForm("passwd")
 
 	isEmail, err := IsExist(email)

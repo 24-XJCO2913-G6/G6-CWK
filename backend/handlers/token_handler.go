@@ -65,8 +65,10 @@ func keyFunc(*jwt.Token) (interface{}, error) {
 
 // CheckToken 解析 access_token
 func CheckToken(aToken string) (claims *MyClaims, err error) {
-	token, err := jwt.ParseWithClaims(aToken, &MyClaims{}, keyFunc)
+	var token *jwt.Token
+	claims = new(MyClaims)
 
+	token, err = jwt.ParseWithClaims(aToken, claims, keyFunc)
 	if err != nil {
 		return nil, err
 	}
@@ -83,8 +85,8 @@ func RefreshToken(aToken, rToken string) (newToken, newrToken string, err error)
 	}
 
 	// 第二步：从旧的 aToken 中解析出 claims 数据
-	var claims MyClaims
-	_, err = jwt.ParseWithClaims(aToken, &claims, keyFunc)
+	var claims = new(MyClaims)
+	_, err = jwt.ParseWithClaims(aToken, claims, keyFunc)
 	var v *jwt.ValidationError
 	_ = errors.As(err, &v)
 
