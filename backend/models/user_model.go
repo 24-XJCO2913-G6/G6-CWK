@@ -49,10 +49,10 @@ func BuildModelUser() {
 
 func IsExist(email string) (bool, error) {
 	user := &User{Email: email}
-	has, err := Db.Get(user)
-	if err != nil {
-		return false, err
-	}
+	has, _ := Db.Get(user)
+	//if err != nil {
+	//	return false, err
+	//}
 	return has, nil
 }
 
