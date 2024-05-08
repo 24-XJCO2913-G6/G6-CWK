@@ -2,14 +2,13 @@
 
 	<view class="p-2 animated fast fadeIn">
 
-		<!-- 头像昵称 | 关注按钮 -->
+
 		<view class="flex align-center justify-between">
 			<view class="flex align-center">
-				<!-- 头像 -->
+		
 				<image class="rounded-circle mr-2" :src="item.userpic" style="width: 65rpx;height: 65rpx;" lazy-load
 					@click="navigateToPage"></image>
-				<!-- vip -->
-				<!-- 昵称发布时间 -->
+			
 				<view>
 					<view class="font" style="line-height: 1.5;">
 						{{item.name}}
@@ -110,12 +109,13 @@
 				    url: 'http://120.46.81.37:8080/app/follow',
 				    method: 'POST',
 				  data: {
-				      'user_id': user_id
+				      'user_id': user_id,
+					  'aToken': aToken,
+					  'rToken':rToken,
 				  },
 					header: {
 					    'Content-Type': 'application/x-www-form-urlencoded',
-						'aToken': aToken,
-						'rToken':rToken,
+						
 					},
 				    success: function (res) {
 				        console.log('Post request successful:', res.data);
@@ -133,12 +133,13 @@
 				    url: 'http://120.46.81.37:8080/app/like',
 				    method: 'POST',
 				    data: {
-				        'post_id': post_id
+				        'post_id': post_id,
+						'aToken': aToken,
+						'rToken':rToken,
 				    },
 					header: {
 					    'Content-Type': 'application/x-www-form-urlencoded',
-						'aToken': aToken,
-						'rToken':rToken,
+						
 					},
 				    success: function (res) {
 				        console.log('Post request successful:', res.data);
@@ -168,12 +169,13 @@
 				    url: 'http://120.46.81.37:8080/app/collect',
 				    method: 'POST',
 				  data: {
-				      'post_id': post_id
+				      'post_id': post_id,
+					  'aToken': aToken,
+					  'rToken':rToken,
 				  },
 					header: {
 					    'Content-Type': 'application/x-www-form-urlencoded',
-						'aToken': aToken,
-						'rToken':rToken,
+						
 					},
 				    success: function (res) {
 				        console.log('Post request successful:', res.data);

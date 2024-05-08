@@ -1,5 +1,8 @@
 <template>
 	<view>
+		<input type="text"  style="position: fixed; top:8px;z-index: 999;display: flex; width: 90%; height: 2.8%; margin-left: 2.5%;
+		  justify-content: center;
+		  align-items: center;"  v-model='search_text'/>
 		  <view class="modal" v-if="showModal" style='padding:10px; '>
 		     <view class="modal-content">
 		       <text style='font-size: 30px;font-weight: bold;text-shadow: 2px 2px black;'>Welcome to Been</text>
@@ -10,18 +13,10 @@
 		<!-- #ifdef MP -->
 
 		<!-- #endif -->
-		<!-- 顶部选项卡 -->
-	<!-- 	<scroll-view scroll-x :scroll-into-view="scrollInto" scroll-with-animation
-		class="scroll-row border-bottom border-light-secondary" 
-		style="height: 100rpx;">
-			<view v-for="(item,index) in tabBars" :key="index" 
-			class="scroll-row-item px-3 py-2 font-md" :id="'tab'+index"
-			:class="tabIndex === index?'text-main font-lg font-weight-bold':''"
-			@click="changeTab(index)">{{item.classname}}</view>
-		</scroll-view> -->
+
 		<view>
 			
-	<common-list :item="myitem" v-for="myitem in posts" :key="myitem.post_id">
+	<common-list :item="myitem" v-for="myitem in show_posts" :key="myitem.post_id">
 
 	</common-list>
 		<br><br>
@@ -856,8 +851,6 @@
 					{userpic:'../../static/user_pic/2.jpg',username:'Vero',data:'Beautiful swan!',time:'2024-4-7'},
 					
 				],
-										
-					
 				
 				}],
 				// 列表高度
@@ -869,18 +862,24 @@
 				newsList:[]
 			}
 		},
-		
-		onload() {
+		computed:{
+			show_posts(){
+				return this.posts.filter(x=>{
+					return x.title.includes(this.search_text)||x.name.includes(this.search_text)
+				})
+			}
+		},
+		onLoad() {
 	uni.request({
-		url: 'http://120.46.81.37:8080/app/index',
-		method: 'POST',
+		url: 'http://120.46.81.37:8080/app/friends_posts',
+		method: 'GET',
 		data: {
-			'search_text': this.search_text
+			'aToken': aToken,
+			'rToken':rToken,
 		},
 		header: {
 			'Content-Type': 'application/x-www-form-urlencoded',
-			'aToken': aToken,
-			'rToken':rToken,
+			
 		},
 	      success: (res) => {
 	        this.posts = res.data;
@@ -890,19 +889,7 @@
 	      }
 	    });
 		
-		},
-		mounted(){
-			console.log('onload');
-			uni.request({
-			url: 'http://120.46.81.37:8080/app/login',
-			      success: (res) => {
-			        console.log('login的数据',res.data)
-			      },
-			      fail: (err) => {
-			        console.error('loginFailed to fetch posts:', err);
-			      }
-			    });
-		}		
+		}
 		,methods: {
 			 closeModal() {
 			      this.showModal = false;
@@ -912,12 +899,11 @@
 				url: 'http://120.46.81.37:8080/app/index',
 				method: 'POST',
 				data: {
-				    'search_text': this.search_text
+					'aToken': aToken,
+					'rToken':rToken,
 				},
 				header: {
 				    'Content-Type': 'application/x-www-form-urlencoded',
-					'aToken': aToken,
-					'rToken':rToken,
 				},
 				      success: (res) => {
 				        this.posts = res.data;

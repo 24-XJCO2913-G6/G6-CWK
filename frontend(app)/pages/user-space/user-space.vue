@@ -44,16 +44,11 @@
 			<view class="animated fast fadeIn">
 				<view class="p-3 border-bottom">
 					<view class="font-md">Information</view>
-					<view class="font">Age：{{userinfo.regtime}}</view>
-					<view class="font">id：{{user_id}}</view>
-				</view>
-				<view class="p-3 border-bottom">
-					<view class="font-md">Information</view>
-					<view class="font">Sex: Female</view>
+					<view class="font">Sex: {{userinfo.sex}}</view>
 					<view class="font">Birthday：{{userinfo.birthday}}</view>
 					<view class="font">Job：{{userinfo.job}}</view>
-					<view class="font">Hometown：{{userinfo.path}}</view>
-					<view class="font">Relationship Status：{{userinfo.qg}}</view>
+					<view class="font">Hometown：{{userinfo.hometown}}</view>
+					<view class="font">Relationship Status：{{userinfo.relation}}</view>
 				</view>
 			</view>
 		</template>
@@ -111,6 +106,8 @@
 					visibility: 1,
 					time: '2024-05-01',
 					like: 19,
+					islike:1,
+					iscollect:0,
 					userpic: '../../static/user_pic/1.jpg',
 					title: 'Nice day to have a walk',
 					collect: 13,
@@ -264,7 +261,6 @@
 
 					],
 					comments: [
-
 						{
 							userpic: '../../static/user_pic/2.jpg',
 							username: 'Vero',
@@ -274,18 +270,14 @@
 
 					],
 				}],
-				user_id: 9,
 				userinfo: {
 					userpic: "/static/user_pic/1.jpg",
-					username: "",
-					sex: 0,
-					age: 20,
-					isFollow: true,
-					regtime: "20",
+					username: "Abby",
+					sex: 'female',
 					birthday: "2003-08-17",
 					job: "Software Engineer",
-					path: "Chengdu",
-					qg: "None"
+					hometown: "Chengdu",
+					relation: "married"
 				},
 				counts: [{
 					name: "Post",
@@ -331,51 +323,123 @@
 			}
 		},
 		onLoad(e) {
-		
-			this.user_id = e.user_id
-			// 加载用户个人信息
-			this.getUserInfo()
-			// 获取用户相关数据
-			this.getCounts()
-			// 监听关注和顶踩操作
-			uni.$on('updateFollowOrSupport', (e) => {
-				switch (e.type) {
-					case 'follow': // 关注
-						this.follow(e.data.user_id)
-						break;
-					case 'support': // 顶踩
-						this.doSupport(e.data)
-						break;
-				}
-			})
-			// 监听评论数变化
-			uni.$on('updateCommentsCount', ({
-				id,
-				count
-			}) => {
-				this.tabBars.forEach(tab => {
-					if (tab.list) {
-						tab.list.forEach((item) => {
-							if (item.id === id) {
-								item.comment_count = count
-							}
-						})
-					}
-				})
-			})
+		uni.request({
+			  url: 'http://120.46.81.37:8080/app/profile_detail',
+			  method: 'POST',
+			  data:{
+				  'aToken': aToken,
+				  'rToken':rToken,
+			  },
+			  header: {
+			      'Content-Type': 'application/x-www-form-urlencoded',
+			  },
+			  success: (res) => {
+					this.user_info.user_pic=res.user_pic
+					this.user_info.username = res.username
+					this.user_info.sex  =  res.sex
+					this.user_info.job  = res.job
+					this.user_info.birthday  =res.birthday
+					this.user_info.hometown =res.hometown
+					this.user_info.relation =res.relation
+			  },
+			  fail: (err) => {
+				  console.error('Error fetching person info:', err);
+				
+			  }
+		});
+			uni.request({
+					  //获取某个用户发过的所有帖子
+						url: 'http://120.46.81.37:8080/app/get_posts',
+			           method: 'GET',
+			           data: {
+						'aToken': aToken,
+						'rToken': rToken,
+						},
+			           header: {
+			               'Content-Type': 'application/x-www-form-urlencoded',				
+			           },
+			           success: (res) => {
+						   this.counts[0].num=res.data.length;
+						   this.posts=res.data;
+			               console.log('Post data uploaded successfully:', res);
+			           },
+			           fail: (err) => {
+			               console.error('Error uploading post data:', err);
+			           }
+			       });
+			uni.request({
+						//获取某个用户所有关注的人
+						url: 'http://120.46.81.37:8080/app/get_follow',
+			           method: 'GET',
+			           data: {
+						'aToken': aToken,
+						'rToken': rToken,
+						},
+			           header: {
+			               'Content-Type': 'application/x-www-form-urlencoded',				
+			           },
+			           success: (res) => {
+						   this.counts[1].num=res.data.length;
+			               console.log('Post data uploaded successfully:', res);
+			           },
+			           fail: (err) => {
+			               console.error('Error uploading post data:', err);
+			           }
+			       });
+			uni.request({
+						//获取某个用户所有的粉丝
+						url: 'http://120.46.81.37:8080/app/get_fan',
+			           method: 'GET',
+			           data: {
+						'aToken': aToken,
+						'rToken': rToken,
+						},
+			           header: {
+			               'Content-Type': 'application/x-www-form-urlencoded',				
+			           },
+			           success: (res) => {
+						   this.counts[2].num=res.data.length;
+			               console.log('Post data uploaded successfully:', res);
+			           },
+			           fail: (err) => {
+			               console.error('Error uploading post data:', err);
+			           }
+			       });
+
 		},
 		onUnload() {
-			uni.$off('updateFollowOrSupport', (e) => {})
-			uni.$off('updateCommentsCount', (e) => {})
+			
 		},
 		methods: {
+			dofollow(){
+				uni.request({
+				    url: 'http://120.46.81.37:8080/app/follow',
+				    method: 'POST',
+				  data: {
+				      'user_id': user_id,
+					  'aToken': aToken,
+					  'rToken':rToken,
+				  },
+					header: {
+					    'Content-Type': 'application/x-www-form-urlencoded',
+						
+					},
+				    success: function (res) {
+				        console.log('Post request successful:', res.data);
+				        // 可以在这里处理返回的数据
+				    },
+				    fail: function (err) {
+				        console.error('Post request failed:', err);
+				    }
+				});
+			},
 			clickNavigationButton() {
 				if (this.user_id == this.user.id) {
 					return uni.navigateTo({
 						url: '../user-set/user-set',
 					});
 				}
-				this.$refs.popup.open()
+				
 			},
 	
 			changeTab(index) {
@@ -383,42 +447,7 @@
 				this.getList()
 			},
 
-			// 加入/移出黑名单
-			doBlack() {
-				this.checkAuth(() => {
-					let url = this.userinfo.isblack ? '/removeblack' : '/addblack'
-					let msg = this.userinfo.isblack ? 'de-blacklist' : 'blacklist'
-					uni.showModal({
-						content: '是否要' + msg,
-						success: (res) => {
-							if (res.confirm) {
-								this.$H.post(url, {
-									id: this.user_id
-								}, {
-									token: true
-								}).then(res => {
-									this.userinfo.isblack = !this.userinfo.isblack
-									uni.showToast({
-										title: msg + 'Success',
-										icon: 'none'
-									});
-								})
-							}
-						}
-					});
 
-				})
-			},
-			openChat() {
-				let user = {
-					user_id: this.user_id,
-					username: this.userinfo.username,
-					userpic: this.userinfo.userpic
-				}
-				this.navigateTo({
-					url: "/pages/user-chat/user-chat?user=" + JSON.stringify(user)
-				})
-			}
 		}
 	}
 </script>

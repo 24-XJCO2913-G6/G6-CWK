@@ -14,15 +14,8 @@
 							"disabled": true,
 							"placeholder": "search",
 							"placeholderColor": "#6D6C67"
-						},
-						"buttons": [{
-							"color": "#333333",
-							"colorPressed": "#FD597C",
-							"float": "right",
-							"fontSize": "20px",
-							"fontSrc": "/static/iconfont.ttf",
-							"text": "\ue668"
-						}]
+						}
+			
 					}
 				}
 			}
@@ -33,7 +26,15 @@
 					"titleNView": false
 				}
 			}
-		}, {
+		},{
+			"path": "pages/upload/upload",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
 			"path": "pages/msg/msg",
 			"style": {
 				"navigationBarTitleText": "Messages",
@@ -58,7 +59,8 @@
 					}
 				}
 			}
-		}, {
+		},
+		{
 			"path": "pages/my/my",
 			"style": {
 				"navigationBarTitleText": "My",
@@ -239,25 +241,23 @@
 					}
 				}
 			}
-		}
-		,{
-		    "path" : "pages/my-post/my-post",
-		    "style" : {
-				"navigationBarTitleText":"My Post",
-				"app-plus":{
-					"titleNView":{
-						"buttons":[{
-							"type":"menu"
+		}, {
+			"path": "pages/my-post/my-post",
+			"style": {
+				"navigationBarTitleText": "My Post",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+							"type": "menu"
 						}]
 					}
 				}
 			}
-		}
-		,{
-		    "path" : "pages/user-list/user-list",
-		    "style" : {
-				"app-plus":{
-					"titleNView":false
+		}, {
+			"path": "pages/user-list/user-list",
+			"style": {
+				"app-plus": {
+					"titleNView": false
 				}
 			}
 		}, {
@@ -282,7 +282,7 @@
 					}
 				}
 			}
-		},  {
+		}, {
 			"path": "pages/rank/rank",
 			"style": {
 				"navigationBarTitleText": "Rank",
@@ -360,11 +360,10 @@
 			}
 		},
 		{
-			"path" : "pages/my-space/my-space",
-			"style" : 
-			{
-				"navigationBarTitleText" : "",
-				"enablePullDownRefresh" : false
+			"path": "pages/my-space/my-space",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
 			}
 		}
 	],
@@ -390,12 +389,17 @@
 			"iconPath": "static/tabbar/feed.png",
 			"selectedIconPath": "static/tabbar/feed.png"
 		}, {
+			"pagePath": "pages/upload/upload",
+			"text": "Post",
+			"iconPath": "static/tabbar/upload.png",
+			"selectedIconPath": "static/tabbar/upload.png"
+		},
+		{
 			"pagePath": "pages/add-input/add-input",
-
 			"text": "Add",
 			"iconPath": "static/tabbar/add.png",
 			"selectedIconPath": "static/tabbar/add.png"
-		}, {
+		},{
 			"pagePath": "pages/msg/msg",
 			"text": "Message",
 			"iconPath": "static/tabbar/paper.png",

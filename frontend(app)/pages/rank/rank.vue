@@ -514,21 +514,22 @@
 					]
 				}
 			},
-			//   mounted(){
-			// 	  console.log('haha')
-			// 	  uni.request({
-			// 	              url: 'http://localhost:8080/app/rank',
-			// 	              method: 'GET',
-			// 	              success: (res) => {
-			// 	                  this.rankList=res.rank_list
+			  onLoad(){
+				  console.log('haha')
+				  uni.request({
+				              url: 'http://120.46.81.37:8080/app/get_rank',
+				              method: 'GET',
+				              success: (res) => {
+				                  this.rankList=res.rank_list
+								  this.routes=res.routes
 
-			// 	              },
-			// 	              fail: (err) => {
-			// 	                  console.error('Error fetching person info:', err);
+				              },
+				              fail: (err) => {
+				                  console.error('Error fetching person info:', err);
 
-			// 	              }
-			//   })
-			// }  
+				              }
+			  })
+			}  
 		}
 </script>
 

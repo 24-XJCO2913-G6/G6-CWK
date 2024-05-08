@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Easy-Mock-API">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/fontend(admin)/src/assets/mock/Easy-Mock-API.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

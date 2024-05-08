@@ -37,9 +37,13 @@ export default {
   onLoad(){
 	  uni.request({
 	  url: 'http://120.46.81.37:8080/app/get_likes',
-	  	header: {
+	  	method: 'GET',
+	  	data: {
 	  		'aToken': aToken,
 	  		'rToken':rToken,
+	  	},
+	  	header: {
+	  	    'Content-Type': 'application/x-www-form-urlencoded',
 	  	},
 	    success: (res) => {
 	  	this.likes= res.data;

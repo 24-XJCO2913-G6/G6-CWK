@@ -1,18 +1,7 @@
 <template>
 	<view>
 		<!-- 导航 -->
-		<!-- #ifndef APP-PLUS -->
-		<uni-nav-bar :shadow="false" :border="false" @click-left="clickLeft" @click-right="clickRight" title="Talk">
-			<!-- 左边图标 -->
-			<block slot="left">
-				<view class="iconfont icon-user-detail mx-2" style="font-size: 22px;"></view>
-			</block>
-			<!-- 右边图标 -->
-			<block slot="right">
-				<view class="icon iconfont icon-zengjia" style="font-size: 22px;"></view>
-			</block>
-		</uni-nav-bar>
-		<!-- #endif -->
+
 
 		<view class="icon-box">
 			<view class="icon-text-group" @click="handleClick('like')">

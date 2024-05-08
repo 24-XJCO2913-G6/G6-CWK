@@ -79,6 +79,8 @@
 					visibility:1,
 					time:'2024-5-5',
 					like:0,
+					islike:1,
+					iscollect:0,
 					userpic:'../../static/user_pic/4.jpg',
 					collect:0,
 					content:'Cycling by the lake',
@@ -373,6 +375,8 @@
 					visibility:1,
 					time:'2024-4-13',
 					like:6,
+					islike:1,
+					iscollect:0,
 					userpic:'../../static/user_pic/4.jpg',
 					collect:3,
 					title:'School walk',
@@ -573,9 +577,66 @@
 				return value > 99 ? '99+' : value;
 			}
 		},
-		onLoad(e) {
-			
-			
+		onLoad() {
+			uni.request({
+					  //获取某个用户发过的所有帖子
+						url: 'http://120.46.81.37:8080/app/get_posts',
+			           method: 'GET',
+			           data: {
+						'aToken': aToken,
+						'rToken':rToken,
+						},
+			           header: {
+			               'Content-Type': 'application/x-www-form-urlencoded',				
+			           },
+			           success: (res) => {
+						   this.counts[0].num=res.data.length;
+						   this.posts=res.data;
+			               console.log('Post data uploaded successfully:', res);
+			           },
+			           fail: (err) => {
+			               console.error('Error uploading post data:', err);
+			           }
+			       });
+			uni.request({
+						//获取某个用户所有关注的人
+						url: 'http://120.46.81.37:8080/app/get_follow',
+			           method: 'GET',
+			           data: {
+						'aToken': aToken,
+						'rToken':rToken,
+						},
+			           header: {
+			               'Content-Type': 'application/x-www-form-urlencoded',				
+			           },
+			           success: (res) => {
+						   this.counts[1].num=res.data.length;
+			               console.log('Post data uploaded successfully:', res);
+			           },
+			           fail: (err) => {
+			               console.error('Error uploading post data:', err);
+			           }
+			       });
+			uni.request({
+						//获取某个用户所有的粉丝
+						url: 'http://120.46.81.37:8080/app/get_fan',
+			           method: 'GET',
+			           data: {
+						'aToken': aToken,
+						'rToken':rToken,
+						},
+			           header: {
+			               'Content-Type': 'application/x-www-form-urlencoded',				
+			           },
+			           success: (res) => {
+						   this.counts[2].num=res.data.length;
+			               console.log('Post data uploaded successfully:', res);
+			           },
+			           fail: (err) => {
+			               console.error('Error uploading post data:', err);
+			           }
+			       });
+	
 		
 		},
 		onUnload() {

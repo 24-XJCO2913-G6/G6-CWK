@@ -3,11 +3,11 @@
 		<!-- 未登录 -->
 		<template v-if="!loginStatus">
 			<view class="flex align-center justify-center py-2 font">
-				登录社区，体验更多功能
+				Log in to enjoy more functionalities!
 			</view>
 			<other-login></other-login>
 			<view class="flex align-center justify-center py-2 font text-secondary" @click="openLogin">
-				账号/邮箱/手机登录 <text class="ml-1 iconfont icon-jinru"></text>
+				Use email to log in <text class="ml-1 iconfont icon-jinru"></text>
 			</view>
 		</template>
 

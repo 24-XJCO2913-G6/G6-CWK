@@ -30,11 +30,15 @@ export default {
   },
   onLoad(options) {
    uni.request({
-   url: 'http://120.46.81.37:8080/app/get_collects',
-   	header: {
-   		'aToken': aToken,
-   		'rToken':rToken,
-   	},
+			   url: 'http://120.46.81.37:8080/app/get_collects',
+			   method: 'GET',
+			   data: {	 
+					  'aToken': aToken,
+					  'rToken':rToken,
+			   },
+				header: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
      success: (res) => {
    	this.collects= res.data;
      },

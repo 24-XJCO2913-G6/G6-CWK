@@ -59,28 +59,28 @@
 		data() {
 			return {
 				// 当前帖子信息
-				info: {
-					id: 15,
-					user_id: 0,
-					username: "昵称",
-					userpic: "",
-					newstime: 0,
-					isFollow: false,
-					title: "",
-					content:"wow",
-					titlepic: "",
-					support: {
-						type: "support", // 顶
-						support_count: 0,
-						unsupport_count: 0
-					},
-					comment_count: 0,
-					share_num: 0,
-				},
-				images: [],
+			// 	info: {
+			// 		id: 15,
+			// 		user_id: 0,
+			// 		username: "昵称",
+			// 		userpic: "",
+			// 		newstime: 0,
+			// 		isFollow: false,
+			// 		title: "",
+			// 		content:"wow",
+			// 		titlepic: "",
+			// 		support: {
+			// 			type: "support", // 顶
+			// 			support_count: 0,
+			// 			unsupport_count: 0
+			// 		},
+			// 		comment_count: 0,
+			// 		share_num: 0,
+			// 	},
+			// 	images: [],
 			
-				focus: false,
-				reply_id: 0
+			// 	focus: false,
+			// 	reply_id: 0
 			}
 		},
 		onLoad(e) {
@@ -142,10 +142,60 @@
 				
 				
 			},
+			submitComment(commentContent) {
+				console.log(commentContent)
+			      // 假设用户已经输入了评论内容到某个数据属性，如 this.commentContent
+			    
+				  console.log(commentData.postId)
+			      // 发送POST请求到后台
+			      uni.request({
+			        url:  'http://120.46.81.37:8080/app/add_comment',
+			        method: 'POST',
+			        data: {
+			        postId: this.info.post_id, // 帖子的ID,不确定待改
+			        commentContent: commentContent, // 用户输入的评论内容
+			        aToken: this.aToken, // 假设这是某种认证令牌
+			        rToken: this.rToken, // 另一个令牌
+			      },
+			        header: {
+			          'Content-Type': 'application/x-www-form-urlencoded',
+			        },
+			        success: (res) => {
+			          if (res.statusCode === 200) {
+			            // 假设后台返回的评论数据包含新的评论ID
+			            const newCommentId = res.data.newCommentId;
+			            // 更新评论列表
+			            this.info.comments.unshift({
+			              userpic: '用户头像地址',
+			              username: '用户名',
+			              data: this.commentContent,
+			              time: $T().time('yyyy-mm-dd'),
+			              id: newCommentId, // 后台返回的新评论ID
+			            });
+			            // 清空评论输入
+			            this.commentContent = '';
+			          } else {
+			            // 处理错误情况
+			            uni.showToast({
+			              title: '评论失败',
+			              icon: 'none',
+			            });
+			          }
+			        },
+			        fail: (error) => {
+			          // 网络请求失败的处理
+			          uni.showToast({
+			            title: '网络错误',
+			            icon: 'none',
+			          });
+			        }
+			      });
+			    },
 			// 提交评论
 			submit(data) {
-				this.comments++;
-				this.info.comments.unshift({userpic:'../../static/user_pic/4.jpg',username:'Super girl',data:data,time:'2024-4-9'})
+				this.submitComment(data);
+				// this.comments++;
+				// this.info.comments.unshift({userpic:'../../static/user_pic/4.jpg',username:'Super girl',data:data,time:'2024-4-9'})
 			},
 		
 			// 输入框失去焦点
