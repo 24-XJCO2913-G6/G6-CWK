@@ -47,10 +47,15 @@ func SetToken(uid, password string) (aToken, rToken string, err error) {
 	aToken, err = token.SignedString([]byte(os.Getenv("MySecret")))
 
 	// rToken 不需要存储任何自定义数据
-	rToken, err = jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
+	refreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		ExpiresAt: time.Now().Add(ReTokenExpireDuration).Unix(), // 过期时间
 		Issuer:    os.Getenv("BEEN_ISSUER"),                     // 签发人
-	}).SignedString(MySecret)
+	})
+	rToken, err = refreshToken.SignedString([]byte(os.Getenv("MySecret")))
+	if err != nil {
+		return "", "", err
+	}
+
 	return aToken, rToken, nil
 }
 
@@ -93,44 +98,69 @@ func RefreshToken(aToken, rToken string) (newToken, newrToken string, err error)
 // JwtToken jwt中间件
 func JwtToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		aToken := c.DefaultQuery("atoken", "")
-		rToken := c.DefaultQuery("rtoken", "")
+
+		//origin := c.Request.Header
+		err := c.Request.ParseForm()
+		if err != nil {
+			return
+		}
+		// 读取请求体中的 aToken 和 rToken
+		aToken := c.PostForm("aToken")
+		rToken := c.PostForm("rToken")
+
+		//c.JSON(200, gin.H{"header": origin, "rToken": rToken})
 
 		if aToken == "" || rToken == "" {
-			c.JSON(200, gin.H{
-				"msg":  "没有携带 aToken 或者 rToken",
-				"code": 400,
-			})
-			c.Abort()
+			//c.JSON(200, gin.H{
+			//	"message": "visitor",
+			//	"code":    400,
+			//})
+			c.Set("message", "visitor")
+			c.Set("aToken", "")
+			c.Set("rToken", "")
+			c.Set("Uid", -1)
+			c.Next()
 			return
 		}
 
-		parasToken, err := CheckToken(aToken) // 解析 access_token
-		if err == nil {                       // 当前的 access_token 格式对，没有过期
-			c.JSON(200, gin.H{
-				"msg":  "aToken 和 rToken 没有过期",
-				"data": parasToken,
-				"code": 400,
-			})
+		_, err = CheckToken(aToken) // 解析 access_token
+		if err == nil {             // 当前的 access_token 格式对，没有过期
+			//c.JSON(200, gin.H{
+			//	"message": "user",
+			//	"aToken":  aToken,
+			//	"rToken":  rToken,
+			//	"code":    400,
+			//})
+			c.Set("message", "user")
+			c.Set("aToken", aToken)
+			c.Set("rToken", rToken)
 			c.Next()
 			return
 		}
 
 		aToken, rNewToken, err := RefreshToken(aToken, rToken)
 		if err != nil {
-			c.JSON(200, gin.H{
-				"msg":  "Need sign in again",
-				"code": 400,
-			})
-			c.Abort()
+			//c.JSON(200, gin.H{
+			//	"message": "visitor",
+			//	"code":    400,
+			//})
+
+			c.Set("message", "visitor")
+			c.Set("aToken", "")
+			c.Set("rToken", "")
+			c.Set("Uid", -1)
+			c.Next()
 			return
 		} else {
-			c.JSON(200, gin.H{
-				"msg":    "aToken 和 rToken 没有过期",
-				"aToken": aToken,
-				"rToken": rNewToken,
-				"code":   400,
-			})
+			//c.JSON(200, gin.H{
+			//	"message": "user",
+			//	"aToken":  aToken,
+			//	"rToken":  rNewToken,
+			//	"code":    400,
+			//})
+			c.Set("message", "user")
+			c.Set("aToken", aToken)
+			c.Set("rToken", rNewToken)
 			c.Next()
 			return
 		}

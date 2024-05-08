@@ -1,0 +1,410 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页
+		{
+			"path": "pages/index/index",
+			"style": {
+				"app-plus": {
+					// 导航栏配置
+					"titleNView": {
+						// 搜索框配置
+						"searchInput": {
+							"align": "center",
+							"backgroundColor": "#F5F4F2",
+							"borderRadius": "4px",
+							"disabled": true,
+							"placeholder": "search",
+							"placeholderColor": "#6D6C67"
+						},
+						"buttons": [{
+							"color": "#333333",
+							"colorPressed": "#FD597C",
+							"float": "right",
+							"fontSize": "20px",
+							"fontSrc": "/static/iconfont.ttf",
+							"text": "\ue668"
+						}]
+					}
+				}
+			}
+		}, {
+			"path": "pages/news/news",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		}, {
+			"path": "pages/msg/msg",
+			"style": {
+				"navigationBarTitleText": "Messages",
+				"enablePullDownRefresh": true,
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+							"color": "#333333",
+							"colorPressed": "#FD597C",
+							"float": "left",
+							"fontSize": "20px",
+							"fontSrc": "/static/iconfont.ttf",
+							"text": "\ue611"
+						}, {
+							"color": "#333333",
+							"colorPressed": "#FD597C",
+							"float": "right",
+							"fontSize": "20px",
+							"fontSrc": "/static/iconfont.ttf",
+							"text": "\ue649"
+						}]
+					}
+				}
+			}
+		}, {
+			"path": "pages/my/my",
+			"style": {
+				"navigationBarTitleText": "My",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+							"type": "menu"
+						}]
+					}
+				}
+			}
+		}, {
+			"path": "pages/search/search",
+			"style": {
+				"enablePullDownRefresh": true,
+				"app-plus": {
+					// 导航栏配置
+					"titleNView": {
+						// 搜索框配置
+						"searchInput": {
+							"align": "center",
+							"backgroundColor": "#F5F4F2",
+							"borderRadius": "4px",
+							"placeholder": "search",
+							"placeholderColor": "#6D6C67"
+						},
+						"buttons": [{
+							"color": "#333333",
+							"colorPressed": "#FD597C",
+							"float": "right",
+							"fontSize": "14px",
+							"text": "搜索"
+						}]
+					}
+				}
+			}
+		}, {
+			"path": "pages/add-input/add-input",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		}, {
+			"path": "pages/topic-nav/topic-nav",
+			"style": {
+				"navigationBarTitleText": "话题分类"
+			}
+		}, {
+			"path": "pages/topic-detail/topic-detail",
+			"style": {
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent",
+						"buttons": [{
+							"type": "menu"
+						}]
+					}
+				}
+			}
+		}, {
+			"path": "pages/user-list/user-list",
+			"style": {
+				"app-plus": {
+					// 动画效果
+					"animationType": "slide-in-left",
+					// 导航栏配置
+					"titleNView": {
+						// 取消返回按钮
+						"autoBackButton": false,
+						// 搜索框配置
+						"searchInput": {
+							"align": "center",
+							"backgroundColor": "#F5F4F2",
+							"borderRadius": "4px",
+							"disabled": true,
+							"placeholder": "Search Users",
+							"placeholderColor": "#6D6C67"
+						},
+						"buttons": [{
+							"color": "#333333",
+							"colorPressed": "#FD597C",
+							"float": "right",
+							"fontSize": "15px",
+							"text": "Cancel"
+						}]
+					}
+				}
+			}
+		}, {
+			"path": "pages/user-chat/user-chat",
+			"style": {
+				"app-plus": {
+					"bounce": "none",
+					"titleNView": {
+						"buttons": [{
+							"color": "#333333",
+							"colorPressed": "#FD597C",
+							"float": "right",
+							"fontSize": "20px",
+							"fontSrc": "/static/iconfont.ttf",
+							"text": "\ue628"
+						}]
+					}
+				}
+			}
+		}, {
+			"path": "pages/detail/detail",
+			"style": {
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+							"type": "menu",
+							"float": "right"
+						}]
+					}
+				}
+			}
+		}, {
+			"path": "pages/user-set/user-set",
+			"style": {
+				"navigationBarTitleText": "Setting"
+			}
+		}, {
+			"path": "pages/user-password/user-password",
+			"style": {
+				"navigationBarTitleText": "Change Passsword"
+
+			}
+		}, {
+			"path": "pages/user-email/user-email",
+			"style": {
+				"navigationBarTitleText": "Bind Email"
+			}
+		}, {
+			"path": "pages/user-userinfo/user-userinfo",
+			"style": {
+				"navigationBarTitleText": "Edit Profile"
+			}
+		}, {
+			"path": "pages/user-feedback/user-feedback",
+			"style": {
+				"navigationBarTitleText": "意见反馈"
+			}
+		}, {
+			"path": "pages/about/about",
+			"style": {
+				"navigationBarTitleText": "关于社区"
+			}
+		}, {
+			"path": "pages/login/login",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		}, {
+			"path": "pages/user-space/user-space",
+			"style": {
+				"navigationBarTitleText": "User Space",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+							"type": "menu"
+						}]
+					}
+				}
+			}
+		}, {
+			"path": "pages/payment/payment",
+			"style": {
+				"navigationBarTitleText": "Payment",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+							"type": "menu"
+						}]
+					}
+				}
+			}
+		}
+		,{
+		    "path" : "pages/my-post/my-post",
+		    "style" : {
+				"navigationBarTitleText":"My Post",
+				"app-plus":{
+					"titleNView":{
+						"buttons":[{
+							"type":"menu"
+						}]
+					}
+				}
+			}
+		}
+		,{
+		    "path" : "pages/user-list/user-list",
+		    "style" : {
+				"app-plus":{
+					"titleNView":false
+				}
+			}
+		}, {
+			"path": "pages/user-safe/user-safe",
+			"style": {
+				"navigationBarTitleText": "账号与安全"
+			}
+		}, {
+			"path": "pages/user-phone/user-phone",
+			"style": {
+				"navigationBarTitleText": "绑定手机号"
+			}
+		}, {
+			"path": "pages/vip/vip",
+			"style": {
+				"navigationBarTitleText": "VIP",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+							"type": "menu"
+						}]
+					}
+				}
+			}
+		},  {
+			"path": "pages/rank/rank",
+			"style": {
+				"navigationBarTitleText": "Rank",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+							"type": "menu"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/badge/badge",
+			"style": {
+				"navigationBarTitleText": "Medal wall",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+							"type": "menu"
+						}]
+					}
+				}
+			}
+		}, {
+			"path": "pages/like/like",
+			"style": {
+				"navigationBarTitleText": "Likes from Others",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+							"type": "menu"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/collect/collect",
+			"style": {
+				"navigationBarTitleText": "Collect from Others",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+							"type": "menu"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/comment/comment",
+			"style": {
+				"navigationBarTitleText": "Comments from Others",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+							"type": "menu"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/routes/routes",
+			"style": {
+				"navigationBarTitleText": "My routes",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+							"type": "menu"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path" : "pages/my-space/my-space",
+			"style" : 
+			{
+				"navigationBarTitleText" : "",
+				"enablePullDownRefresh" : false
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "社区交友",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#FFFFFF"
+	},
+	"tabBar": {
+		"color": "#333333",
+		"selectedColor": "#1296db",
+		"backgroundColor": "#FFFFFF",
+		"borderStyle": "black",
+		"list": [{
+			"pagePath": "pages/index/index",
+			"text": "Home",
+			"iconPath": "static/tabbar/index.png",
+			"selectedIconPath": "static/tabbar/indexed.png"
+		}, {
+			"pagePath": "pages/news/news",
+			"text": "Feed",
+			"iconPath": "static/tabbar/feed.png",
+			"selectedIconPath": "static/tabbar/feed.png"
+		}, {
+			"pagePath": "pages/add-input/add-input",
+
+			"text": "Add",
+			"iconPath": "static/tabbar/add.png",
+			"selectedIconPath": "static/tabbar/add.png"
+		}, {
+			"pagePath": "pages/msg/msg",
+			"text": "Message",
+			"iconPath": "static/tabbar/paper.png",
+			"selectedIconPath": "static/tabbar/papered.png"
+		}, {
+			"pagePath": "pages/my/my",
+			"text": "My",
+			"iconPath": "static/tabbar/home.png",
+			"selectedIconPath": "static/tabbar/homeed.png"
+		}]
+	}
+}

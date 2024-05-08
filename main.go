@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 	. "main/backend/handlers"
+	. "main/backend/models"
 )
 
 func main() {
@@ -10,42 +13,97 @@ func main() {
 	engine := gin.Default()
 
 	// 中间件
-	engine.Use(JwtToken())
-	engine.Use(Cors())
+
 	// 数据库
 	InitDB()
 
-	engine.Static("/static", "frontend/static")
-	engine.LoadHTMLGlob("frontend/*.html")
+	engine.Static("/web/static", "frontend(web)/static")
+	engine.Static("/app/static", "frontend(app)/static")
+	engine.LoadHTMLGlob("frontend(web)/*.html")
 
-	engine.GET("/", ToIndex)
-	engine.GET("/index", ToIndex)
+	engine.Use(Cors())
+	engine.Use(JwtToken())
 
-	engine.GET("/login", ToLogin)
-	engine.GET("/register", ToRegister)
 	engine.POST("/login", Login)
 	engine.POST("/register", Register)
+	engine.POST("/blog_publish", BlogPublish)
+	go func() {
+		for {
+			msg := <-MsgChan // 改为 Message 类型
 
-	engine.GET("/profile/:uid", func(c *gin.Context) {
-		uid := c.Param("uid")
-		ToProfile(c, uid)
-	})
+			// 将消息存储到数据库中
+			//insertQuery := "INSERT INTO messages (sender, recipient, message) VALUES (?, ?, ?)"
+			//_, err := Db.Exec(insertQuery, msg.Sender, msg.Recipient, msg.Content)
+			//if err != nil {
+			//	fmt.Printf("Failed to insert message to database: %v", err)
+			//	continue
+			//}
 
-	engine.GET("/vip", ToVip)
-	engine.GET("/bill", ToBill)
+			// 根据接收人发送消息
+			Conns.RLock()
+			for Conn, username := range Conns.M {
+				if username == msg.Recipient {
+					if err := Conn.WriteMessage(websocket.TextMessage, []byte(msg.Content)); err != nil {
+						fmt.Printf("Failed to send message: %+v\n", err)
+					}
+					break
+				}
+			}
+			Conns.RUnlock()
+		}
+	}()
 
-	engine.GET("/download", ToDownload)
+	webGroup := engine.Group("/web")
+	{
+		webGroup.GET("/", ToIndex)
+		webGroup.GET("/index", ToIndex)
 
-	engine.GET("/help", ToHelp)
-	engine.GET("/help/:searchText", func(c *gin.Context) {
-		searchText := c.Param("searchText")
-		ToHelpDetails(c, searchText)
-	})
+		webGroup.GET("/login", ToLogin)
+		webGroup.GET("/register", ToRegister)
+		webGroup.GET("/profile", ToProfile)
 
-	engine.GET("/messages", ToMessages)
-	engine.GET("/notifications", ToNotifications)
-	engine.GET("/setting", ToSetting)
+		webGroup.GET("/vip", ToVip)
+		webGroup.GET("/bill", ToBill)
 
+		webGroup.GET("/download", ToDownload)
+
+		webGroup.GET("/help", ToHelp)
+		webGroup.GET("/help/:searchText", func(c *gin.Context) {
+			searchText := c.Param("searchText")
+			ToHelpDetails(c, searchText)
+		})
+
+		webGroup.GET("/messages", ToMessages)
+		webGroup.GET("/notifications", ToNotifications)
+		webGroup.GET("/setting", ToSetting)
+		webGroup.GET("/ws", ToWs)
+		webGroup.GET("/post_detail/:Id", func(c *gin.Context) {
+			Id := c.Param("Id")
+			ToPostDetails(Id, c)
+		})
+	}
+
+	appGroup := engine.Group("/app")
+	{
+		appGroup.GET("/")
+		appGroup.GET("/index", ToIndex_app)
+		appGroup.GET("/post_detail/:Id", func(c *gin.Context) {
+			Id := c.Param("Id")
+			ToPostDetails_app(Id, c)
+		})
+		appGroup.GET("/profile", ToProfile_app)
+		appGroup.GET("/profile_detail")
+		appGroup.GET("/rank", ToRank_app)
+		appGroup.POST("/like", ToLike_app)
+		appGroup.POST("/collect", ToCollect_app)
+		appGroup.POST("/follow", ToFollow_app)
+		appGroup.GET("/likeList", ToLikeList_app)
+		appGroup.GET("/collectList", ToCollectList_app)
+		appGroup.GET("/vip/:uid", func(c *gin.Context) {
+			//TODO check whether the user is vip by uid.
+			c.JSON(200, gin.H{"isVip": true})
+		})
+	}
 	err := engine.Run()
 	if err != nil {
 		return

@@ -80,7 +80,7 @@
             }
         }
     </style>
-
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -347,7 +347,7 @@ Header END -->
                     <div class="card card-body">
                         <!-- Fees images -->
                         <div id="wrap" class="my-map">
-                            <div id="mapContainer"></div>
+                            <div id="map"></div>
                         </div>
 
 
@@ -362,10 +362,11 @@ Header END -->
                                 <!-- Info -->
                                 <div>
                                     <div class="nav nav-divider">
-                                        <h6 class="nav-item card-title mb-0"><a href="#!"> Lori Ferguson </a></h6>
-                                        <span class="nav-item small"> 2hr</span>
+                                        <h6 class="nav-item card-title mb-0"><a href="#!"> {{ .username }}Lori Ferguson </a></h6>
+                                        <span class="nav-item small"> {{ .post_time }}2hr</span>
                                     </div>
-                                    <p class="mb-0 small">Web Developer at Webestica</p>
+                                    <!-- 这块不知道干嘛，可能是座右铭motto? -->
+                                    <p class="mb-0 small">{{ .motto}}Web Developer at Webestica</p>
                                 </div>
                             </div>
                             <!-- Card feed action dropdown START -->
@@ -376,30 +377,28 @@ Header END -->
                                 </a>
                                 <!-- Card feed action dropdown menu -->
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
-                                    <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark fa-fw pe-2"></i>Save
-                                        post</a></li>
+                                    <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark fa-fw pe-2"></i>Collect</a></li>
+                                    <!-- 这里可以改为下载gps路线 -->
+                                    <li><a class="dropdown-item" href="#"> <i class="bi bi-archive"></i>&nbsp;&nbsp;Download GPS Route</a></li>
                                     <li><a class="dropdown-item" href="#"> <i class="bi bi-person-x fa-fw pe-2"></i>Unfollow
-                                        lori ferguson </a></li>
-                                    <li><a class="dropdown-item" href="#"> <i class="bi bi-x-circle fa-fw pe-2"></i>Hide
-                                        post</a></li>
+                                        {{ .username }}lori ferguson </a></li>
+                                    <!-- 投诉提交后台审核 -->
                                     <li><a class="dropdown-item" href="#"> <i class="bi bi-slash-circle fa-fw pe-2"></i>Block</a>
                                     </li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
-                                    <li><a class="dropdown-item" href="#"> <i class="bi bi-flag fa-fw pe-2"></i>Report
-                                        post</a></li>
                                 </ul>
                             </div>
                             <!-- Card feed action dropdown END -->
                         </div>
                         <!-- Feed meta Info -->
-                        <h1 class="h4">Speedily say has suitable disposal add boy. On forth doubt miles of child.</h1>
-                        <p>Exercise joy man children rejoiced. Yet uncommonly his ten who diminution astonished.
+                        <h1 class="h4">{{ .post_title }}Speedily say has suitable disposal add boy. On forth doubt miles of child.</h1>
+                        <p>{{ .post_content }}Exercise joy man children rejoiced. Yet uncommonly his ten who diminution astonished.
                             Speedily say has suitable disposal add boy. On forth doubt miles of child. </p>
                         <div id="carouselExampleFade" class="carousel slide carousel-fade" style="margin-bottom: 20px" data-ride="carousel">
                             <div class="carousel-inner">
-
+                                <!-- 帖子里面的图片 -->
                                 <div class="carousel-item active">
                                     <img src="static/images/post/16by9/big/01.jpg" class="d-block w-100" alt="...">
                                 </div>
@@ -425,44 +424,20 @@ Header END -->
                         <!-- Feed react START -->
                         <ul class="nav nav-stack flex-wrap small mb-3">
                             <li class="nav-item">
-                                <a class="nav-link" href="#!"> <i class="bi bi-hand-thumbs-up-fill pe-1"></i>(56)</a>
+                                <a class="nav-link" href="#!"> <i class="bi bi-hand-thumbs-up-fill pe-1"></i>{{ .sum_likes}}(56)</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#!"> <i class="bi bi-chat-fill pe-1"></i>(12)</a>
+                                <a class="nav-link" href="#!"> <i class="bi bi-chat-fill pe-1"></i>{{ sum_comments }}(12)</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#!"> <i class="bi bi-trash-fill pe-1"></i></a>
-                            </li>
-
                             <!-- Card share action START -->
-                            <li class="nav-item dropdown ms-sm-auto">
-                                <a class="nav-link mb-0" href="#" id="cardShareAction" data-bs-toggle="dropdown"
-                                   aria-expanded="false">
-                                    <i class="bi bi-reply-fill flip-horizontal ps-1"></i>(3)
-                                </a>
-                                <!-- Card share action dropdown menu -->
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction">
-                                    <li><a class="dropdown-item" href="#"> <i class="bi bi-envelope fa-fw pe-2"></i>Send
-                                        via Direct Message</a></li>
-                                    <li><a class="dropdown-item" href="#"> <i
-                                            class="bi bi-bookmark-check fa-fw pe-2"></i>Bookmark </a></li>
-                                    <li><a class="dropdown-item" href="#"> <i class="bi bi-link fa-fw pe-2"></i>Copy
-                                        link to post</a></li>
-                                    <li><a class="dropdown-item" href="#"> <i class="bi bi-share fa-fw pe-2"></i>Share
-                                        post via …</a></li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li><a class="dropdown-item" href="#"> <i
-                                            class="bi bi-pencil-square fa-fw pe-2"></i>Share to News Feed</a></li>
-                                </ul>
-                            </li>
+                            
                             <!-- Card share action END -->
                         </ul>
                         <!-- Feed react END -->
 
                         <!-- Comment wrap START -->
                         <ul class="comment-wrap list-unstyled">
+                            <!-- 评论可以使用for循环 -->
                             <!-- Comment item START -->
                             <li class="comment-item">
                                 <div class="d-flex position-relative">
@@ -475,104 +450,17 @@ Header END -->
                                         <!-- Comment by -->
                                         <div class="bg-light rounded-start-top-0 p-3 rounded">
                                             <div class="d-flex justify-content-between">
-                                                <h6 class="mb-1"><a href="#!"> Frances Guerrero </a></h6>
-                                                <small class="ms-2">5hr</small>
+                                                <h6 class="mb-1"><a href="#!">{{ .com_username }} Frances Guerrero </a></h6>
+                                                <small class="ms-2">{{ .com_time }}5hr</small>
                                             </div>
-                                            <p class="small mb-0">Removed demands expense account in outward tedious do.
+                                            <p class="small mb-0">{{ .com_content }}Removed demands expense account in outward tedious do.
                                                 Particular way thoroughly unaffected projection.</p>
                                         </div>
                                         <!-- Comment react -->
-                                        <ul class="nav nav-divider py-2 small">
-                                            <li class="nav-item">
-                                                <a class="nav-link" href="#!"> Like (3)</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" href="#!"> Reply</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" href="#!"> View 5 replies</a>
-                                            </li>
-                                        </ul>
                                     </div>
                                 </div>
                                 <!-- Comment item nested START -->
-                                <ul class="comment-item-nested list-unstyled">
-                                    <!-- Comment item START -->
-                                    <li class="comment-item">
-                                        <div class="d-flex">
-                                            <!-- Avatar -->
-                                            <div class="avatar avatar-xs">
-                                                <a href="#!"><img class="avatar-img rounded-circle"
-                                                                  src="static/images/avatar/06.jpg" alt=""></a>
-                                            </div>
-                                            <!-- Comment by -->
-                                            <div class="ms-2">
-                                                <div class="bg-light p-3 rounded">
-                                                    <div class="d-flex justify-content-between">
-                                                        <h6 class="mb-1"><a href="#!"> Lori Stevens </a></h6>
-                                                        <small class="ms-2">2hr</small>
-                                                    </div>
-                                                    <p class="small mb-0">See resolved goodness felicity shy civility
-                                                        domestic had but Drawings offended yet answered Jennings
-                                                        perceive.</p>
-                                                </div>
-                                                <!-- Comment react -->
-                                                <ul class="nav nav-divider py-2 small">
-                                                    <li class="nav-item">
-                                                        <a class="nav-link" href="#!"> Like (5)</a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a class="nav-link" href="#!"> Reply</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <!-- Comment item END -->
-                                    <!-- Comment item START -->
-                                    <li class="comment-item">
-                                        <div class="d-flex">
-                                            <!-- Avatar -->
-                                            <div class="avatar avatar-story avatar-xs">
-                                                <a href="#!"><img class="avatar-img rounded-circle"
-                                                                  src="static/images/avatar/07.jpg" alt=""></a>
-                                            </div>
-                                            <!-- Comment by -->
-                                            <div class="ms-2">
-                                                <div class="bg-light p-3 rounded">
-                                                    <div class="d-flex justify-content-between">
-                                                        <h6 class="mb-1"><a href="#!"> Billy Vasquez </a></h6>
-                                                        <small class="ms-2">15min</small>
-                                                    </div>
-                                                    <p class="small mb-0">Wishing calling is warrant settled was
-                                                        lucky.</p>
-                                                </div>
-                                                <!-- Comment react -->
-                                                <ul class="nav nav-divider py-2 small">
-                                                    <li class="nav-item">
-                                                        <a class="nav-link" href="#!"> Like</a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a class="nav-link" href="#!"> Reply</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <!-- Comment item END -->
-                                </ul>
-                                <!-- Load more replies -->
-                                <a href="#!" role="button"
-                                   class="btn btn-link btn-link-loader btn-sm text-secondary d-flex align-items-center mb-3 ms-5"
-                                   data-bs-toggle="button" aria-pressed="true">
-                                    <div class="spinner-dots me-2">
-                                        <span class="spinner-dot"></span>
-                                        <span class="spinner-dot"></span>
-                                        <span class="spinner-dot"></span>
-                                    </div>
-                                    Load more replies
-                                </a>
-                                <!-- Comment item nested END -->
+                               <br>
                             </li>
                             <!-- Comment item END -->
                             <!-- Comment item START -->
@@ -647,96 +535,126 @@ JS libraries, plugins and custom scripts -->
 <!-- Template Functions -->
 <script src="static/js/functions.js"></script>
 
-<script src="//webapi.amap.com/maps?v=1.3&key=f1742220707c5766bbcd9c781a33ed1a"></script>
-<script>
-    !function () {
-        var infoWindow, map, level = 16,
-            center = {lng: 103.985895, lat: 30.763873},
-            features = [];
-
-        function loadFeatures() {
-            for (var feature, data, i = 0, len = features.length, j, jl, path; i < len; i++) {
-                data = features[i];
-                switch (data.type) {
-                    case "Marker":
-                        feature = new AMap.Marker({
-                            map: map,
-                            position: new AMap.LngLat(data.lnglat.lng, data.lnglat.lat),
-                            zIndex: 3,
-                            extData: data,
-                            offset: new AMap.Pixel(data.offset.x, data.offset.y),
-                            title: data.name,
-                            content: '<div class="icon icon-' + data.icon + ' icon-' + data.icon + '-' + data.color + '"></div>'
-                        });
-                        break;
-                    case "Polyline":
-                        for (j = 0, jl = data.path.length, path = []; j < jl; j++) {
-                            path.push(new AMap.LngLat(data.path[j].lng, data.path[j].lat));
-                        }
-                        feature = new AMap.Polyline({
-                            map: map,
-                            path: path,
-                            extData: data,
-                            zIndex: 2,
-                            strokeWeight: data.strokeWeight,
-                            strokeColor: data.strokeColor,
-                            strokeOpacity: data.strokeOpacity
-                        });
-                        break;
-                    case "Polygon":
-                        for (j = 0, jl = data.path.length, path = []; j < jl; j++) {
-                            path.push(new AMap.LngLat(data.path[j].lng, data.path[j].lat));
-                        }
-                        feature = new AMap.Polygon({
-                            map: map,
-                            path: path,
-                            extData: data,
-                            zIndex: 1,
-                            strokeWeight: data.strokeWeight,
-                            strokeColor: data.strokeColor,
-                            strokeOpacity: data.strokeOpacity,
-                            fillColor: data.fillColor,
-                            fillOpacity: data.fillOpacity
-                        });
-                        break;
-                    default:
-                        feature = null;
-                }
-                if (feature) {
-                    AMap.event.addListener(feature, "click", mapFeatureClick);
-                }
-            }
-        }
-
-        function mapFeatureClick(e) {
-            if (!infoWindow) {
-                infoWindow = new AMap.InfoWindow({autoMove: true, isCustom: false});
-            }
-            var extData = e.target.getExtData();
-            infoWindow.setContent("<div class='myinfowindow'><h5>" + extData.name + "</h5><div>" + extData.desc + "</div></div>");
-            infoWindow.open(map, e.lnglat);
-        }
-
-        map = new AMap.Map("mapContainer", {
-            center: new AMap.LngLat(center.lng, center.lat),
-            level: level,
-            keyboardEnable: true,
-            dragEnable: true,
-            scrollWheel: true,
-            doubleClickZoom: true
-        });
-
-        loadFeatures();
-
-        map.on('complete', function () {
-            map.plugin(["AMap.ToolBar", "AMap.OverView", "AMap.Scale"], function () {
-                map.addControl(new AMap.ToolBar({ruler: false, direction: false, locate: false}));
-                map.addControl(new AMap.OverView({isOpen: false}));
-                map.addControl(new AMap.Scale);
+<script src="//webapi.amap.com/maps?v=1.3&key=21d47c7ae90e5c14d751f6bfe98e34f1"></script>
+<script src="https://webapi.amap.com/maps?v=2.0&key=21d47c7ae90e5c14d751f6bfe98e34f1"></script>
+<script src="https://webapi.amap.com/loca?v=2.0.0&key=21d47c7ae90e5c14d751f6bfe98e34f1"></script>
+        <script>
+            var map = ( new AMap.Map('map', {
+                zoom: 16,
+                center: [103.988769, 30.764262],
+                showLabel: true,
+                viewMode: '3D',
+            }));
+            var loca = new Loca.Container({
+                map,
             });
-        })
+            // $.ajax({
+            //   url: "https://restapi.amap.com/rest/lbs/geohub/place/properties?key=052fa8130e4aa343ecd86b2854e09b2b&dataset_id=0f4d453c-d344-467b-a34c-e30949b8bb84&properties={\"relation\": \"and\",\"conditions\": [{\"field\": \"terminalId\",\"operation\":\"equal\",\"value\": 1}]}&offset=300",
 
-    }();
-</script>
+            //   success: function(res){
+
+              const path = [[103.988769, 30.764262],
+    [103.988769, 30.764262],
+    [103.988914, 30.764133],
+    [103.989043, 30.763985],
+    [103.989118, 30.763874],
+    [103.989268, 30.763755],
+    [103.989354, 30.763662],
+    [103.989483, 30.763533],
+    [103.989611, 30.763413],
+    [103.989729, 30.763312],
+    [103.989858, 30.763174],
+    [103.989965, 30.763054],
+    [103.990062, 30.762971],
+    [103.990126, 30.762879],
+    [103.990201, 30.763026],
+    [103.990309, 30.763109],
+    [103.990416, 30.763201],
+    [103.990523, 30.763275],
+    [103.990641, 30.763335],
+    [103.990759, 30.763423],
+    [103.990872, 30.763552],
+    [103.990979, 30.763626],
+    [103.991065, 30.76357],
+    [103.991065, 30.763501],
+    [103.991113, 30.763441],
+    [103.991156, 30.763354],
+    [103.991172, 30.763312],
+    [103.99121, 30.763266],
+    [103.991215, 30.763188],
+    [103.991253, 30.763142],
+    [103.991264, 30.763118],
+    [103.991296, 30.763077],
+    [103.991312, 30.76304],
+    [103.991333, 30.762999],
+    [103.991349, 30.762971],
+    [103.991355, 30.762902],
+    [103.991398, 30.762851],
+    [103.991424, 30.762782],
+    [103.991441, 30.76274],
+    [103.991462, 30.76269],
+    [103.991473, 30.762648],
+    [103.991467, 30.762607],
+    [103.991462, 30.762561],
+    [103.991462, 30.762492],
+    [103.991441, 30.762445],
+    [103.991414, 30.762399],
+    [103.991392, 30.762349],
+    [103.991365, 30.762321],
+    [103.991339, 30.762303],
+    [103.991323, 30.762284],
+    [103.991296, 30.76227],
+    [103.991258, 30.762243],
+    [103.991215, 30.762201],
+    [103.991167, 30.762155],
+    [103.991129, 30.762109],
+    [103.99106, 30.762063],
+    [103.991022, 30.762026]];
+            //   const data = res.objects.map(i => {
+            //     path.push(i.geometry.coordinates)
+
+            //   });
+
+              const geo = new Loca.GeoJSONSource({
+                data: {
+                  type: "FeatureCollection",
+                  features: [
+                  {
+                      type: 'Feature',
+                      geometry: {
+                        type: 'LineString',
+                        coordinates: path
+                      }
+                    }
+                  ]
+                }
+              });
+              const layer = new Loca.PulseLineLayer({
+                  zIndex: 10,
+                  opacity: 1,
+                  visible: true,
+                  zooms: [2, 22],
+              });
+              layer.setSource(geo);
+              layer.setStyle({
+                  altitude: 0,
+                  lineWidth: 6,
+                  // 脉冲头颜色
+                  headColor: '#2040ff',
+                  // 脉冲尾颜色
+                  trailColor: '#c0ffff',
+                  interval: 1,
+                  // 脉冲线的速度，几秒钟跑完整段路
+                  duration: 5000,
+              });
+              loca.add(layer);
+              loca.animate.start();
+        //     },
+        //     error: function()
+        //     {
+        //         alert(2)
+        //     }
+        // });
+        </script>
 </body>
 </html>
