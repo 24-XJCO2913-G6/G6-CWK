@@ -2,7 +2,7 @@
 	<view style="height: 100rpx;"
 	class="fixed-bottom flex align-center border-top bg-white">
 	
-		<input type="text" v-model="content" class="flex-1 rounded bg-light ml-2" style="padding: 5rpx;" :focus="focus" placeholder="文明发言" @confirm="submit" @blur="$emit('blur')"/>
+		<input type="text" v-model="content" class="flex-1 rounded bg-light ml-2" style="padding: 5rpx;" :focus="focus" placeholder="Speak politely" @confirm="submit" @blur="$emit('blur')"/>
 		
 		<view class="iconfont icon-fabu flex align-center justify-center font-lg animated" hover-class="jello text-main" style="width: 100rpx;" @click="submit"></view>
 		

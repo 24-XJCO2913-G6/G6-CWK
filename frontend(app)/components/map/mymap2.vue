@@ -36,7 +36,7 @@
 				this.initAmap();
 			} else {
 				const script = document.createElement('script');
-				script.src = "https://webapi.amap.com/maps?v=1.4.15&key=399dacdae46d183be97ba277bda01549";
+				script.src = "https://webapi.amap.com/maps?v=1.4.15&key=88a2ba19bc223378211e8c2f00a25622";
 				script.onload = () => {
 					this.initAmap();
 				}

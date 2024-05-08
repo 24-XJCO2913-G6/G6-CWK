@@ -10,7 +10,7 @@
 		</uni-nav-bar>
 		<!-- #endif -->
 		<!-- 文本域 -->
-		<mymap3 :path="path" :center='center' :zoom='16' :mapheight='80'></mymap3>
+		<mymap  :path="path" :center='center' :zoom='16' :mapheight='80'></mymap>
 		<br><br>
 
 
@@ -76,7 +76,7 @@
 
 
 <script>
-	const isOpenArray = ['Public', 'Only me', "Only friends"];
+	
 	import uniNavBar from '@/components/uni-ui/uni-nav-bar/uni-nav-bar.vue';
 	import uploadImage from '@/components/common/upload-image.vue';
 	import mymap3 from '../../components/map/mymap3.vue';
@@ -90,6 +90,7 @@
 		},
 		data() {
 			return {
+				 isOpenArray :['Public', 'Only VIP'],
 				showflag: false,
 				currentCountdown: 3,
 				isRecording: false,
@@ -101,7 +102,7 @@
 				imageList: [],
 				// 是否已经弹出提示框
 				showBack: false,
-				isopen: 1,
+				isopen: 0,
 				topic: {
 					id: 0,
 					title: ""
@@ -136,7 +137,7 @@
 				return this.imageList.length > 0
 			},
 			isopenText() {
-				return isOpenArray[this.isopen]
+				return this.isOpenArray[this.isopen]
 			},
 			// 文章分类可选项
 			range() {
@@ -327,7 +328,7 @@
 			// 切换可见性
 			changeIsopen() {
 				uni.showActionSheet({
-					itemList: isOpenArray,
+					itemList: this.isOpenArray,
 					success: (res) => {
 						this.isopen = res.tapIndex
 					}

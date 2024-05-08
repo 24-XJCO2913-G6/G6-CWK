@@ -1,86 +1,82 @@
 <template>
 	<view>
 		<!-- #ifdef MP -->
-		<uni-nav-bar :shadow="false" :fixed="true" :border="false" right-text="Menu" @click-right="clickNavigationButton"></uni-nav-bar>
+		<uni-nav-bar :shadow="false" :fixed="true" :border="false" right-text="Menu"
+			@click-right="clickNavigationButton"></uni-nav-bar>
 		<!-- #endif -->
 		<!-- 头部 -->
 		<view class="flex align-center p-3 border-bottom border-light-secondary">
-			<image :src="userinfo.userpic" 
-			style="width: 180rpx;height: 180rpx;"
-			class="rounded-circle"></image>
+			<image :src="userinfo.userpic" style="width: 180rpx;height: 180rpx;" class="rounded-circle"></image>
 			<view class="pl-3 flex flex-column flex-1">
 				<view class="flex align-center">
-					<view class="flex-1 flex flex-column align-center justify-center" v-for="(item,index) in counts" :key="index">
+					<view class="flex-1 flex flex-column align-center justify-center" v-for="(item,index) in counts"
+						:key="index">
 						<text class="font-lg font-weight-bold">{{item.num|formatNum}}</text>
 						<text class="font text-muted">{{item.name}}</text>
 					</view>
 				</view>
 				<view class="flex justify-center align-center">
-					
-					<button v-if="user_id == user.id"
-					 type="default" size="mini"
-					style="width: 400rpx;" @click="openUserInfo">
+
+					<button v-if="user_id == user.id" type="default" size="mini" style="width: 400rpx;"
+						@click="openUserInfo">
 						Edit Profile
 					</button>
-					
-					<button v-else
-					type="default" size="mini" 
-					:class="userinfo.isFollow ? 'bg-light text-dark' : 'bg-main'"
-					style="width: 400rpx;" @click="doFollow">
+
+					<button v-else type="default" size="mini"
+						:class="userinfo.isFollow ? 'bg-light text-dark' : 'bg-main'" style="width: 400rpx;"
+						@click="doFollow">
 						{{userinfo.isFollow ? '' : 'Follow'}}
 					</button>
 
 				</view>
 			</view>
 		</view>
-		
+
 		<!-- tab -->
 		<view class="flex align-center" style="height: 100rpx;">
-			<view class="flex-1 flex align-center justify-center"
-			v-for="(item,index) in tabBars" :key="index"
-			:class="index === tabIndex ? 'font-lg font-weight-bold text-main':'font-md'"
-			@click="changeTab(index)">
-			{{item.name}}</view>
+			<view class="flex-1 flex align-center justify-center" v-for="(item,index) in tabBars" :key="index"
+				:class="index === tabIndex ? 'font-lg font-weight-bold text-main':'font-md'" @click="changeTab(index)">
+				{{item.name}}
+			</view>
 		</view>
-		
+
 		<template v-if="tabIndex === 0">
 			<view class="animated fast fadeIn">
 				<view class="p-3 border-bottom">
 					<view class="font-md">Information</view>
-					<view class="font">Age：{{userinfo.regtime}}</view>
-					<view class="font">id：{{user_id}}</view>
-				</view>
-				<view class="p-3 border-bottom">
-					<view class="font-md">Information</view>
+					<view class="font">Sex: {{userinfo.sex}}</view>
 					<view class="font">Birthday：{{userinfo.birthday}}</view>
 					<view class="font">Job：{{userinfo.job}}</view>
-					<view class="font">Hometown：{{userinfo.path}}</view>
-					<view class="font">Emotion：{{userinfo.qg}}</view>
+					<view class="font">Hometown：{{userinfo.hometown}}</view>
+					<view class="font">Relationship Status：{{userinfo.relation}}</view>
 				</view>
 			</view>
 		</template>
 		<template v-else>
 			<view class="animated fast fadeIn">
-				<common-list v-for="(item,index) in list" :key="index" :item="item" :index="index" @follow="follow" @doSupport="doSupport"></common-list>
+				<!-- <common-list :item="myitem" v-for="myitem in posts" :key="myitem.post_id"></common-list> -->
+				<common-list :item="post" v-for="post in posts" :key="post.post_id"></common-list>
 				<divider></divider>
-				<load-more :loadmore="loadmore"></load-more>
+				<!-- <load-more :loadmore="loadmore"></load-more> -->
 			</view>
 		</template>
-		
-		
-		
+
+
+
 		<!-- 弹出层 -->
 		<uni-popup ref="popup" type="top">
-			<view class="flex align-center justify-center font-md border-bottom py-2" hover-class="bg-light" @click="doBlack">
-				<text class="iconfont icon-sousuo mr-2"></text> 
+			<view class="flex align-center justify-center font-md border-bottom py-2" hover-class="bg-light"
+				@click="doBlack">
+				<text class="iconfont icon-sousuo mr-2"></text>
 				{{userinfo.isblack ? 'de-blacklist' : 'blacklist'}}
 			</view>
-			<view v-if="!userinfo.isblack" class="flex align-center justify-center font-md py-2" hover-class="bg-light" @click="openChat">
+			<view v-if="!userinfo.isblack" class="flex align-center justify-center font-md py-2" hover-class="bg-light"
+				@click="openChat">
 				<text class="iconfont icon-shanchu mr-2"></text> Talk
 			</view>
 		</uni-popup>
-		
-		
+
+
 	</view>
 </template>
 
@@ -90,9 +86,12 @@
 	import loadMore from '@/components/common/load-more.vue';
 	import uniPopup from '@/components/uni-ui/uni-popup/uni-popup.vue';
 	import $T from '@/common/time.js';
-	import { mapState } from 'vuex'
+	import {
+		mapState
+	} from 'vuex'
 	import uniNavBar from '@/components/uni-ui/uni-nav-bar/uni-nav-bar.vue';
 	export default {
+
 		components: {
 			commonList,
 			loadMore,
@@ -101,44 +100,206 @@
 		},
 		data() {
 			return {
-				user_id:0,
-				userinfo:{
-					userpic:"/static/default.jpg",
-					username:"",
-					sex:0,
-					age:20,
-					isFollow:false,
-					regtime:"",
-					birthday:"",
-					job:"",
-					path:"",
-					qg:""
-				},
-				counts:[{
-					name:"Post",
-					num:0
-				},{
-					name:"Follow",
-					num:0
-				},{
-					name:"Fan",
-					num:0
+				posts: [{
+					post_id: 1,
+					name: 'Yodo',
+					visibility: 1,
+					time: '2024-05-01',
+					like: 19,
+					islike:1,
+					iscollect:0,
+					userpic: '../../static/user_pic/1.jpg',
+					title: 'Nice day to have a walk',
+					collect: 13,
+					content: '44444444444444444',
+					comments_num: 0,
+					center: [
+						103.981051,
+						30.765612
+					],
+					path: [
+						[
+							103.977527,
+							30.767054
+						],
+						[
+							103.977643,
+							30.766825
+						],
+						[
+							103.977727,
+							30.766768
+						],
+						[
+							103.977826,
+							30.766625
+						],
+						[
+							103.977926,
+							30.766525
+						],
+						[
+							103.978076,
+							30.766325
+						],
+						[
+							103.978375,
+							30.765926
+						],
+						[
+							103.978558,
+							30.76574
+						],
+						[
+							103.978741,
+							30.765526
+						],
+						[
+							103.978874,
+							30.765297
+						],
+						[
+							103.978973,
+							30.765269
+						],
+						[
+							103.97904,
+							30.765255
+						],
+						[
+							103.979106,
+							30.765312
+						],
+						[
+							103.979273,
+							30.765355
+						],
+						[
+							103.979406,
+							30.765483
+						],
+						[
+							103.979672,
+							30.765583
+						],
+						[
+							103.979788,
+							30.765669
+						],
+						[
+							103.979938,
+							30.765769
+						],
+						[
+							103.980154,
+							30.765869
+						],
+						[
+							103.980337,
+							30.766012
+						],
+						[
+							103.980486,
+							30.766097
+						],
+						[
+							103.980619,
+							30.766169
+						],
+						[
+							103.980669,
+							30.766169
+						],
+						[
+							103.980736,
+							30.766026
+						],
+						[
+							103.980785,
+							30.76584
+						],
+						[
+							103.980835,
+							30.765697
+						],
+						[
+							103.981051,
+							30.765612
+						],
+						[
+							103.981168,
+							30.765569
+						],
+						[
+							103.981317,
+							30.765555
+						],
+						[
+							103.981517,
+							30.765555
+						],
+						[
+							103.98175,
+							30.765497
+						],
+						[
+							103.981999,
+							30.76534
+						],
+						[
+							103.982165,
+							30.765155
+						],
+						[
+							103.982282,
+							30.764969
+						],
+						[
+							103.982365,
+							30.764812
+						],
+
+					],
+					comments: [
+						{
+							userpic: '../../static/user_pic/2.jpg',
+							username: 'Vero',
+							data: 'Good!',
+							time: '2024-4-7'
+						},
+
+					],
 				}],
-				tabIndex:0,
-				tabBars:[{
-					name:"Home",
-				},{
-					name:"Post",
-					list:[],
+				userinfo: {
+					userpic: "/static/user_pic/1.jpg",
+					username: "Abby",
+					sex: 'female',
+					birthday: "2003-08-17",
+					job: "Software Engineer",
+					hometown: "Chengdu",
+					relation: "married"
+				},
+				counts: [{
+					name: "Post",
+					num: 1
+				}, {
+					name: "Follow",
+					num: 0
+				}, {
+					name: "Fan",
+					num: 1
+				}],
+				tabIndex: 0,
+				tabBars: [{
+					name: "Info",
+				}, {
+					name: "Post",
+					list: [
+
+					],
 					// 1.上拉加载更多  2.加载中... 3.没有更多了
-					loadmore:"Load more",
-					page:1
-				},{
-					name:"News",
-					list:[],
-					// 1.上拉加载更多  2.加载中... 3.没有更多了
-					loadmore:"Load more",
-					page:1
+					loadmore: "Load more",
+					page: 1
 				}],
 			}
 		},
@@ -147,12 +308,12 @@
 		},
 		computed: {
 			...mapState({
-				user:state=>state.user
+				user: state => state.user
 			}),
 			list() {
-				return this.tabBars[this.tabIndex].list 
+				return this.tabBars[this.tabIndex].list
 			},
-			loadmore(){
+			loadmore() {
 				return this.tabBars[this.tabIndex].loadmore
 			}
 		},
@@ -162,212 +323,131 @@
 			}
 		},
 		onLoad(e) {
-			if(!e.user_id){
-				return uni.showToast({
-					title: 'Invalid parameter',
-					icon: 'none'
-				});
-			}
-			this.user_id = e.user_id
-			// 加载用户个人信息
-			this.getUserInfo()
-			// 获取用户相关数据
-			this.getCounts()
-			// 监听关注和顶踩操作
-			uni.$on('updateFollowOrSupport',(e)=>{
-				switch (e.type){
-					case 'follow': // 关注
-					this.follow(e.data.user_id)
-						break;
-					case 'support': // 顶踩
-					this.doSupport(e.data)
-						break;
-				}
-			})
-			// 监听评论数变化
-			uni.$on('updateCommentsCount',({id,count})=>{
-				this.tabBars.forEach(tab=>{
-					if(tab.list){
-						tab.list.forEach((item)=>{
-							if(item.id === id){
-								item.comment_count = count
-							}
-						})
-					}
-				})
-			})
+		uni.request({
+			  url: 'http://120.46.81.37:8080/app/profile_detail',
+			  method: 'POST',
+			  data:{
+				  'aToken': aToken,
+				  'rToken':rToken,
+			  },
+			  header: {
+			      'Content-Type': 'application/x-www-form-urlencoded',
+			  },
+			  success: (res) => {
+					this.user_info.user_pic=res.user_pic
+					this.user_info.username = res.username
+					this.user_info.sex  =  res.sex
+					this.user_info.job  = res.job
+					this.user_info.birthday  =res.birthday
+					this.user_info.hometown =res.hometown
+					this.user_info.relation =res.relation
+			  },
+			  fail: (err) => {
+				  console.error('Error fetching person info:', err);
+				
+			  }
+		});
+			uni.request({
+					  //获取某个用户发过的所有帖子
+						url: 'http://120.46.81.37:8080/app/get_posts',
+			           method: 'GET',
+			           data: {
+						'aToken': aToken,
+						'rToken': rToken,
+						},
+			           header: {
+			               'Content-Type': 'application/x-www-form-urlencoded',				
+			           },
+			           success: (res) => {
+						   this.counts[0].num=res.data.length;
+						   this.posts=res.data;
+			               console.log('Post data uploaded successfully:', res);
+			           },
+			           fail: (err) => {
+			               console.error('Error uploading post data:', err);
+			           }
+			       });
+			uni.request({
+						//获取某个用户所有关注的人
+						url: 'http://120.46.81.37:8080/app/get_follow',
+			           method: 'GET',
+			           data: {
+						'aToken': aToken,
+						'rToken': rToken,
+						},
+			           header: {
+			               'Content-Type': 'application/x-www-form-urlencoded',				
+			           },
+			           success: (res) => {
+						   this.counts[1].num=res.data.length;
+			               console.log('Post data uploaded successfully:', res);
+			           },
+			           fail: (err) => {
+			               console.error('Error uploading post data:', err);
+			           }
+			       });
+			uni.request({
+						//获取某个用户所有的粉丝
+						url: 'http://120.46.81.37:8080/app/get_fan',
+			           method: 'GET',
+			           data: {
+						'aToken': aToken,
+						'rToken': rToken,
+						},
+			           header: {
+			               'Content-Type': 'application/x-www-form-urlencoded',				
+			           },
+			           success: (res) => {
+						   this.counts[2].num=res.data.length;
+			               console.log('Post data uploaded successfully:', res);
+			           },
+			           fail: (err) => {
+			               console.error('Error uploading post data:', err);
+			           }
+			       });
+
 		},
 		onUnload() {
-			uni.$off('updateFollowOrSupport',(e)=>{})
-			uni.$off('updateCommentsCount',(e)=>{})
+			
 		},
 		methods: {
-			clickNavigationButton(){
-				if(this.user_id == this.user.id){
+			dofollow(){
+				uni.request({
+				    url: 'http://120.46.81.37:8080/app/follow',
+				    method: 'POST',
+				  data: {
+				      'user_id': user_id,
+					  'aToken': aToken,
+					  'rToken':rToken,
+				  },
+					header: {
+					    'Content-Type': 'application/x-www-form-urlencoded',
+						
+					},
+				    success: function (res) {
+				        console.log('Post request successful:', res.data);
+				        // 可以在这里处理返回的数据
+				    },
+				    fail: function (err) {
+				        console.error('Post request failed:', err);
+				    }
+				});
+			},
+			clickNavigationButton() {
+				if (this.user_id == this.user.id) {
 					return uni.navigateTo({
 						url: '../user-set/user-set',
 					});
 				}
-				this.$refs.popup.open()
+				
 			},
-			// 获取用户相关数据
-			getCounts(){
-				this.$H.get('/user/getcounts/'+this.user_id).then(res=>{
-					this.counts[0].num = res.post_count
-					this.counts[1].num = res.withfollow_count
-					this.counts[2].num = res.withfen_count
-				})
-			},
-			// 获取用户个人信息
-			getUserInfo(){
-				this.$H.post('/getuserinfo',{
-					user_id:this.user_id
-				},{
-					token:true,
-					notoast:true
-				}).then(res=>{
-					this.userinfo = {
-						userpic:res.userpic,
-						username:res.username,
-						sex:res.userinfo.sex,
-						age:res.userinfo.age,
-						isFollow:res.fens.length > 0,
-						isblack:res.blacklist.length > 0,
-						regtime:$T.dateFormat(new Date(res.create_time * 1000), '{Y}-{MM}-{DD}'),
-						birthday:$T.getHoroscope(res.userinfo.birthday),
-						job:res.userinfo.job ? res.userinfo.job : 'No',
-						path:res.userinfo.path ? res.userinfo.path : 'No',
-						qg:emotionArray[res.userinfo.qg],
-					}
-					uni.setNavigationBarTitle({
-						title:this.userinfo.username
-					})
-				})
-			},
-			changeTab(index){
+	
+			changeTab(index) {
 				this.tabIndex = index
 				this.getList()
 			},
-			// 关注
-			follow(user_id){
-				// 找到当前作者的所有列表
-				this.tabBars.forEach(tab=>{
-					if(tab.list){
-						tab.list.forEach((item)=>{
-							if(item.user_id === user_id){
-								item.isFollow = true
-							}
-						})
-					}
-				})
-				uni.showToast({ title: '关注成功' })
-			},
-			// 顶踩操作
-			doSupport(e){
-				// 拿到当前的选项卡对应的list
-				this.tabBars[this.tabIndex].list.forEach(item=>{
-					if(item.id === e.id){
-						// 之前没有操作过
-						if (item.support.type === '') {
-							item.support[e.type+'_count']++
-						} else if (item.support.type ==='support' && e.type === 'unsupport') {
-							// 顶 - 1
-							item.support.support_count--;
-							// 踩 + 1
-							item.support.unsupport_count++;
-						} else if(item.support.type ==='unsupport' && e.type === 'support'){ 					// 之前踩了
-							// 顶 + 1
-							item.support.support_count++;
-							// 踩 - 1
-							item.support.unsupport_count--;
-						}
-						item.support.type = e.type
-					}
-				})
-				let msg = e.type === 'support' ? 'Like' : 'Dislike'
-				uni.showToast({ title: msg + 'Success' });
-			},
-			// 获取文章列表
-			getList(){
-				let index = this.tabIndex
-				if(index === 0) return;
-				let page = this.tabBars[index].page
-				let isrefresh = page === 1
-				this.$H.get('/user/'+this.user_id+'/post/'+page)
-				.then(res=>{
-					let list = res.list.map(v=>{
-						return this.$U.formatCommonList(v)
-					})
-					this.tabBars[index].list = isrefresh ? [...list] : [...this.tabBars[index].list,...list]
-					this.tabBars[index].loadmore = list.length < 10 ? 'No more' : 'Load more'
-				}).catch(err=>{
-					if(!isrefresh){
-						this.tabBars[index].page--
-					}
-				})
-			},
-			// 关注/取消关注
-			doFollow(){
-				this.checkAuth(()=>{
-					let url = this.userinfo.isFollow ? '/unfollow' : '/follow'
-					let msg = this.userinfo.isFollow ? 'Unfollow' : 'Follow'
-					this.$H.post(url,{
-						follow_id:this.user_id
-					},{
-						token:true
-					}).then(res=>{
-						this.userinfo.isFollow = !this.userinfo.isFollow
-						uni.showToast({
-							title: msg+'success',
-							icon: 'none'
-						});
-						uni.$emit('updateIndex')
-						this.getList()
-					})
-				})
-			},
-			// 进入编辑资料
-			openUserInfo(){
-				uni.navigateTo({
-					url: '../user-userinfo/user-userinfo',
-				});
-			},
-			// 加入/移出黑名单
-			doBlack(){
-				this.checkAuth(()=>{
-					let url = this.userinfo.isblack ? '/removeblack':'/addblack'
-					let msg = this.userinfo.isblack ? 'de-blacklist' : 'blacklist'
-					uni.showModal({
-						content: '是否要'+msg,
-						success: (res)=> {
-							if (res.confirm) {
-								this.$H.post(url,{
-									id:this.user_id
-								},{
-									token:true
-								}).then(res=>{
-									this.userinfo.isblack = !this.userinfo.isblack
-									uni.showToast({
-										title: msg+'Success',
-										icon: 'none'
-									});
-								})
-							}
-						}
-					});
-					
-				})
-			},
-			openChat(){
-				let user = {
-					user_id:this.user_id,
-					username:this.userinfo.username,
-					userpic:this.userinfo.userpic
-				}
-				this.navigateTo({
-					url:"/pages/user-chat/user-chat?user="+JSON.stringify(user)
-				})
-			}
+
+
 		}
 	}
 </script>

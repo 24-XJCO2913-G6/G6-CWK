@@ -3,21 +3,21 @@
 		<!-- 未登录 -->
 		<template v-if="!loginStatus">
 			<view class="flex align-center justify-center py-2 font">
-				登录社区，体验更多功能
+				Log in to enjoy more functionalities!
 			</view>
 			<other-login></other-login>
 			<view class="flex align-center justify-center py-2 font text-secondary" @click="openLogin">
-				账号/邮箱/手机登录 <text class="ml-1 iconfont icon-jinru"></text>
+				Use email to log in <text class="ml-1 iconfont icon-jinru"></text>
 			</view>
 		</template>
 
 		<!-- 已登录 -->
 		<view v-else class="flex align-center p-2" hover-class="bg-light" @click='openSpace'>
-			<image :src="user.userpic"
+			<image src="../../static/user_pic/4.jpg"
 			style="width: 100rpx;height: 100rpx;"
 			class="rounded-circle"></image>
 			<view class="flex flex-column flex-1 px-2">
-				<text class="font-lg font-weight-bold text-dark">{{user.username}}</text>
+				<text class="font-lg font-weight-bold text-dark">Super girl</text>
 			</view>
 			<text class="iconfont icon-jinru" style="font-weight: bold;"></text>
 		</view>
@@ -25,8 +25,8 @@
 		
 		
 		<view class="px-3 py-2">
-			<image src="/static/demo/banner1.jpg" mode="aspectFill"
-			style="height: 170rpx;width: 100%;" class="rounded"></image>
+			<image src="../../static/images/banner.png" mode="aspectFill"
+			style="height: 220rpx;width: 100%;" class="rounded"></image>
 		</view>
 		
 		<uni-list-item title="View Routes" showExtraIcon @click="openRoutes">
@@ -66,8 +66,8 @@
 		data() {
 			return {
 				myuser:{
-					userpic:'',
-					username:''
+					userpic:'../../static/user_pic/4.jpg',
+					username:'Super girl'
 				},
 				post_num:0,
 				comments_num:0,

@@ -3,7 +3,7 @@
 		<!-- 用户头像和用户名 -->
 		<view class="user-info">
 			<image class="avatar" src="../../static/common/nothing.png" />
-			<text class="username">UserName</text>
+			
 		</view>
 		<!-- 徽章盒子 -->
 		<view class="medal-boxes">

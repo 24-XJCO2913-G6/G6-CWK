@@ -1,11 +1,13 @@
 <template>
   <view class="like-messages-page">
-    <view class="message-item" v-for="(item, index) in messages" :key="index">
+    <view class="message-item" v-for="(item, index) in likes" :key="index">
       <image class="avatar" :src="item.avatar"></image>
       <view class="message-content">
-        <text class="username">{{ item.username }}</text>
-        <text class="comment">{{ item.comment }}</text>
-        <text class="like-action">liked your comment</text>
+        <view class="user-info">
+          <text class="username">{{ item.username }}</text>
+          <text class="like-action">liked your post</text>
+        </view>
+        <text class="title">{{ item.title }}</text>
         <text class="date">{{ item.date }}</text>
       </view>
     </view>
@@ -16,61 +18,92 @@
 export default {
   data() {
     return {
-      messages: [] // 用于存储点赞消息的数组
+      likes: [
+          {post_id:1, username: 'Verooo', title: 'School walk', date: '04-20', avatar: '../../static/user_pic/2.jpg' },
+		  {post_id:2,  username: 'Super Girl', title: 'School walk', date: '04-14', avatar: '../../static/user_pic/4.jpg' },
+		  { post_id:13, username: 'Yaoyao', title: 'School walk', date: '04-13', avatar: '../../static/user_pic/6.jpg' },
+		  { post_id:11, username: 'Yodo', title: 'School walk', date: '04-13', avatar: '../../static/user_pic/1.jpg' },
+		  { post_id:12, username: 'Peace of summer', title: 'School walk', date: '04-13', avatar: '../../static/user_pic/3.jpg' },
+		 { post_id:14, username: 'Jelly cat', title: 'School walk', date: '04-13', avatar: '../../static/user_pic/5.jpg' },
+		  // ...更多点赞消息对象
+		  // ...更多点赞消息对象
+          // ...更多点赞消息对象
+        ]
     };
   },
-  onLoad(options) {
-    // 这里可以获取从上一个页面传递过来的参数，例如:
-    const { someParameter } = options;
-    // 调用获取点赞消息列表的API，并填充到messages数组中
-    this.fetchLikeMessages(someParameter);
-  },
   methods: {
-    fetchLikeMessages(parameter) {
-      // 这里是获取点赞消息列表的API调用示例
-      // 请替换为实际的API请求逻辑
-      const fakeApiCall = () => {
-        // 模拟从API获取数据
-        return [
-          { username: '团子', comment: '评论内容', date: '04-20' },
-          // ...更多点赞消息对象
-        ];
-      };
-      this.messages = fakeApiCall(parameter);
-    }
+   
+  },
+  onLoad(){
+	  uni.request({
+	  url: 'http://120.46.81.37:8080/app/get_likes',
+	  	method: 'GET',
+	  	data: {
+	  		'aToken': aToken,
+	  		'rToken':rToken,
+	  	},
+	  	header: {
+	  	    'Content-Type': 'application/x-www-form-urlencoded',
+	  	},
+	    success: (res) => {
+	  	this.likes= res.data;
+	    },
+	    fail: (err) => {
+	  	console.error('Failed to fetch posts:', err);
+	    }
+	      });
   }
 };
 </script>
 
-<style>
+<style scoped>
 .like-messages-page {
-  /* 页面样式 */
+  padding: 10px; /* 页面内边距 */
 }
+
 .message-item {
-  /* 消息条目样式 */
   display: flex;
-  align-items: start;
-  margin-bottom: 10px;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-bottom: 1px solid #eee; /* 分割线 */
 }
+
 .avatar {
-  width: 40px; /* 头像大小 */
+  width: 40px;
   height: 40px;
-  border-radius: 50%; /* 圆形头像 */
-  margin-right: 10px;
+  border-radius: 50%;
+  margin-right: 15px;
 }
+
 .message-content {
-  /* 消息内容样式 */
+  flex: 1; /* 填充剩余空间 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
+
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
 .username {
-  /* 用户名样式 */
+  font-weight: bold; /* 加粗用户名 */
+  margin-right: 5px;
 }
-.comment {
-  /* 评论样式 */
-}
+
 .like-action {
-  /* 点赞动作样式 */
+  color: #888; /* 点赞动作颜色 */
 }
+
+.comment {
+  margin-bottom: 5px;
+}
+
 .date {
-  /* 日期样式 */
+  color: #aaa; /* 日期颜色 */
+  font-size: 12px;
 }
 </style>

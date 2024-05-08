@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<template v-if="loginStatus">
+		<template v-if="!loginStatus">
 			<uni-list-item title="Account Security" @click="open('user-safe')"></uni-list-item>
 			<uni-list-item title="Profile Editing" @click="open('user-userinfo')"></uni-list-item>
 		</template>
