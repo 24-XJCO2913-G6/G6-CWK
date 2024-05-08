@@ -106,12 +106,53 @@ func GetLike(c *gin.Context) ([]Liked, error) {
 		for range likeCount {
 			likeAmount += 1
 		}
-		likedBlog := Liked{Bid: blogLiked[0].Id, Content: blogLiked[0].Content, Picture: blogLiked[0].Picture, Tag: blogLiked[0].Tag, Visibility: blogLiked[0].Visibility, Time: blogLiked[0].Pub_time, Review: reviews, ReviewCount: reviewAmount, LikeCount: likeAmount}
+		likedBlog := Liked{Bid: blogLiked[0].Id, Content: blogLiked[0].Content, Picture: blogLiked[0].Picture, Title: blogLiked[0].Title, Visibility: blogLiked[0].Visibility, Time: blogLiked[0].Pub_time, Review: reviews, ReviewCount: reviewAmount, LikeCount: likeAmount}
 		likedBlogs = append(likedBlogs, likedBlog)
 	}
 	return likedBlogs, nil
 }
-
+func GetCollect(c *gin.Context) ([]Collected, error) {
+	var collectedBlogs []Collected
+	var collectList []Collect
+	var blogCollect []Blog
+	var reviews []Review
+	var collectCount []Collect
+	var reviewAmount int64 = 0
+	var collectAmount int64 = 0
+	aToken := c.GetString("aToken")
+	Claims, _ := CheckToken(aToken)
+	Uid, err := strconv.ParseInt(Claims.Uid, 10, 64)
+	if (Uid == -1) || (err != nil) {
+		err := Db.Where("Uid = ?", Uid).Find(&collectList)
+		if err != nil {
+			return []Collected{}, err
+		}
+	}
+	for _, liked := range collectList {
+		Id := liked.Bid
+		err := Db.Where("Id = ?", Id).Find(&blogCollect)
+		if err != nil {
+			return []Collected{}, err
+		}
+		err2 := Db.Where("Bid = ?", Id).Find(&reviews)
+		if err2 != nil {
+			return []Collected{}, err
+		}
+		for range reviews {
+			reviewAmount += 1
+		}
+		err3 := Db.Where("Bid = ?", Id).Find(&collectCount)
+		if err3 != nil {
+			return []Collected{}, err
+		}
+		for range collectCount {
+			collectAmount += 1
+		}
+		collectedBlog := Collected{Bid: blogCollect[0].Id, Content: blogCollect[0].Content, Picture: blogCollect[0].Picture, Title: blogCollect[0].Title, Visibility: blogCollect[0].Visibility, Time: blogCollect[0].Pub_time, Review: reviews, ReviewCount: reviewAmount, CollectCount: collectAmount}
+		collectedBlogs = append(collectedBlogs, collectedBlog)
+	}
+	return collectedBlogs, nil
+}
 func GetJourney(c *gin.Context) (string, error) {
 
 	var users []User

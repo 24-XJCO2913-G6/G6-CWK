@@ -7,7 +7,7 @@ type Blog struct {
 	Visibility int64 //
 	Content    string
 	Picture    string //
-	Tag        string //
+	Title      string //
 	Tid        int64
 }
 
@@ -18,7 +18,7 @@ type Blog_display struct {
 	Visibility int64 //
 	Content    string
 	Picture    string //
-	Tag        string //
+	Title      string //
 }
 
 func BuildModelBlog() {
@@ -28,14 +28,14 @@ func BuildModelBlog() {
 	}
 }
 
-func AddBlog(Uid int64, Pub_time string, Visibility int64, Content string, Picture string, Tag string, Tid int64) int64 {
+func AddBlog(Uid int64, Pub_time string, Visibility int64, Content string, Picture string, Title string, Tid int64) int64 {
 	blog := &Blog{
 		Uid:        Uid,
 		Pub_time:   Pub_time,
 		Visibility: Visibility,
 		Content:    Content,
 		Picture:    Picture,
-		Tag:        Tag,
+		Title:      Title,
 		Tid:        Tid,
 	}
 

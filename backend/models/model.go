@@ -25,4 +25,6 @@ func BuildModel() {
 	BuildModelFollow()
 	BuildModelCollect()
 	BuildModelReview()
+	BuildModelNotification()
+	BuildModelOrder()
 }

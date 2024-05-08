@@ -24,9 +24,20 @@ type Liked struct {
 	ReviewCount int64
 	Review      []Review
 	Picture     string
-	Tag         string
+	Title       string
 	Visibility  int64
 	Time        string
+}
+type Collected struct {
+	Bid          int64
+	Content      string
+	CollectCount int64
+	ReviewCount  int64
+	Review       []Review
+	Picture      string
+	Title        string
+	Visibility   int64
+	Time         string
 }
 
 func BuildModelUser() {

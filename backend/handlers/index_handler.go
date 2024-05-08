@@ -40,7 +40,6 @@ func FollowByCount(c *gin.Context) (int64, error) {
 		if err != nil {
 			return 0, err
 		}
-
 		for range followByList {
 			TotalamountFollowBy += 1
 		}
@@ -133,7 +132,7 @@ func BlogDisplay() ([]Blog_display, error) {
 		}
 		author := authors[0].Name
 		photo := authors[0].ProfilePhot
-		blog_dis := Blog_display{Author: author, Photo: photo, Pub_time: blog.Pub_time, Visibility: blog.Visibility, Content: blog.Content, Picture: blog.Picture, Tag: blog.Tag}
+		blog_dis := Blog_display{Author: author, Photo: photo, Pub_time: blog.Pub_time, Visibility: blog.Visibility, Content: blog.Content, Picture: blog.Picture, Title: blog.Title}
 		blogs_dis = append(blogs_dis, blog_dis)
 	}
 	return []Blog_display{}, nil

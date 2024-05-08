@@ -1,10 +1,12 @@
 package models
 
 type Log struct {
-	Lid  int64 `xorm:"pk"`
-	Uid  int64
-	Ope  string
-	Time string
+	Lid     int64 `xorm:"pk"`
+	Uid     int64
+	Ope     string
+	Time    string
+	IP      string
+	Browser string
 }
 
 func BuildModelLog() {

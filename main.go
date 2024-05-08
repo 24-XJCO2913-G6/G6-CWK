@@ -18,6 +18,7 @@ func main() {
 	InitDB()
 
 	engine.Static("/web/static", "frontend(web)/static")
+	engine.Static("/app/static", "frontend(app)/static")
 	engine.LoadHTMLGlob("frontend(web)/*.html")
 
 	engine.Use(Cors())
@@ -25,6 +26,7 @@ func main() {
 
 	engine.POST("/login", Login)
 	engine.POST("/register", Register)
+	engine.POST("/blog_publish", BlogPublish)
 	go func() {
 		for {
 			msg := <-MsgChan // 改为 Message 类型
@@ -58,10 +60,7 @@ func main() {
 
 		webGroup.GET("/login", ToLogin)
 		webGroup.GET("/register", ToRegister)
-		webGroup.GET("/profile/:uid", func(c *gin.Context) {
-			uid := c.Param("uid")
-			ToProfile(c, uid)
-		})
+		webGroup.GET("/profile", ToProfile)
 
 		webGroup.GET("/vip", ToVip)
 		webGroup.GET("/bill", ToBill)
@@ -87,18 +86,24 @@ func main() {
 	appGroup := engine.Group("/app")
 	{
 		appGroup.GET("/")
-		appGroup.GET("/index")
-		appGroup.GET("/post_detail")
-		appGroup.GET("/profile")
+		appGroup.GET("/index", ToIndex_app)
+		appGroup.GET("/post_detail/:Id", func(c *gin.Context) {
+			Id := c.Param("Id")
+			ToPostDetails_app(Id, c)
+		})
+		appGroup.GET("/profile", ToProfile_app)
 		appGroup.GET("/profile_detail")
-		appGroup.GET("/rank")
-
+		appGroup.GET("/rank", ToRank_app)
+		appGroup.POST("/like", ToLike_app)
+		appGroup.POST("/collect", ToCollect_app)
+		appGroup.POST("/follow", ToFollow_app)
+		appGroup.GET("/likeList", ToLikeList_app)
+		appGroup.GET("/collectList", ToCollectList_app)
 		appGroup.GET("/vip/:uid", func(c *gin.Context) {
 			//TODO check whether the user is vip by uid.
 			c.JSON(200, gin.H{"isVip": true})
 		})
 	}
-
 	err := engine.Run()
 	if err != nil {
 		return
