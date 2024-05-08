@@ -181,41 +181,43 @@ JS libraries, plugins and custom scripts -->
         };
         console.log(formDataObject);
 
-        axios({
-            method: 'POST',
-            url: "http://localhost:8080/login",
-            data: formDataObject,
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-        })
-            .then(function (response) {
-                var data = response.data;
-                console.log(data);
-                if (data.error) {
-                    //TODO 登录问题报错
-                } else {
-                    localStorage.aToken = data.aToken;
-                    localStorage.rToken = data.rToken;
-                    console.log(localStorage.aToken);
-                }
-            })
-            .catch(function (error) {
-                errormsg.innerHTML = error.data.error;
-            });
+        // axios({
+        //     method: 'POST',
+        //     url: "http://localhost:8080/login",
+        //     data: formDataObject,
+        //     headers: {
+        //         "Content-Type": "application/x-www-form-urlencoded"
+        //     },
+        // })
+        //     .then(function (response) {
+        //         var data = response.data;
+        //         console.log(data);
+        //         if (data.error) {
+        //             //TODO 登录问题报错
+        //         } else {
+        //             localStorage.aToken = data.aToken;
+        //             localStorage.rToken = data.rToken;
+        //             console.log(localStorage.aToken);
+        //         }
+        //     })
+        //     .catch(function (error) {
+        //         errormsg.innerHTML = error.data.error;
+        //     });
 
         axios({
             method: 'GET',
             url: 'http://localhost:8080/web/index',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'aToken': localStorage.aToken,
-                'rToken': localStorage.rToken,
+                "Content-Type": "application/x-www-form-urlencoded",
+                data:{
+                    'aToken': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsInBhc3N3b3JkIjoiJDJhJDEwJGk0N2hoMm1xbnpWY0lMVXZ2cjVVR09hMXNFdy9SeDVEWUR2bGI1LlIxcmFyWUY2cEZ1a25LIiwiYXVkIjoiMSIsImV4cCI6MTcxNDM2MDk3MSwiaWF0IjoxNzE0MzQ2NTcxLCJuYmYiOjE3MTQzNDY1NzEsInN1YiI6InRva2VuIn0.LiSoEO6WAV9SIuAxayeCCibmxM7CiSaoua756tsX4So",
+                    'rToken': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTQzNzg5NzF9.DrNmPcwNMDHZrDiWQqhMo0QDdIuTZpMUdznC5xZBOxQ",
+                }
             }
         }).then(function (response) {
             // 请求成功后的处理逻辑
             console.log('Request to second route successful:', response);
-            window.location.href = 'http://localhost:8080/web/index';
+            //window.location.href = 'http://localhost:8080/web/index';
         })
             .catch(function (error) {
                 // 请求失败的处理逻辑

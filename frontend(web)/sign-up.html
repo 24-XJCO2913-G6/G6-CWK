@@ -239,7 +239,7 @@ JS libraries, plugins and custom scripts -->
             "name": form.elements["name"].value,
             "email": form.elements["email"].value,
             "passwd": form.elements["passwd"].value,
-            "rePasswd": form.elements["rePasswd"].value
+            "rePasswd": form.elements["rePasswd"].value,
         };
         console.log(formDataObject)
         var fg = false;
@@ -269,6 +269,10 @@ JS libraries, plugins and custom scripts -->
             url: 'http://localhost:8080/web/login',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            data:{
+                'aToken': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsInBhc3N3b3JkIjoiJDJhJDEwJGk0N2hoMm1xbnpWY0lMVXZ2cjVVR09hMXNFdy9SeDVEWUR2bGI1LlIxcmFyWUY2cEZ1a25LIiwiYXVkIjoiMSIsImV4cCI6MTcxNDM2MDk3MSwiaWF0IjoxNzE0MzQ2NTcxLCJuYmYiOjE3MTQzNDY1NzEsInN1YiI6InRva2VuIn0.LiSoEO6WAV9SIuAxayeCCibmxM7CiSaoua756tsX4So",
+                'rToken': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTQzNzg5NzF9.DrNmPcwNMDHZrDiWQqhMo0QDdIuTZpMUdznC5xZBOxQ",
             }
         }).then(function (response) {
             // 请求成功后的处理逻辑

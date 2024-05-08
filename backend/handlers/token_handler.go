@@ -100,10 +100,13 @@ func JwtToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		//origin := c.Request.Header
-
+		err := c.Request.ParseForm()
+		if err != nil {
+			return
+		}
 		// 读取请求体中的 aToken 和 rToken
-		aToken := c.GetHeader("aToken")
-		rToken := c.GetHeader("rToken")
+		aToken := c.PostForm("aToken")
+		rToken := c.PostForm("rToken")
 
 		//c.JSON(200, gin.H{"header": origin, "rToken": rToken})
 
@@ -120,8 +123,8 @@ func JwtToken() gin.HandlerFunc {
 			return
 		}
 
-		_, err := CheckToken(aToken) // 解析 access_token
-		if err == nil {              // 当前的 access_token 格式对，没有过期
+		_, err = CheckToken(aToken) // 解析 access_token
+		if err == nil {             // 当前的 access_token 格式对，没有过期
 			//c.JSON(200, gin.H{
 			//	"message": "user",
 			//	"aToken":  aToken,
