@@ -260,9 +260,12 @@ func ToProfile(c *gin.Context) {
 }
 
 func ToProfile_app(c *gin.Context) {
-	Claim, _ := CheckToken(c.GetHeader("aToken"))
-	Uid_tmp := Claim.Uid
-	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
+	//Claim, _ := CheckToken(c.GetHeader("aToken"))
+	//Uid_tmp := Claim.Uid
+	//Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
+
+	Uid, _ := strconv.ParseInt(c.Param("uid"), 10, 64)
+
 	name, _ := GetName(c)
 	email, _ := GetEmail(c)
 	photo, _ := GetPhoto(c)
