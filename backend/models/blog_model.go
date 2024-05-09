@@ -1,7 +1,7 @@
 package models
 
 type Blog struct {
-	Id         int64 `xorm:"pk"` // 轨迹的唯一标识符，被标记为主键
+	Id         int64 `xorm:"pk autoincr"` // 轨迹的唯一标识符，被标记为主键
 	Uid        int64 // 用户的唯一标识符
 	Pub_time   string
 	Visibility int64 //
@@ -19,6 +19,7 @@ type Blog_display struct {
 	Content    string
 	Picture    string //
 	Title      string //
+	IsFollow   int64
 }
 
 func BuildModelBlog() {

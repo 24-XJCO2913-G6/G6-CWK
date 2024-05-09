@@ -123,27 +123,27 @@ func GetCollect(c *gin.Context) ([]Collected, error) {
 	Claims, _ := CheckToken(aToken)
 	Uid, err := strconv.ParseInt(Claims.Uid, 10, 64)
 	if (Uid == -1) || (err != nil) {
-		err := Db.Where("Uid = ?", Uid).Find(&collectList)
-		if err != nil {
-			return []Collected{}, err
+		err1 := Db.Where("Uid = ?", Uid).Find(&collectList)
+		if err1 != nil {
+			return []Collected{}, err1
 		}
 	}
 	for _, liked := range collectList {
 		Id := liked.Bid
-		err := Db.Where("Id = ?", Id).Find(&blogCollect)
-		if err != nil {
-			return []Collected{}, err
-		}
-		err2 := Db.Where("Bid = ?", Id).Find(&reviews)
+		err2 := Db.Where("Id = ?", Id).Find(&blogCollect)
 		if err2 != nil {
-			return []Collected{}, err
+			return []Collected{}, err2
+		}
+		err3 := Db.Where("Bid = ?", Id).Find(&reviews)
+		if err3 != nil {
+			return []Collected{}, err3
 		}
 		for range reviews {
 			reviewAmount += 1
 		}
-		err3 := Db.Where("Bid = ?", Id).Find(&collectCount)
-		if err3 != nil {
-			return []Collected{}, err
+		err4 := Db.Where("Bid = ?", Id).Find(&collectCount)
+		if err4 != nil {
+			return []Collected{}, err4
 		}
 		for range collectCount {
 			collectAmount += 1

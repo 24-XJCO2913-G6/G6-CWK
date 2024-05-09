@@ -1,7 +1,7 @@
 package models
 
 type Log struct {
-	Lid     int64 `xorm:"pk"`
+	Lid     int64 `xorm:"pk autoincr"`
 	Uid     int64
 	Ope     string
 	Time    string

@@ -1,19 +1,32 @@
-import { ResPage, User } from "@/api/interface/index";
+// import { ResPage, User } from "@/api/interface/index";
+import { User } from "@/api/interface/index";
 import { PORT1 } from "@/api/config/servicePort";
 import http from "@/api";
+// @/api/modules/user.js
+import axios from "axios";
 
 /**
  * @name 用户管理模块
  */
-// 获取用户列表
-export const getUserList = (params: User.ReqUserParams) => {
-  return http.post<ResPage<User.ResUserList>>(PORT1 + `/user/list`, params);
+// // 获取用户列表
+// export const getUserList = (params: User.ReqUserParams) => {
+//   return http.post<ResPage<User.ResUserList>>(PORT1 + `/user/list`, params);
+// };
+export const getUserList = () => {
+  // 请替换成你的实际 API 地址
+  const url = "/api/users";
+  return axios.get(url);
 };
 
+export async function getUserDetailById(userId) {
+  const response = await axios.get(`/api/users/${userId}`);
+  return response.data;
+}
+
 // 获取树形用户列表
-export const getUserTreeList = (params: User.ReqUserParams) => {
-  return http.post<ResPage<User.ResUserList>>(PORT1 + `/user/tree/list`, params);
-};
+// export const getUserTreeList = (params: User.ReqUserParams) => {
+//   return http.post<ResPage<User.ResUserList>>(PORT1 + `/user/tree/list`, params);
+// };
 
 // 新增用户
 export const addUser = (params: { id: string }) => {

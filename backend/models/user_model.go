@@ -6,7 +6,7 @@ import (
 )
 
 type User struct {
-	Uid         int64  `xorm:"pk"`                     //主键，UID
+	Uid         int64  `xorm:"pk autoincr"`            //主键，UID
 	Name        string `xorm:"NOT NULL"`               // 用户名
 	Email       string `xorm:"UNIQUE NOT NULL"`        // 邮箱，唯一键
 	Passwd      string `xorm:"NOT NULL"`               // 密码

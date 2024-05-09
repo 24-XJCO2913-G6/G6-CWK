@@ -1,8 +1,8 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
 	. "main/backend/models"
 	"sort"
 	"strconv"
@@ -11,9 +11,15 @@ import (
 func BlogCount(c *gin.Context) (int64, error) {
 
 	var blogList []Blog
-	aToken := c.GetString("aToken")
-	Claims, _ := CheckToken(aToken)
-	Uid, err := strconv.ParseInt(Claims.Uid, 10, 64)
+	var Uid_tmp string
+	if c.PostForm("aToken") == "" {
+		Uid_tmp = "-1"
+	} else {
+		aToken := c.PostForm("aToken")
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
+	Uid, err := strconv.ParseInt(Uid_tmp, 10, 64)
 	var TotalamountBlog int64
 	if (Uid == -1) || (err != nil) {
 		err := Db.Where("Uid = ?", Uid).Find(&blogList)
@@ -31,9 +37,15 @@ func BlogCount(c *gin.Context) (int64, error) {
 
 func FollowByCount(c *gin.Context) (int64, error) {
 	var followByList []Follow
-	aToken := c.GetString("aToken")
-	Claims, _ := CheckToken(aToken)
-	Uid, err := strconv.ParseInt(Claims.Uid, 10, 64)
+	var Uid_tmp string
+	if c.PostForm("aToken") == "" {
+		Uid_tmp = "-1"
+	} else {
+		aToken := c.PostForm("aToken")
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
+	Uid, err := strconv.ParseInt(Uid_tmp, 10, 64)
 	var TotalamountFollowBy int64
 	if (Uid == -1) || (err != nil) {
 		err := Db.Where("FollowId = ?", Uid).Find(&followByList)
@@ -50,9 +62,15 @@ func FollowByCount(c *gin.Context) (int64, error) {
 
 func FollowCount(c *gin.Context) (int64, error) {
 	var followList []Follow
-	aToken := c.GetString("aToken")
-	Claims, _ := CheckToken(aToken)
-	Uid, err := strconv.ParseInt(Claims.Uid, 10, 64)
+	var Uid_tmp string
+	if c.PostForm("aToken") == "" {
+		Uid_tmp = "-1"
+	} else {
+		aToken := c.PostForm("aToken")
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
+	Uid, err := strconv.ParseInt(Uid_tmp, 10, 64)
 	var TotalamountFollow int64 = 0
 	if (Uid == -1) || (err != nil) {
 		err := Db.Where("FollowById = ?", Uid).Find(&followList)
@@ -70,9 +88,15 @@ func FollowCount(c *gin.Context) (int64, error) {
 
 func SignatureCheck(c *gin.Context) (string, error) {
 	var signaturelist []User
-	aToken := c.GetString("aToken")
-	Claims, _ := CheckToken(aToken)
-	Uid, err := strconv.ParseInt(Claims.Uid, 10, 64)
+	var Uid_tmp string
+	if c.PostForm("aToken") == "" {
+		Uid_tmp = "-1"
+	} else {
+		aToken := c.PostForm("aToken")
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
+	Uid, err := strconv.ParseInt(Uid_tmp, 10, 64)
 	var Signature string
 	if (Uid == -1) || (err != nil) {
 		err := Db.Where("Uid = ?", Uid).Find(&signaturelist)
@@ -85,21 +109,55 @@ func SignatureCheck(c *gin.Context) (string, error) {
 	return Signature, nil
 }
 
-func RankCheck() ([]Records, error) {
+func RankCheck(c *gin.Context) ([]Records, error) {
 	var recordlist []Records
 	var tracks []Track
+	var followlist []Follow
+	var followbylist []Follow
+	arr := make([]int64, 0)
 	var totaldis float64 = 0
 	// 查询并按照 i 值进行分组，并将 distance 求和
 	var users []User
-	err := Db.Find(&users)
-	if err != nil {
-		log.Fatalf("Failed to query database: %v", err)
+	var friend User
+	aToken := c.Query("aToken")
+	var Uid_tmp string
+	if aToken == "" {
+		Uid_tmp = "-1"
+	} else {
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
 	}
+	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
+	err := Db.Where("FollowById = ?", Uid).Find(&followlist)
+	for _, follower := range followlist {
+		has, err := Db.Where("FollowById = ? AND FollowId = ?", follower.FollowId, Uid).Get(&followbylist)
 
+		if err != nil {
+			return []Records{}, err
+		} else if !has {
+			continue
+		} else {
+			arr = append(arr, follower.FollowId)
+		}
+
+	}
+	if err != nil {
+		return []Records{}, err
+	}
+	for _, friendid := range arr {
+		has, err := Db.Where("Uid = ?", friendid).Get(&friend)
+		if err != nil {
+			return []Records{}, err
+		} else if !has {
+			fmt.Printf("user(id) not exist:%d\n", friendid)
+		} else {
+			users = append(users, friend)
+		}
+	}
 	// 遍历结果集
 	for _, user := range users {
 		// 处理每一行数据
-		tracks, err = GetTracks(user.Uid)
+		tracks, _ = GetTracks(user.Uid)
 		for _, record := range tracks {
 			Dis, _ := strconv.ParseFloat(record.Distance, 64)
 			totaldis += Dis
@@ -120,19 +178,30 @@ func BlogDisplay() ([]Blog_display, error) {
 	var blogs []Blog
 	var authors []User
 	var blogs_dis []Blog_display
+	var followed Follow
+	var isFollow int64
 	err := Db.Find(&blogs)
 	if err != nil {
 		return []Blog_display{}, err
 	}
 	for _, blog := range blogs {
 		Uid := blog.Uid
-		err := Db.Where("Uid = ?", Uid).Find(&authors)
+		err1 := Db.Where("Uid = ?", Uid).Find(&authors)
+		if err1 != nil {
+			return []Blog_display{}, err1
+		}
+		has, err := Db.Where("FollowById = ? AND FollowId = ?", Uid, authors[0].Uid).Get(&followed)
 		if err != nil {
 			return []Blog_display{}, err
+		} else if !has {
+			isFollow = 0
+		} else {
+			isFollow = 1
 		}
 		author := authors[0].Name
 		photo := authors[0].ProfilePhot
-		blog_dis := Blog_display{Author: author, Photo: photo, Pub_time: blog.Pub_time, Visibility: blog.Visibility, Content: blog.Content, Picture: blog.Picture, Title: blog.Title}
+		blog_dis := Blog_display{Author: author, Photo: photo, Pub_time: blog.Pub_time, Visibility: blog.Visibility,
+			Content: blog.Content, Picture: blog.Picture, Title: blog.Title, IsFollow: isFollow}
 		blogs_dis = append(blogs_dis, blog_dis)
 	}
 	return []Blog_display{}, nil

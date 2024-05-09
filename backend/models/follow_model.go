@@ -1,7 +1,7 @@
 package models
 
 type Follow struct {
-	Fid        int64 `xorm:"pk"` // 轨迹的唯一标识符，被标记为主键
+	Fid        int64 `xorm:"pk autoincr"` // 轨迹的唯一标识符，被标记为主键
 	FollowId   int64
 	FollowById int64
 	Time       string

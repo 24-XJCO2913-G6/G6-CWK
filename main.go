@@ -103,17 +103,16 @@ func main() {
 
 			// 喜欢帖子
 			appGroup.POST("/like", ToLike_app)
-
+			//评论帖子
+			appGroup.POST("/review", ToReview_app)
 			// 收藏帖子
 			appGroup.POST("/collect", ToCollect_app)
 		}
 
 		// 用户相关
 		{
-			// 获取用户主页 （改成以uid来查询）
+			// 获取用户主页
 			appGroup.GET("/profile/:uid", ToProfile_app)
-
-			// TODO 个人发过的所有帖子
 
 			// 个人喜欢列表
 			appGroup.GET("/likeList", ToLikeList_app)
@@ -130,24 +129,11 @@ func main() {
 			// 返回所有粉丝
 			appGroup.GET("/fans/:uid", ToFans)
 
-			// 返回用户朋友的排名 (个人)
-			// TODO 改成朋友
+			// 返回用户排名 (个人)
 			appGroup.GET("/rank", ToRank_app)
-
-			// TODO 返回当前用户的VIP的到期时间
-			appGroup.GET("/vip")
-
-			// TODO 查询当前用户是不是VIP
-
-			// TODO 获取所有被点赞的帖子信息
-
-			// TODO 获取所有被关注的信息
-
-			// TODO 获取所有被评论的信息
 		}
 
 		// 帖子相关
-		// TODO 帖子返回信息新增 发贴人是否关注
 		{
 			// 查看帖子详细信息
 			appGroup.GET("/post_detail/:Id", func(c *gin.Context) {
@@ -157,7 +143,6 @@ func main() {
 
 			// 首页对帖子标题或内容进行查询
 			appGroup.GET("/search/:text", ToSearchedBlogs)
-
 			// 返回朋友帖子
 			appGroup.GET("/friend_blog", ToFriendsBlogs)
 			//appGroup.GET("/profile_detail")
@@ -166,17 +151,10 @@ func main() {
 		// 获取路径信息
 		appGroup.GET("/blogPublishTrack", ToPublishTrack_app)
 
-		// TODO 取消VIP
+		// 切换到VIP界面，并返回当前VIP的到期时间
+		appGroup.GET("/vip", ToVip_app)
 
 	}
-
-	adminGroup := engine.Group("/admin")
-	{
-		// TODO Admin首页
-		adminGroup.GET("/index")
-
-	}
-
 	err := engine.Run()
 	if err != nil {
 		return
