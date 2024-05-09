@@ -68,11 +68,7 @@ const maximize = () => {
   globalStore.setGlobalState("maximize", !globalStore.maximize);
 };
 
-// 关闭当前页
-const closeCurrentTab = () => {
-  if (route.meta.isAffix) return;
-  tabStore.removeTabs(route.fullPath);
-};
+
 
 // 关闭其他
 const closeOtherTab = () => {

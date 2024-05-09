@@ -1,9 +1,9 @@
 <template>
-  <el-drawer v-model="drawerVisible" title="布局设置" size="290px">
+  <el-drawer v-model="drawerVisible" title="Layout setting" size="290px">
     <!-- 布局样式 -->
     <el-divider class="divider" content-position="center">
       <el-icon><Notification /></el-icon>
-      布局样式
+      Layout
     </el-divider>
     <div class="layout-box">
       <el-tooltip effect="dark" content="纵向" placement="top" :show-after="200">
@@ -50,79 +50,26 @@
         </div>
       </el-tooltip>
     </div>
-    <div class="theme-item">
-      <span>
-        侧边栏反转色
-        <el-tooltip effect="dark" content="侧边栏颜色变为深色模式" placement="top">
-          <el-icon><QuestionFilled /></el-icon>
-        </el-tooltip>
-      </span>
-      <el-switch v-model="asideInverted" @change="setAsideTheme" />
-    </div>
-    <div class="theme-item mb50">
-      <span>
-        头部反转色
-        <el-tooltip effect="dark" content="头部颜色变为深色模式" placement="top">
-          <el-icon><QuestionFilled /></el-icon>
-        </el-tooltip>
-      </span>
-      <el-switch v-model="headerInverted" @change="setHeaderTheme" />
-    </div>
-
     <!-- 全局主题 -->
     <el-divider class="divider" content-position="center">
       <el-icon><ColdDrink /></el-icon>
-      全局主题
+      Theme
     </el-divider>
     <div class="theme-item">
-      <span>主题颜色</span>
+      <span>Theme color</span>
       <el-color-picker v-model="primary" :predefine="colorList" @change="changePrimary" />
     </div>
     <div class="theme-item">
-      <span>暗黑模式</span>
+      <span>Dark mode</span>
       <SwitchDark />
     </div>
     <div class="theme-item">
-      <span>灰色模式</span>
+      <span>Grey mode</span>
       <el-switch v-model="isGrey" @change="changeGreyOrWeak('grey', !!$event)" />
     </div>
     <div class="theme-item mb40">
-      <span>色弱模式</span>
+      <span>Color weakness pattern</span>
       <el-switch v-model="isWeak" @change="changeGreyOrWeak('weak', !!$event)" />
-    </div>
-
-    <!-- 界面设置 -->
-    <el-divider class="divider" content-position="center">
-      <el-icon><Setting /></el-icon>
-      界面设置
-    </el-divider>
-    <div class="theme-item">
-      <span>菜单折叠</span>
-      <el-switch v-model="isCollapse" />
-    </div>
-    <div class="theme-item">
-      <span>菜单手风琴</span>
-      <el-switch v-model="accordion" />
-    </div>
-    <div class="theme-item">
-      <span>面包屑</span>
-      <el-switch v-model="breadcrumb" />
-    </div>
-    <div class="theme-item">
-      <span>面包屑图标</span>
-      <el-switch v-model="breadcrumbIcon" />
-    </div>
-    <div class="theme-item">
-      <span>标签栏</span>
-      <el-switch v-model="tabs" />
-    </div>
-    <div class="theme-item">
-      <span>标签栏图标</span>
-      <el-switch v-model="tabsIcon" />
-    </div>
-    <div class="theme-item">
-      <span>页脚</span>
-      <el-switch v-model="footer" />
     </div>
   </el-drawer>
 </template>
@@ -137,24 +84,10 @@ import { DEFAULT_PRIMARY } from "@/config";
 import mittBus from "@/utils/mittBus";
 import SwitchDark from "@/components/SwitchDark/index.vue";
 
-const { changePrimary, changeGreyOrWeak, setAsideTheme, setHeaderTheme } = useTheme();
+const { changePrimary, changeGreyOrWeak, setAsideTheme } = useTheme();
 
 const globalStore = useGlobalStore();
-const {
-  layout,
-  primary,
-  isGrey,
-  isWeak,
-  asideInverted,
-  headerInverted,
-  isCollapse,
-  accordion,
-  breadcrumb,
-  breadcrumbIcon,
-  tabs,
-  tabsIcon,
-  footer
-} = storeToRefs(globalStore);
+const { layout, primary, isGrey, isWeak } = storeToRefs(globalStore);
 
 // 预定义主题颜色
 const colorList = [

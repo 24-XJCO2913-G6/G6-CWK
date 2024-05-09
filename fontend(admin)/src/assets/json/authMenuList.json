@@ -16,18 +16,34 @@
       }
     },
     {
-      "path": "/dataScreen",
-      "name": "dataScreen",
-      "component": "/dataScreen/index",
+      "path": "/echarts",
+      "name": "echarts",
+      "redirect": "/echarts/waterChart",
       "meta": {
-        "icon": "Histogram",
-        "title": "Data prediction",
+        "icon": "TrendCharts",
+        "title": "Data analysis",
         "isLink": "",
         "isHide": false,
-        "isFull": true,
+        "isFull": false,
         "isAffix": false,
         "isKeepAlive": true
-      }
+      },
+      "children": [
+        {
+          "path": "/echarts/lineChart",
+          "name": "lineChart",
+          "component": "/echarts/lineChart/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "Revenue forecast",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": true
+          }
+        }
+      ]
     },
     {
       "path": "/proTable",
@@ -124,80 +140,6 @@
           "meta": {
             "icon": "Menu",
             "title": "Log detail",
-            "isLink": "",
-            "isHide": false,
-            "isFull": false,
-            "isAffix": false,
-            "isKeepAlive": true
-          }
-        }
-      ]
-    },
-    {
-      "path": "/echarts",
-      "name": "echarts",
-      "redirect": "/echarts/waterChart",
-      "meta": {
-        "icon": "TrendCharts",
-        "title": "Data analysis",
-        "isLink": "",
-        "isHide": false,
-        "isFull": false,
-        "isAffix": false,
-        "isKeepAlive": true
-      },
-      "children": [
-        {
-          "path": "/echarts/lineChart",
-          "name": "lineChart",
-          "component": "/echarts/lineChart/index",
-          "meta": {
-            "icon": "Menu",
-            "title": "Revenue forecast",
-            "isLink": "",
-            "isHide": false,
-            "isFull": false,
-            "isAffix": false,
-            "isKeepAlive": true
-          }
-        },
-        {
-          "path": "/echarts/pieChart",
-          "name": "pieChart",
-          "component": "/echarts/pieChart/index",
-          "meta": {
-            "icon": "Menu",
-            "title": "Income category",
-            "isLink": "",
-            "isHide": false,
-            "isFull": false,
-            "isAffix": false,
-            "isKeepAlive": true
-          }
-        }
-      ]
-    },
-    {
-      "path": "/link",
-      "name": "link",
-      "redirect": "/link/bing",
-      "meta": {
-        "icon": "Paperclip",
-        "title": "External link",
-        "isLink": "",
-        "isHide": false,
-        "isFull": false,
-        "isAffix": false,
-        "isKeepAlive": true
-      },
-      "children": [
-        {
-          "path": "/link/bing",
-          "name": "bing",
-          "component": "/link/bing/index",
-          "meta": {
-            "icon": "Menu",
-            "title": "Been",
             "isLink": "",
             "isHide": false,
             "isFull": false,
