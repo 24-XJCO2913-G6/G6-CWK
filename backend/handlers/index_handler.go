@@ -178,11 +178,12 @@ func BlogDisplay() ([]Blog_display, error) {
 	var blogs []Blog
 	var authors []User
 	var blogs_dis []Blog_display
+	var track Track
 	var followed Follow
 	var isFollow int64
-	err := Db.Find(&blogs)
-	if err != nil {
-		return []Blog_display{}, err
+	err2 := Db.Find(&blogs)
+	if err2 != nil {
+		return []Blog_display{}, err2
 	}
 	for _, blog := range blogs {
 		Uid := blog.Uid
@@ -198,10 +199,14 @@ func BlogDisplay() ([]Blog_display, error) {
 		} else {
 			isFollow = 1
 		}
+		err4 := Db.Where("Tid = ?", blog.Tid).Find(&track)
+		if err4 != nil {
+			return []Blog_display{}, err4
+		}
 		author := authors[0].Name
 		photo := authors[0].ProfilePhot
 		blog_dis := Blog_display{Author: author, Photo: photo, Pub_time: blog.Pub_time, Visibility: blog.Visibility,
-			Content: blog.Content, Picture: blog.Picture, Title: blog.Title, IsFollow: isFollow}
+			Content: blog.Content, Picture: blog.Picture, Title: blog.Title, IsFollow: isFollow, Coordinates: track.Coordinates}
 		blogs_dis = append(blogs_dis, blog_dis)
 	}
 	return []Blog_display{}, nil

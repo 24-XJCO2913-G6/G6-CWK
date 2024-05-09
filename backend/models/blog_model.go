@@ -12,14 +12,16 @@ type Blog struct {
 }
 
 type Blog_display struct {
-	Author     string
-	Photo      string
-	Pub_time   string
-	Visibility int64 //
-	Content    string
-	Picture    string //
-	Title      string //
-	IsFollow   int64
+	Author      string
+	Photo       string
+	Pub_time    string
+	Visibility  int64 //
+	Content     string
+	Picture     string //
+	Title       string //
+	IsFollow    int64
+	Coordinates string
+	AuthorId    int64
 }
 
 func BuildModelBlog() {
