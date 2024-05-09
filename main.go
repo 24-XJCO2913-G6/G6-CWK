@@ -96,6 +96,7 @@ func main() {
 		appGroup.GET("/rank", ToRank_app)
 		appGroup.POST("/like", ToLike_app)
 		appGroup.POST("/collect", ToCollect_app)
+		appGroup.POST("/review", ToReview_app)
 		appGroup.GET("/blogPublishTrack", ToPublishTrack_app)
 		appGroup.POST("/upload_post", ToPublish_app)
 		appGroup.POST("/follow", ToFollow_app)
