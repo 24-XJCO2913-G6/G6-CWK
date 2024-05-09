@@ -1,7 +1,7 @@
 package models
 
 type CollectedApp struct {
-	Cid       int64 `xorm:"pk"`
+	Cid       int64 `xorm:"pk autoincr"`
 	Uid       int64
 	UserName  string
 	Photo     string

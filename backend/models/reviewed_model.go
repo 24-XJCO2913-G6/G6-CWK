@@ -1,7 +1,7 @@
 package models
 
 type ReviewedApp struct {
-	Rid      int64 `xorm:"pk"`
+	Rid      int64 `xorm:"pk autoincr"`
 	Uid      int64
 	UserName string
 	Photo    string

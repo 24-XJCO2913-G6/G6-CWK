@@ -1,7 +1,7 @@
 package models
 
 type Messages struct {
-	Mid         int64 `xorm:"pk"` // 轨迹的唯一标识符，被标记为主键
+	Mid         int64 `xorm:"pk autoincr"` // 轨迹的唯一标识符，被标记为主键
 	Sender_id   int64
 	Reveiver_id int64
 	Operation   string

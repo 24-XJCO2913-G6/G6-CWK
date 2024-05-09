@@ -1,7 +1,7 @@
 package models
 
 type Notification struct {
-	Nid     int64 `xorm:"pk"`
+	Nid     int64 `xorm:"pk autoincr"`
 	Uid     int64
 	Sender  int64
 	Ope     string

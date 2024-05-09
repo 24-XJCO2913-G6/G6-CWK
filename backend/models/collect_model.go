@@ -1,7 +1,7 @@
 package models
 
 type Collect struct {
-	Cid  int64  `xorm:"pk"` // 轨迹的唯一标识符，被标记为主键
+	Cid  int64  `xorm:"pk autoincr"` // 轨迹的唯一标识符，被标记为主键
 	Uid  int64  // 用户的唯一标识符
 	Bid  int64  //blog id
 	Time string //

@@ -1,7 +1,7 @@
 package models
 
 type Track struct {
-	Tid         int64 `xorm:"pk"` // 轨迹的唯一标识符，被标记为主键
+	Tid         int64 `xorm:"pk autoincr"` // 轨迹的唯一标识符，被标记为主键
 	Uid         int64 // 用户的唯一标识符
 	StrDate     string
 	StrTime     string // 轨迹的起始时间

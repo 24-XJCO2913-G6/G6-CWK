@@ -1,7 +1,7 @@
 package models
 
 type Vip struct {
-	Vid     int64 `xorm:"pk"` // 轨迹的唯一标识符，被标记为主键
+	Vid     int64 `xorm:"pk autoincr"` // 轨迹的唯一标识符，被标记为主键
 	Uid     int64
 	StrTime string
 	EndTime string

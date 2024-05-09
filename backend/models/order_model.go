@@ -1,7 +1,7 @@
 package models
 
 type Order struct {
-	Oid     int64 `xorm:"pk"`
+	Oid     int64 `xorm:"pk autoincr"`
 	Uid     int64
 	Content string
 	Time    string

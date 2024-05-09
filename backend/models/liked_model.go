@@ -1,7 +1,7 @@
 package models
 
 type LikedApp struct {
-	Lid      int64 `xorm:"pk"`
+	Lid      int64 `xorm:"pk autoincr"`
 	Uid      int64
 	UserName string
 	Photo    string

@@ -119,11 +119,11 @@ func RankCheck(c *gin.Context) ([]Records, error) {
 	// 查询并按照 i 值进行分组，并将 distance 求和
 	var users []User
 	var friend User
+	aToken := c.Query("aToken")
 	var Uid_tmp string
-	if c.PostForm("aToken") == "" {
+	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		aToken := c.PostForm("aToken")
 		Claim, _ := CheckToken(aToken)
 		Uid_tmp = Claim.Uid
 	}

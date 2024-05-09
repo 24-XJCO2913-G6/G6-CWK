@@ -44,11 +44,11 @@ func ToIndex(c *gin.Context) {
 }
 
 func ToIndex_app(c *gin.Context) {
+	aToken := c.Query("aToken")
 	var Uid_tmp string
-	if c.PostForm("aToken") == "" {
+	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		aToken := c.PostForm("aToken")
 		Claim, _ := CheckToken(aToken)
 		Uid_tmp = Claim.Uid
 	}
@@ -84,11 +84,11 @@ func ToRank_app(c *gin.Context) {
 	})
 }
 func ToPublishTrack_app(c *gin.Context) {
+	aToken := c.Query("aToken")
 	var Uid_tmp string
-	if c.PostForm("aToken") == "" {
+	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		aToken := c.PostForm("aToken")
 		Claim, _ := CheckToken(aToken)
 		Uid_tmp = Claim.Uid
 	}
@@ -120,11 +120,11 @@ func ToPublish_app(c *gin.Context) {
 	//}
 	//c.JSON(http.StatusOK, gin.H{"message": "Blog upload successfully."})
 
+	aToken := c.Query("aToken")
 	var Uid_tmp string
-	if c.PostForm("aToken") == "" {
+	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		aToken := c.PostForm("aToken")
 		Claim, _ := CheckToken(aToken)
 		Uid_tmp = Claim.Uid
 	}
@@ -156,13 +156,13 @@ func ToPublish_app(c *gin.Context) {
 
 func ToLike_app(c *gin.Context) {
 	// 根据请求携带的aToken判断添加路径的用户
-	var Uid_tmp string
 	var user User
 	var blog Blog
-	if c.PostForm("aToken") == "" {
+	aToken := c.Query("aToken")
+	var Uid_tmp string
+	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		aToken := c.PostForm("aToken")
 		Claim, _ := CheckToken(aToken)
 		Uid_tmp = Claim.Uid
 	}
@@ -201,13 +201,13 @@ func ToLike_app(c *gin.Context) {
 }
 
 func ToCollect_app(c *gin.Context) {
-	var Uid_tmp string
 	var user User
 	var blog Blog
-	if c.PostForm("aToken") == "" {
+	aToken := c.Query("aToken")
+	var Uid_tmp string
+	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		aToken := c.PostForm("aToken")
 		Claim, _ := CheckToken(aToken)
 		Uid_tmp = Claim.Uid
 	}
@@ -246,13 +246,13 @@ func ToCollect_app(c *gin.Context) {
 }
 
 func ToReview_app(c *gin.Context) {
-	var Uid_tmp string
 	var user User
 	var blog Blog
-	if c.PostForm("aToken") == "" {
+	aToken := c.Query("aToken")
+	var Uid_tmp string
+	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		aToken := c.PostForm("aToken")
 		Claim, _ := CheckToken(aToken)
 		Uid_tmp = Claim.Uid
 	}
@@ -293,11 +293,11 @@ func ToReview_app(c *gin.Context) {
 
 func ToFollow_app(c *gin.Context) {
 	// 根据请求携带的aToken判断添加路径的用户
+	aToken := c.Query("aToken")
 	var Uid_tmp string
-	if c.PostForm("aToken") == "" {
+	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		aToken := c.PostForm("aToken")
 		Claim, _ := CheckToken(aToken)
 		Uid_tmp = Claim.Uid
 	}
@@ -323,11 +323,11 @@ func ToFollow_app(c *gin.Context) {
 }
 
 func ToLikeList_app(c *gin.Context) {
+	aToken := c.Query("aToken")
 	var Uid_tmp string
-	if c.PostForm("aToken") == "" {
+	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		aToken := c.PostForm("aToken")
 		Claim, _ := CheckToken(aToken)
 		Uid_tmp = Claim.Uid
 	}
@@ -343,11 +343,11 @@ func ToLikeList_app(c *gin.Context) {
 }
 
 func ToCollectList_app(c *gin.Context) {
+	aToken := c.Query("aToken")
 	var Uid_tmp string
-	if c.PostForm("aToken") == "" {
+	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		aToken := c.PostForm("aToken")
 		Claim, _ := CheckToken(aToken)
 		Uid_tmp = Claim.Uid
 	}
@@ -362,11 +362,11 @@ func ToCollectList_app(c *gin.Context) {
 }
 
 func ToVip_app(c *gin.Context) {
+	aToken := c.Query("aToken")
 	var Uid_tmp string
-	if c.PostForm("aToken") == "" {
+	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		aToken := c.PostForm("aToken")
 		Claim, _ := CheckToken(aToken)
 		Uid_tmp = Claim.Uid
 	}
@@ -422,11 +422,11 @@ func ToProfile(c *gin.Context) {
 	})
 }
 func ToProfile_app(c *gin.Context) {
+	aToken := c.Query("aToken")
 	var Uid_tmp string
-	if c.PostForm("aToken") == "" {
+	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		aToken := c.PostForm("aToken")
 		Claim, _ := CheckToken(aToken)
 		Uid_tmp = Claim.Uid
 	}
@@ -570,8 +570,14 @@ func ToSearchedBlogs(c *gin.Context) {
 }
 
 func ToFriendsBlogs(c *gin.Context) {
-	Claim, _ := CheckToken(c.GetString("aToken"))
-	Uid_tmp := Claim.Uid
+	aToken := c.Query("aToken")
+	var Uid_tmp string
+	if aToken == "" {
+		Uid_tmp = "-1"
+	} else {
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 
 	blogDisplays, err := GetFriendsBlogs(Uid)
@@ -584,7 +590,6 @@ func ToFriendsBlogs(c *gin.Context) {
 }
 
 func ToFollowing(c *gin.Context) {
-
 	Uid, _ := strconv.ParseInt(c.Param("uid"), 10, 64)
 
 	followings, err := GetFollowings(Uid)
