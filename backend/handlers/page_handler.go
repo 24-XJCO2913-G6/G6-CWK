@@ -14,14 +14,15 @@ func ToIndex(c *gin.Context) {
 	//if err != nil {
 	//	return
 	//}
-	var Uid string
+	var Uid_tmp string
 	if c.PostForm("aToken") == "" {
-		Uid = "-1"
+		Uid_tmp = "-1"
 	} else {
 		aToken := c.PostForm("aToken")
 		Claim, _ := CheckToken(aToken)
-		Uid = Claim.Uid
+		Uid_tmp = Claim.Uid
 	}
+	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	//blogcount, _ := BlogCount(c)
 	//followcount, _ := FollowCount(c)
 	//followbycount, _ := FollowByCount(c)
@@ -78,14 +79,21 @@ func ToRank_app(c *gin.Context) {
 	})
 }
 func ToPublishTrack_app(c *gin.Context) {
-	aToken := c.GetHeader("aToken")
-	Claims, _ := CheckToken(aToken)
-	Uid, _ := strconv.ParseInt(Claims.Uid, 10, 64)
+	var Uid_tmp string
+	if c.PostForm("aToken") == "" {
+		Uid_tmp = "-1"
+	} else {
+		aToken := c.PostForm("aToken")
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
+	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	tracks, _ := GetTracks(Uid)
 	c.JSON(http.StatusOK, gin.H{
-		"aToken": c.GetString("aToken"),
-		"rToken": c.GetString("rToken"),
-		"tracks": tracks, //.StrDate .StrTime .EndData .EndTime
+		"message": c.GetString("message"),
+		"aToken":  c.GetString("aToken"),
+		"rToken":  c.GetString("rToken"),
+		"tracks":  tracks, //.StrDate .StrTime .EndData .EndTime
 	})
 }
 func ToPublish_app(c *gin.Context) {
@@ -107,9 +115,15 @@ func ToPublish_app(c *gin.Context) {
 	//}
 	//c.JSON(http.StatusOK, gin.H{"message": "Blog upload successfully."})
 
-	aToken := c.GetHeader("aToken")
-	Claims, _ := CheckToken(aToken)
-	Uid, _ := strconv.ParseInt(Claims.Uid, 10, 64)
+	var Uid_tmp string
+	if c.PostForm("aToken") == "" {
+		Uid_tmp = "-1"
+	} else {
+		aToken := c.PostForm("aToken")
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
+	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	type BlogApp struct {
 		Title      string `json:"title"`
 		Visibility string `json:"visibility"`
@@ -137,9 +151,15 @@ func ToPublish_app(c *gin.Context) {
 
 func ToLike_app(c *gin.Context) {
 	// 根据请求携带的aToken判断添加路径的用户
-	aToken := c.GetHeader("aToken")
-	Claims, _ := CheckToken(aToken)
-	Uid, _ := strconv.ParseInt(Claims.Uid, 10, 64)
+	var Uid_tmp string
+	if c.PostForm("aToken") == "" {
+		Uid_tmp = "-1"
+	} else {
+		aToken := c.PostForm("aToken")
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
+	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	type LikeData struct {
 		Bid string `json:"post_id"`
 	}
@@ -162,10 +182,15 @@ func ToLike_app(c *gin.Context) {
 }
 
 func ToCollect_app(c *gin.Context) {
-	// 根据请求携带的aToken判断添加路径的用户
-	aToken := c.GetHeader("aToken")
-	Claims, _ := CheckToken(aToken)
-	Uid, _ := strconv.ParseInt(Claims.Uid, 10, 64)
+	var Uid_tmp string
+	if c.PostForm("aToken") == "" {
+		Uid_tmp = "-1"
+	} else {
+		aToken := c.PostForm("aToken")
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
+	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
 	Bid_tmp := c.PostForm("post_id")
@@ -177,11 +202,48 @@ func ToCollect_app(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Collect successfully."})
 }
 
+func ToReview_app(c *gin.Context) {
+	var Uid_tmp string
+	if c.PostForm("aToken") == "" {
+		Uid_tmp = "-1"
+	} else {
+		aToken := c.PostForm("aToken")
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
+	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
+	type LikeData struct {
+		Bid string `json:"post_id"`
+	}
+	var likeData LikeData
+	w := c.Writer
+	r := c.Request
+	if err := json.NewDecoder(r.Body).Decode(&likeData); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	currentTime := time.Now()
+	timeString := currentTime.Format("2006-01-02 15:04:05")
+	Bid, _ := strconv.ParseInt(likeData.Bid, 10, 64)
+	Lid := AddLike(Uid, Bid, timeString)
+
+	if Lid == -1 {
+		c.JSON(http.StatusOK, gin.H{"error": "Like unsuccessfully."})
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Like successfully."})
+}
+
 func ToFollow_app(c *gin.Context) {
 	// 根据请求携带的aToken判断添加路径的用户
-	aToken := c.GetHeader("aToken")
-	Claims, _ := CheckToken(aToken)
-	Uid, _ := strconv.ParseInt(Claims.Uid, 10, 64)
+	var Uid_tmp string
+	if c.PostForm("aToken") == "" {
+		Uid_tmp = "-1"
+	} else {
+		aToken := c.PostForm("aToken")
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
+	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
 	FollowUid_tmp := c.PostForm("user_id")
@@ -194,11 +256,15 @@ func ToFollow_app(c *gin.Context) {
 }
 
 func ToLikeList_app(c *gin.Context) {
-	//Claim, _ := CheckToken(c.GetHeader("aToken"))
-	//Uid_tmp := Claim.Uid
-	//Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
-
-	Uid, _ := strconv.ParseInt(c.Param("uid"), 10, 64)
+	var Uid_tmp string
+	if c.PostForm("aToken") == "" {
+		Uid_tmp = "-1"
+	} else {
+		aToken := c.PostForm("aToken")
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
+	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	likelist, _ := GetLike(c)
 	c.JSON(http.StatusOK, gin.H{
 		"uid":      Uid,
@@ -210,8 +276,14 @@ func ToLikeList_app(c *gin.Context) {
 }
 
 func ToCollectList_app(c *gin.Context) {
-	Claim, _ := CheckToken(c.GetHeader("aToken"))
-	Uid_tmp := Claim.Uid
+	var Uid_tmp string
+	if c.PostForm("aToken") == "" {
+		Uid_tmp = "-1"
+	} else {
+		aToken := c.PostForm("aToken")
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	collectlist, _ := GetCollect(c)
 	c.JSON(http.StatusOK, gin.H{
@@ -237,8 +309,14 @@ func ToRegister(c *gin.Context) {
 }
 
 func ToProfile(c *gin.Context) {
-	Claim, _ := CheckToken(c.GetHeader("aToken"))
-	Uid_tmp := Claim.Uid
+	var Uid_tmp string
+	if c.PostForm("aToken") == "" {
+		Uid_tmp = "-1"
+	} else {
+		aToken := c.PostForm("aToken")
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	name, _ := GetName(c)
 	email, _ := GetEmail(c)
@@ -258,14 +336,16 @@ func ToProfile(c *gin.Context) {
 		"journey":  journey,
 	})
 }
-
 func ToProfile_app(c *gin.Context) {
-	//Claim, _ := CheckToken(c.GetHeader("aToken"))
-	//Uid_tmp := Claim.Uid
-	//Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
-
-	Uid, _ := strconv.ParseInt(c.Param("uid"), 10, 64)
-
+	var Uid_tmp string
+	if c.PostForm("aToken") == "" {
+		Uid_tmp = "-1"
+	} else {
+		aToken := c.PostForm("aToken")
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
+	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	name, _ := GetName(c)
 	email, _ := GetEmail(c)
 	photo, _ := GetPhoto(c)
@@ -368,7 +448,6 @@ func ToPostDetails(Id string, c *gin.Context) {
 		"reviews": reviews, //评论者.Reviewer 评论者头像.Reviewer_photo 时间.Time 内容.Content
 	})
 }
-
 func ToLog(c *gin.Context) {
 	photo, _ := GetPhoto(c)
 	c.JSON(http.StatusOK, gin.H{
@@ -394,7 +473,6 @@ func ToPostDetails_app(Id string, c *gin.Context) {
 		"reviews": reviews, //评论者.Reviewer 评论者头像.Reviewer_photo 时间.Time 内容.Content
 	})
 }
-
 func ToSearchedBlogs(c *gin.Context) {
 	text := c.Param("text")
 	blogDisplays, err := SearchBlogs(text)
