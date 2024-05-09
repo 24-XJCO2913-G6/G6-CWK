@@ -1,12 +1,12 @@
 package models
 
 type CollectedApp struct {
-	Cid      int64 `xorm:"pk"`
-	Uid      int64
-	UserName int64
-	Photo    string
-	BlogName string
-	Time     string
+	Cid       int64 `xorm:"pk"`
+	Uid       int64
+	UserName  string
+	Photo     string
+	BlogTitle string
+	Time      string
 }
 
 func BuildModelCollectApp() {
@@ -16,13 +16,14 @@ func BuildModelCollectApp() {
 	}
 }
 
-func AddCollectApp(Uid int64, UserName int64, Photo string, BlogName string, Time string) int64 {
+func AddCollectApp(Uid int64, UserName string, Photo string, BlogTitle string,
+	Time string) int64 {
 	collectedApp := &CollectedApp{
-		Uid:      Uid,
-		UserName: UserName,
-		Photo:    Photo,
-		BlogName: BlogName,
-		Time:     Time,
+		Uid:       Uid,
+		UserName:  UserName,
+		Photo:     Photo,
+		BlogTitle: BlogTitle,
+		Time:      Time,
 	}
 
 	Cid, err := Db.Insert(collectedApp)

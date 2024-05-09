@@ -69,7 +69,7 @@ func ToIndex_app(c *gin.Context) {
 		"FansCount":   followbycount, //粉丝数
 		"Signature":   signature,     //个签
 		"records":     rank,          //排名(降序) 距离：.Distance 用户名：.Name 头像：.Photo
-		"blogs":       blogs,         //所有blog 用户名：.Author 头像：.Photo 发布时间：.Pub_time 可见性：.Visibility 内容：.Content 图片：.Picture 标题：.Title
+		"blogs":       blogs,         //所有blog 用户名：.Author 头像：.Photo 发布时间：.Pub_time 可见性：.Visibility 内容：.Content 图片：.Picture 标题：.Title 是否被关注: .IsFollow
 		"isVip":       isVip,         // 1是 or 0不是
 	})
 }
@@ -157,6 +157,8 @@ func ToPublish_app(c *gin.Context) {
 func ToLike_app(c *gin.Context) {
 	// 根据请求携带的aToken判断添加路径的用户
 	var Uid_tmp string
+	var user User
+	var blog Blog
 	if c.PostForm("aToken") == "" {
 		Uid_tmp = "-1"
 	} else {
@@ -178,9 +180,21 @@ func ToLike_app(c *gin.Context) {
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
 	Bid, _ := strconv.ParseInt(likeData.Bid, 10, 64)
-	Lid := AddLike(Uid, Bid, timeString)
-
-	if Lid == -1 {
+	Lid1 := AddLike(Uid, Bid, timeString)
+	err1 := Db.Where("Uid = ?", Uid).Find(&user)
+	if err1 != nil {
+		return
+	}
+	username := user.Name
+	photo := user.ProfilePhot
+	blogTitle := blog.Title
+	err2 := Db.Where("Bid = ?", Bid).Find(&blog)
+	if err2 != nil {
+		return
+	}
+	authorId := blog.Uid
+	Lid2 := AddLikeApp(authorId, username, photo, blogTitle, timeString)
+	if Lid1 == -1 || Lid2 == -1 {
 		c.JSON(http.StatusOK, gin.H{"error": "Like unsuccessfully."})
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Like successfully."})
@@ -188,6 +202,8 @@ func ToLike_app(c *gin.Context) {
 
 func ToCollect_app(c *gin.Context) {
 	var Uid_tmp string
+	var user User
+	var blog Blog
 	if c.PostForm("aToken") == "" {
 		Uid_tmp = "-1"
 	} else {
@@ -198,10 +214,32 @@ func ToCollect_app(c *gin.Context) {
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
-	Bid_tmp := c.PostForm("post_id")
-	Bid, _ := strconv.ParseInt(Bid_tmp, 10, 64)
-	Cid := AddCollect(Uid, Bid, timeString)
-	if Cid == -1 {
+	type CollectData struct {
+		Bid string `json:"post_id"`
+	}
+	var collectData CollectData
+	w := c.Writer
+	r := c.Request
+	if err := json.NewDecoder(r.Body).Decode(&collectData); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	Bid, _ := strconv.ParseInt(collectData.Bid, 10, 64)
+	Cid1 := AddCollect(Uid, Bid, timeString)
+	err1 := Db.Where("Uid = ?", Uid).Find(&user)
+	if err1 != nil {
+		return
+	}
+	username := user.Name
+	photo := user.ProfilePhot
+	blogTitle := blog.Title
+	err2 := Db.Where("Bid = ?", Bid).Find(&blog)
+	if err2 != nil {
+		return
+	}
+	authorId := blog.Uid
+	Cid2 := AddCollectApp(authorId, username, photo, blogTitle, timeString)
+	if Cid1 == -1 || Cid2 == -1 {
 		c.JSON(http.StatusOK, gin.H{"error": "Collect unsuccessfully."})
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Collect successfully."})
@@ -209,6 +247,8 @@ func ToCollect_app(c *gin.Context) {
 
 func ToReview_app(c *gin.Context) {
 	var Uid_tmp string
+	var user User
+	var blog Blog
 	if c.PostForm("aToken") == "" {
 		Uid_tmp = "-1"
 	} else {
@@ -217,25 +257,38 @@ func ToReview_app(c *gin.Context) {
 		Uid_tmp = Claim.Uid
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
-	type LikeData struct {
-		Bid string `json:"post_id"`
+	type ReviewData struct {
+		Bid     string `json:"post_id"`
+		Content string `json:"commentContent"`
 	}
-	var likeData LikeData
+	var reviewData ReviewData
 	w := c.Writer
 	r := c.Request
-	if err := json.NewDecoder(r.Body).Decode(&likeData); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&reviewData); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
-	Bid, _ := strconv.ParseInt(likeData.Bid, 10, 64)
-	Lid := AddLike(Uid, Bid, timeString)
-
-	if Lid == -1 {
-		c.JSON(http.StatusOK, gin.H{"error": "Like unsuccessfully."})
+	Bid, _ := strconv.ParseInt(reviewData.Bid, 10, 64)
+	Rid1 := AddReview(Uid, Bid, timeString, reviewData.Content)
+	err1 := Db.Where("Uid = ?", Uid).Find(&user)
+	if err1 != nil {
+		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Like successfully."})
+	username := user.Name
+	photo := user.ProfilePhot
+	blogTitle := blog.Title
+	err2 := Db.Where("Bid = ?", Bid).Find(&blog)
+	if err2 != nil {
+		return
+	}
+	authorId := blog.Uid
+	Rid2 := AddReviewApp(authorId, username, photo, blogTitle, timeString)
+	if Rid1 == -1 || Rid2 == -1 {
+		c.JSON(http.StatusOK, gin.H{"error": "Review unsuccessfully."})
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Review successfully."})
 }
 
 func ToFollow_app(c *gin.Context) {
@@ -251,8 +304,17 @@ func ToFollow_app(c *gin.Context) {
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
-	FollowUid_tmp := c.PostForm("user_id")
-	FollowUid, _ := strconv.ParseInt(FollowUid_tmp, 10, 64)
+	type FollowData struct {
+		Uid string `json:"post_id"`
+	}
+	var followData FollowData
+	w := c.Writer
+	r := c.Request
+	if err := json.NewDecoder(r.Body).Decode(&followData); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	FollowUid, _ := strconv.ParseInt(followData.Uid, 10, 64)
 	Fid := AddFollow(FollowUid, Uid, timeString)
 	if Fid == -1 {
 		c.JSON(http.StatusOK, gin.H{"error": "Follow unsuccessfully."})

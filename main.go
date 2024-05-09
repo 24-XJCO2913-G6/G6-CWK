@@ -103,7 +103,8 @@ func main() {
 
 			// 喜欢帖子
 			appGroup.POST("/like", ToLike_app)
-
+			//评论帖子
+			appGroup.POST("/review", ToReview_app)
 			// 收藏帖子
 			appGroup.POST("/collect", ToCollect_app)
 		}

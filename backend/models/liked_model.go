@@ -3,7 +3,7 @@ package models
 type LikedApp struct {
 	Lid      int64 `xorm:"pk"`
 	Uid      int64
-	UserName int64
+	UserName string
 	Photo    string
 	BlogName string
 	Time     string
@@ -16,7 +16,7 @@ func BuildModelLikeApp() {
 	}
 }
 
-func AddLikeApp(Uid int64, UserName int64, Photo string, BlogName string, Time string) int64 {
+func AddLikeApp(Uid int64, UserName string, Photo string, BlogName string, Time string) int64 {
 	likedApp := &LikedApp{
 		Uid:      Uid,
 		UserName: UserName,

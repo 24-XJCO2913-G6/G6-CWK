@@ -19,6 +19,7 @@ type Blog_display struct {
 	Content    string
 	Picture    string //
 	Title      string //
+	IsFollow   int64
 }
 
 func BuildModelBlog() {
