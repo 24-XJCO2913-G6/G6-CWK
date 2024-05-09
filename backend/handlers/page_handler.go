@@ -44,17 +44,21 @@ func ToIndex(c *gin.Context) {
 }
 
 func ToIndex_app(c *gin.Context) {
-	var Uid string
-	Claim, res := CheckToken(c.GetString("aToken"))
-	if res != nil {
-		Uid = "-1"
+	var Uid_tmp string
+	if c.PostForm("aToken") == "" {
+		Uid_tmp = "-1"
+	} else {
+		aToken := c.PostForm("aToken")
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
 	}
-	Uid = Claim.Uid
+	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
+	isVip, _ := IsVip(Uid)
 	blogcount, _ := BlogCount(c)
 	followcount, _ := FollowCount(c)
 	followbycount, _ := FollowByCount(c)
 	signature, _ := SignatureCheck(c)
-	rank, _ := RankCheck()
+	rank, _ := RankCheck(c)
 	blogs, _ := BlogDisplay()
 	c.JSON(http.StatusOK, gin.H{
 		"aToken":      c.GetString("aToken"),
@@ -66,10 +70,11 @@ func ToIndex_app(c *gin.Context) {
 		"Signature":   signature,     //个签
 		"records":     rank,          //排名(降序) 距离：.Distance 用户名：.Name 头像：.Photo
 		"blogs":       blogs,         //所有blog 用户名：.Author 头像：.Photo 发布时间：.Pub_time 可见性：.Visibility 内容：.Content 图片：.Picture 标题：.Title
+		"isVip":       isVip,         // 1是 or 0不是
 	})
 }
 func ToRank_app(c *gin.Context) {
-	rank, _ := RankCheck()
+	rank, _ := RankCheck(c)
 	//tracks, _ := GetTracks()
 	c.JSON(http.StatusOK, gin.H{
 		"aToken":  c.GetString("aToken"),
@@ -267,8 +272,8 @@ func ToLikeList_app(c *gin.Context) {
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	likelist, _ := GetLike(c)
 	c.JSON(http.StatusOK, gin.H{
-		"uid":      Uid,
-		"message":  c.GetString("message"),
+		"uid": Uid,
+		//"message":  c.GetString("message"),
 		"aToken":   c.GetString("aToken"),
 		"rToken":   c.GetString("rToken"),
 		"likeList": likelist,
@@ -291,6 +296,24 @@ func ToCollectList_app(c *gin.Context) {
 		"aToken":      c.GetString("aToken"),
 		"rToken":      c.GetString("rToken"),
 		"collectList": collectlist,
+	})
+}
+
+func ToVip_app(c *gin.Context) {
+	var Uid_tmp string
+	if c.PostForm("aToken") == "" {
+		Uid_tmp = "-1"
+	} else {
+		aToken := c.PostForm("aToken")
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
+	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
+	vip, _ := GetVip(Uid)
+	c.JSON(http.StatusOK, gin.H{
+		"aToken": c.GetString("aToken"),
+		"rToken": c.GetString("rToken"),
+		"vip":    vip, // .StrTime .EndTime
 	})
 }
 

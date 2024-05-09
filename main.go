@@ -142,7 +142,6 @@ func main() {
 
 			// 首页对帖子标题或内容进行查询
 			appGroup.GET("/search/:text", ToSearchedBlogs)
-
 			// 返回朋友帖子
 			appGroup.GET("/friend_blog", ToFriendsBlogs)
 			//appGroup.GET("/profile_detail")
@@ -152,8 +151,7 @@ func main() {
 		appGroup.GET("/blogPublishTrack", ToPublishTrack_app)
 
 		// 切换到VIP界面，并返回当前VIP的到期时间
-		appGroup.GET("/vip", func(c *gin.Context) {
-		})
+		appGroup.GET("/vip", ToVip_app)
 
 	}
 	err := engine.Run()
