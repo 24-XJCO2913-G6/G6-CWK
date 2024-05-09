@@ -56,7 +56,6 @@ func ToIndex_app(c *gin.Context) {
 	rank, _ := RankCheck()
 	blogs, _ := BlogDisplay()
 	c.JSON(http.StatusOK, gin.H{
-		"message":     c.GetString("message"),
 		"aToken":      c.GetString("aToken"),
 		"rToken":      c.GetString("rToken"),
 		"Uid":         Uid,
@@ -72,7 +71,6 @@ func ToRank_app(c *gin.Context) {
 	rank, _ := RankCheck()
 	//tracks, _ := GetTracks()
 	c.JSON(http.StatusOK, gin.H{
-		"message": c.GetString("message"),
 		"aToken":  c.GetString("aToken"),
 		"rToken":  c.GetString("rToken"),
 		"records": rank, //排名(降序) 距离：.Distance 用户名：.Name 头像：.Photo
@@ -85,10 +83,9 @@ func ToPublishTrack_app(c *gin.Context) {
 	Uid, _ := strconv.ParseInt(Claims.Uid, 10, 64)
 	tracks, _ := GetTracks(Uid)
 	c.JSON(http.StatusOK, gin.H{
-		"message": c.GetString("message"),
-		"aToken":  c.GetString("aToken"),
-		"rToken":  c.GetString("rToken"),
-		"tracks":  tracks, //.StrDate .StrTime .EndData .EndTime
+		"aToken": c.GetString("aToken"),
+		"rToken": c.GetString("rToken"),
+		"tracks": tracks, //.StrDate .StrTime .EndData .EndTime
 	})
 }
 func ToPublish_app(c *gin.Context) {
@@ -197,9 +194,11 @@ func ToFollow_app(c *gin.Context) {
 }
 
 func ToLikeList_app(c *gin.Context) {
-	Claim, _ := CheckToken(c.GetHeader("aToken"))
-	Uid_tmp := Claim.Uid
-	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
+	//Claim, _ := CheckToken(c.GetHeader("aToken"))
+	//Uid_tmp := Claim.Uid
+	//Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
+
+	Uid, _ := strconv.ParseInt(c.Param("uid"), 10, 64)
 	likelist, _ := GetLike(c)
 	c.JSON(http.StatusOK, gin.H{
 		"uid":      Uid,
@@ -217,7 +216,6 @@ func ToCollectList_app(c *gin.Context) {
 	collectlist, _ := GetCollect(c)
 	c.JSON(http.StatusOK, gin.H{
 		"uid":         Uid,
-		"message":     c.GetString("message"),
 		"aToken":      c.GetString("aToken"),
 		"rToken":      c.GetString("rToken"),
 		"collectList": collectlist,
@@ -226,17 +224,15 @@ func ToCollectList_app(c *gin.Context) {
 
 func ToLogin(c *gin.Context) {
 	c.HTML(http.StatusOK, "sign-in.html", gin.H{
-		"message": c.GetString("message"),
-		"aToken":  c.GetString("aToken"),
-		"rToken":  c.GetString("rToken"),
+		"aToken": c.GetString("aToken"),
+		"rToken": c.GetString("rToken"),
 	})
 }
 
 func ToRegister(c *gin.Context) {
 	c.HTML(http.StatusOK, "sign-up.html", gin.H{
-		"message": c.GetString("message"),
-		"aToken":  c.GetString("aToken"),
-		"rToken":  c.GetString("rToken"),
+		"aToken": c.GetString("aToken"),
+		"rToken": c.GetString("rToken"),
 	})
 }
 
@@ -252,7 +248,6 @@ func ToProfile(c *gin.Context) {
 	journey, _ := GetTracks(Uid)
 	c.HTML(http.StatusOK, "my-profile.html", gin.H{
 		"uid":      Uid,
-		"message":  c.GetString("message"),
 		"aToken":   c.GetString("aToken"),
 		"rToken":   c.GetString("rToken"),
 		"username": name,
@@ -263,8 +258,9 @@ func ToProfile(c *gin.Context) {
 		"journey":  journey,
 	})
 }
+
 func ToProfile_app(c *gin.Context) {
-	Claim, _ := CheckToken(c.GetString("aToken"))
+	Claim, _ := CheckToken(c.GetHeader("aToken"))
 	Uid_tmp := Claim.Uid
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	name, _ := GetName(c)
@@ -275,7 +271,6 @@ func ToProfile_app(c *gin.Context) {
 	journey, _ := GetTracks(Uid)
 	c.JSON(http.StatusOK, gin.H{
 		"uid":      Uid,
-		"message":  c.GetString("message"),
 		"aToken":   c.GetString("aToken"),
 		"rToken":   c.GetString("rToken"),
 		"username": name,
@@ -288,41 +283,36 @@ func ToProfile_app(c *gin.Context) {
 }
 func ToVip(c *gin.Context) {
 	c.HTML(http.StatusOK, "vip.html", gin.H{
-		"message": c.GetString("message"),
-		"aToken":  c.GetString("aToken"),
-		"rToken":  c.GetString("rToken"),
+		"aToken": c.GetString("aToken"),
+		"rToken": c.GetString("rToken"),
 	})
 }
 
 func ToBill(c *gin.Context) {
 	c.HTML(http.StatusOK, "checkout.html", gin.H{
-		"message": c.GetString("message"),
-		"aToken":  c.GetString("aToken"),
-		"rToken":  c.GetString("rToken"),
+		"aToken": c.GetString("aToken"),
+		"rToken": c.GetString("rToken"),
 	})
 }
 
 func ToDownload(c *gin.Context) {
 	c.HTML(http.StatusOK, "app-download.html", gin.H{
-		"message": c.GetString("message"),
-		"aToken":  c.GetString("aToken"),
-		"rToken":  c.GetString("rToken"),
+		"aToken": c.GetString("aToken"),
+		"rToken": c.GetString("rToken"),
 	})
 }
 
 func ToHelp(c *gin.Context) {
 	c.HTML(http.StatusOK, "help.html", gin.H{
-		"message": c.GetString("message"),
-		"aToken":  c.GetString("aToken"),
-		"rToken":  c.GetString("rToken"),
+		"aToken": c.GetString("aToken"),
+		"rToken": c.GetString("rToken"),
 	})
 }
 
 func ToHelpDetails(c *gin.Context, searchText string) {
 	c.HTML(http.StatusOK, "help-details.html", gin.H{
-		"message": c.GetString("message"),
-		"aToken":  c.GetString("aToken"),
-		"rToken":  c.GetString("rToken"),
+		"aToken": c.GetString("aToken"),
+		"rToken": c.GetString("rToken"),
 	})
 }
 
@@ -334,9 +324,8 @@ func ToMessages(c *gin.Context) {
 	}
 	http.SetCookie(c.Writer, &usernameCookie)
 	c.HTML(http.StatusOK, "messaging.html", gin.H{
-		"message": c.GetString("message"),
-		"aToken":  c.GetString("aToken"),
-		"rToken":  c.GetString("rToken"),
+		"aToken": c.GetString("aToken"),
+		"rToken": c.GetString("rToken"),
 	})
 	//Claim, _ := CheckToken(c.GetString("aToken"))
 	//Uid := Claim.Uid
@@ -345,17 +334,15 @@ func ToMessages(c *gin.Context) {
 
 func ToNotifications(c *gin.Context) {
 	c.HTML(http.StatusOK, "notifications.html", gin.H{
-		"message": c.GetString("message"),
-		"aToken":  c.GetString("aToken"),
-		"rToken":  c.GetString("rToken"),
+		"aToken": c.GetString("aToken"),
+		"rToken": c.GetString("rToken"),
 	})
 }
 
 func ToSetting(c *gin.Context) {
 	c.HTML(http.StatusOK, "settings.html", gin.H{
-		"message": c.GetString("message"),
-		"aToken":  c.GetString("aToken"),
-		"rToken":  c.GetString("rToken"),
+		"aToken": c.GetString("aToken"),
+		"rToken": c.GetString("rToken"),
 	})
 }
 
@@ -370,7 +357,6 @@ func ToPostDetails(Id string, c *gin.Context) {
 	reviews, _ := GetReviews(Bid)
 	photo, _ := GetPhoto(c)
 	c.HTML(http.StatusOK, "post-details.html", gin.H{
-		"message": c.GetString("message"),
 		"aToken":  c.GetString("aToken"),
 		"rToken":  c.GetString("rToken"),
 		"photo":   photo,
@@ -379,10 +365,10 @@ func ToPostDetails(Id string, c *gin.Context) {
 		"reviews": reviews, //评论者.Reviewer 评论者头像.Reviewer_photo 时间.Time 内容.Content
 	})
 }
+
 func ToLog(c *gin.Context) {
 	photo, _ := GetPhoto(c)
 	c.JSON(http.StatusOK, gin.H{
-		"message": c.GetString("message"),
 		"aToken":  c.GetString("aToken"),
 		"rToken":  c.GetString("rToken"),
 		"photo":   photo,
@@ -397,7 +383,6 @@ func ToPostDetails_app(Id string, c *gin.Context) {
 	reviews, _ := GetReviews(Bid)
 	photo, _ := GetPhoto(c)
 	c.JSON(http.StatusOK, gin.H{
-		"message": c.GetString("message"),
 		"aToken":  c.GetString("aToken"),
 		"rToken":  c.GetString("rToken"),
 		"photo":   photo,
@@ -405,4 +390,65 @@ func ToPostDetails_app(Id string, c *gin.Context) {
 		"track":   track,
 		"reviews": reviews, //评论者.Reviewer 评论者头像.Reviewer_photo 时间.Time 内容.Content
 	})
+}
+
+func ToSearchedBlogs(c *gin.Context) {
+	text := c.Param("text")
+	blogDisplays, err := SearchBlogs(text)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, blogDisplays)
+}
+
+func ToFriendsBlogs(c *gin.Context) {
+	Claim, _ := CheckToken(c.GetString("aToken"))
+	Uid_tmp := Claim.Uid
+	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
+
+	blogDisplays, err := GetFriendsBlogs(Uid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, blogDisplays)
+}
+
+func ToFollowing(c *gin.Context) {
+
+	Uid, _ := strconv.ParseInt(c.Param("uid"), 10, 64)
+
+	followings, err := GetFollowings(Uid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, followings)
+}
+func ToFans(c *gin.Context) {
+	Uid, _ := strconv.ParseInt(c.Param("uid"), 10, 64)
+
+	fans, err := GetFans(Uid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, fans)
+}
+
+func ToFriends(c *gin.Context) {
+	Uid, _ := strconv.ParseInt(c.Param("uid"), 10, 64)
+
+	friends, err := GetFollowings(Uid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, friends)
 }
