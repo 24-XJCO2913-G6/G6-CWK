@@ -623,3 +623,8 @@ func ToFriends(c *gin.Context) {
 
 	c.JSON(http.StatusOK, friends)
 }
+
+func ToAllUsers(c *gin.Context) {
+	users := AllUsers()
+	c.JSON(http.StatusOK, users)
+}

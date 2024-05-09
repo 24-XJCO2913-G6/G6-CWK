@@ -100,3 +100,9 @@ func AddUser(name string, email string, passwd string) int64 {
 	}
 	return Uid
 }
+
+func AllUsers() []User {
+	var users []User
+	_ = Db.Find(&users)
+	return users
+}
