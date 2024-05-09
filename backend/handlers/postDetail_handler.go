@@ -79,6 +79,28 @@ func BlogPublish(c *gin.Context) {
 		return
 	}
 	AddBlog(Uid, timeString, visibility, description, photos, title, Tid)
-	//TODO visibility 没传
 	c.JSON(http.StatusOK, gin.H{"message": "Blog publish Successfully"})
+}
+
+func GetFriendsBlogs(uid int64) ([]Blog, error) {
+	var friends []Friend
+	var allBlogs []Blog
+
+	// 获取指定用户的所有朋友
+	friends, err := GetFriends(uid)
+	if err != nil {
+		return nil, err
+	}
+
+	// 遍历每个朋友，查询其发布的所有博客
+	for _, friend := range friends {
+		var blogs []Blog
+		err := Db.Where("uid = ?", friend.Uid).Find(&blogs)
+		if err != nil {
+			return nil, err
+		}
+		allBlogs = append(allBlogs, blogs...)
+	}
+
+	return allBlogs, nil
 }
