@@ -170,6 +170,13 @@ func main() {
 
 	}
 
+	adminGroup := engine.Group("/admin")
+	{
+		// TODO Admin首页
+		adminGroup.GET("/index")
+
+	}
+
 	err := engine.Run()
 	if err != nil {
 		return
