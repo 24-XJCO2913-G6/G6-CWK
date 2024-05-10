@@ -181,17 +181,17 @@ Header START -->
                 <ul class="navbar-nav navbar-nav-scroll ms-auto">
 
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
+                        <a class="nav-link"href="/web/index">Home</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="help.html">Help Center</a>
+                        <a class="nav-link" href="/web/help">Help Center</a>
                     </li>
 
 
                     <!-- Nav item 4 Mega menu -->
                     <li class="nav-item">
-                        <a class="nav-link" href="app-download.html">App Download</a>
+                        <a class="nav-link"  href="/web/download">App Download</a>
                     </li>
                 </ul>
             </div>
@@ -200,7 +200,7 @@ Header START -->
             <!-- Nav right START -->
             <ul class="nav flex-nowrap align-items-center ms-sm-3 list-unstyled">
                 <li class="nav-item ms-2">
-                    <a class="nav-link icon-md btn btn-light p-0" href="vip.html">
+                    <a class="nav-link icon-md btn btn-light p-0"  href="{{if eq .message "user"}}/web/vip{{else if eq .message "visitor"}}/web/login{{end}}">
                         <svg t="1710768564615" class="icon" viewBox="0 0 1024 1024" version="1.1"
                              xmlns="http://www.w3.org/2000/svg" p-id="4606" width="18" height="18">
                             <path
@@ -210,114 +210,22 @@ Header START -->
                     </a>
                 </li>
                 <li class="nav-item ms-2">
-                    <a class="nav-link icon-md btn btn-light p-0" href="messaging.html">
+                    <a class="nav-link icon-md btn btn-light p-0"  href="{{if eq .message "user"}}/web/messages{{else if eq .message "visitor"}}/web/login{{end}}">
                         <i class="bi bi-chat-left-text-fill fs-6"> </i>
                     </a>
                 </li>
                 <li class="nav-item ms-2">
-                    <a class="nav-link icon-md btn btn-light p-0" href="settings.html">
+                    <a class="nav-link icon-md btn btn-light p-0"  href="{{if eq .message "user"}}/web/settings{{else if eq .message "visitor"}}/web/login{{end}}">
                         <i class="bi bi-gear-fill fs-6"> </i>
                     </a>
                 </li>
                 <li class="nav-item dropdown ms-2">
-                    <a class="nav-link icon-md btn btn-light p-0" href="#" id="notifDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                    <a class="nav-link icon-md btn btn-light p-0"  href="{{if eq .message "user"}}/web/notifications{{else if eq .message "visitor"}}/web/login{{end}}" id="notifDropdown" role="button"
+                     >
                         <span class="badge-notif animation-blink"></span>
                         <i class="bi bi-bell-fill fs-6"> </i>
                     </a>
-                    <div class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md p-0 shadow-lg border-0"
-                         aria-labelledby="notifDropdown">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h6 class="m-0">Notifications <span
-                                        class="badge bg-danger bg-opacity-10 text-danger ms-2">4 new</span></h6>
-                                <a class="small" href="#">Clear all</a>
-                            </div>
-                            <div class="card-body p-0">
-                                <ul class="list-group list-group-flush list-unstyled p-2">
-                                    <!-- Notif item -->
-                                    <li>
-                                        <div
-                                                class="list-group-item list-group-item-action rounded badge-unread d-flex border-0 mb-1 p-3">
-                                            <div class="avatar text-center d-none d-sm-inline-block">
-                                                <img class="avatar-img rounded-circle"
-                                                     src="static/images/avatar/01.jpg" alt="">
-                                            </div>
-                                            <div class="ms-sm-3">
-                                                <div class=" d-flex">
-                                                    <p class="small mb-2"><b>Judy Nguyen</b> sent you a friend
-                                                        request.</p>
-                                                    <p class="small ms-3 text-nowrap">Just now</p>
-                                                </div>
-                                                <div class="d-flex">
-                                                    <button class="btn btn-sm py-1 btn-primary me-2">Accept
-                                                    </button>
-                                                    <button class="btn btn-sm py-1 btn-danger-soft">Delete</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <!-- Notif item -->
-                                    <li>
-                                        <div
-                                                class="list-group-item list-group-item-action rounded badge-unread d-flex border-0 mb-1 p-3 position-relative">
-                                            <div class="avatar text-center d-none d-sm-inline-block">
-                                                <img class="avatar-img rounded-circle"
-                                                     src="static/images/avatar/02.jpg" alt="">
-                                            </div>
-                                            <div class="ms-sm-3 d-flex">
-                                                <div>
-                                                    <p class="small mb-2">Wish <b>Amanda Reed</b> a happy birthday
-                                                        (Nov 12)</p>
-                                                    <button class="btn btn-sm btn-outline-light py-1 me-2">Say happy
-                                                        birthday 🎂
-                                                    </button>
-                                                </div>
-                                                <p class="small ms-3">2min</p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <!-- Notif item -->
-                                    <li>
-                                        <a href="#"
-                                           class="list-group-item list-group-item-action rounded d-flex border-0 mb-1 p-3">
-                                            <div class="avatar text-center d-none d-sm-inline-block">
-                                                <div class="avatar-img rounded-circle bg-success"><span
-                                                        class="text-white position-absolute top-50 start-50 translate-middle fw-bold">WB</span>
-                                                </div>
-                                            </div>
-                                            <div class="ms-sm-3">
-                                                <div class="d-flex">
-                                                    <p class="small mb-2">Webestica has 15 like and 1 new activity
-                                                    </p>
-                                                    <p class="small ms-3">1hr</p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <!-- Notif item -->
-                                    <li>
-                                        <a href="#"
-                                           class="list-group-item list-group-item-action rounded d-flex border-0 p-3 mb-1">
-                                            <div class="avatar text-center d-none d-sm-inline-block">
-                                                <img class="avatar-img rounded-circle"
-                                                     src="static/images/logo/12.svg" alt="">
-                                            </div>
-                                            <div class="ms-sm-3 d-flex">
-                                                <p class="small mb-2"><b>Bootstrap in the news:</b> The search
-                                                    giant’s parent company, Alphabet, just joined an exclusive club
-                                                    of tech stocks.</p>
-                                                <p class="small ms-3">4hr</p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="card-footer text-center">
-                                <a href="#" class="btn btn-sm btn-primary-soft">See all incoming activity</a>
-                            </div>
-                        </div>
-                    </div>
+                   
                 </li>
                 <!-- Notification dropdown END -->
 
@@ -338,32 +246,26 @@ Header START -->
                                          alt="avatar">
                                 </div>
                                 <div>
-                                    <a class="h6 stretched-link" href="#">Lori Ferguson</a>
-                                    <p class="small m-0">Web Developer</p>
+                                    <a class="h6 stretched-link" href="#">{{.username}}</a>
+                                 
                                 </div>
                             </div>
                             <a class="dropdown-item btn btn-primary-soft btn-sm my-2 text-center"
-                               href="my-profile.html">View profile</a>
+                            href="{{if eq .message "user"}}/web/profile{{else if eq .message "visitor"}}/web/login{{end}}">View profile</a>
                         </li>
                         <!-- Links -->
-                        <li><a class="dropdown-item" href="settings.html"><i
+                        <li><a class="dropdown-item" href="{{if eq .message "user"}}/web/settings{{else if eq .message "visitor"}}/web/login{{end}}"><i
                                 class="bi bi-gear fa-fw me-2"></i>Settings & Privacy</a></li>
-                        <li>
-                            <a class="dropdown-item" href="http://www.bootstrapmb.com">
-                                <i class="fa-fw bi bi-life-preserver me-2"></i>Support
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="">
-                                <i class="fa-fw bi bi-card-text me-2"></i>Documentation
-                            </a>
-                        </li>
+                      
                         <li class="dropdown-divider"></li>
-                        <li><a class="dropdown-item bg-danger-soft-hover" href="sign-in-advance.html"><i
-                                class="bi bi-power fa-fw me-2"></i>Sign Out</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
+                        {{if eq .message 'user'}}
+                        <li><a class="dropdown-item bg-danger-soft-hover" href="/web/logout"><i
+                            class="bi bi-power fa-fw me-2"></i>Sign Out</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                        {{end}}
+                        
                         <!-- Dark mode switch START -->
                         <li>
                             <div class="modeswitch-wrap" id="darkModeSwitch">
@@ -453,11 +355,18 @@ Header END -->
                                             /></a>
                                         </div>
                                         <!-- Info -->
-                                        <h5 class="mb-0"><a href="#!">Sam Lanson </a></h5>
-                                        <small>Web Developer at Webestica</small>
+                                        <h5 class="mb-0"><a href="#!"> {{ if eq .message "user" }}
+                                            {{ .username }}
+                                        {{ else if eq .message "visitor" }}
+                                            User of Been
+                                        {{ end }}</a></h5>
+                                  
                                         <p class="mt-3">
-                                            I'd love to change the world, but they won’t give me
-                                            the source code.
+                                            {{ if eq .message "user" }}
+                                            {{ .motto }}
+                                        {{ else if eq .message "visitor" }}
+                                        Personal motto
+                                        {{ end }}
                                         </p>
 
                                         <!-- User stat START -->
@@ -495,69 +404,69 @@ Header END -->
                                             class="nav nav-link-secondary flex-column fw-bold gap-2"
                                     >
                                         <li class="nav-item">
-                                            <a class="nav-link" href="my-profile.html">
+                                            <a class="nav-link" href="{{if eq .message "user"}}/web/profile{{else if eq .message "visitor"}}/web/login{{end}}">
                                                 <img
                                                         class="me-2 h-20px fa-fw"
                                                         src="static/images/icon/home-outline-filled.svg"
                                                         alt=""
-                                                /><span>Profile</span></a
+                                                /><span id="left_profile">Profile</span></a
                                             >
                                         </li>
                                         <li class="nav-item">
                                             <a
                                                     class="nav-link"
-                                                    href="my-profile-connections.html"
+                                                    href="{{if eq .message "user"}}/web/frineds{{else if eq .message "visitor"}}/web/login{{end}}"
                                             >
                                                 <img
                                                         class="me-2 h-20px fa-fw"
                                                         src="static/images/icon/person-outline-filled.svg"
                                                         alt=""
-                                                /><span>Friends</span></a
+                                                /><span id="left_friends">Friends</span></a
                                             >
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="blog.html">
+                                            <a class="nav-link" href="{{if eq .message "user"}}/web/myRoute{{else if eq .message "visitor"}}/web/login{{end}}">
                                                 <img
                                                         class="me-2 h-20px fa-fw"
                                                         src="static/images/icon/earth-outline-filled.svg"
                                                         alt=""
-                                                /><span>My route</span></a
+                                                /><span id="left_myRoute">My route</span></a
                                             >
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="events.html">
+                                            <a class="nav-link" href="{{if eq .message "user"}}/web/activity{{else if eq .message "visitor"}}/web/login{{end}}">
                                                 <img
                                                         class="me-2 h-20px fa-fw"
                                                         src="static/images/icon/calendar-outline-filled.svg"
                                                         alt=""
-                                                /><span>Activity</span></a
+                                                /><span id="left_activity">Activity</span></a
                                             >
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="groups.html">
+                                            <a class="nav-link" href="{{if eq .message "user"}}/web/messages{{else if eq .message "visitor"}}/web/login{{end}}">
                                                 <img
                                                         class="me-2 h-20px fa-fw"
                                                         src="static/images/icon/chat-outline-filled.svg"
                                                         alt=""
-                                                /><span>Messages</span></a
+                                                /><span id="left_messages">Messages</span></a
                                             >
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="notifications.html">
+                                            <a class="nav-link" href="{{if eq .message "user"}}/web/notifications{{else if eq .message "visitor"}}/web/login{{end}}">
                                                 <img
                                                         class="me-2 h-20px fa-fw"
                                                         src="static/images/icon/notification-outlined-filled.svg"
                                                         alt=""
-                                                /><span>Notifications </span></a
+                                                /><span id="left_notifications">Notifications </span></a
                                             >
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="settings.html">
+                                            <a class="nav-link" href="{{if eq .message "user"}}/web/settings{{else if eq .message "visitor"}}/web/login{{end}}">
                                                 <img
                                                         class="me-2 h-20px fa-fw"
                                                         src="static/images/icon/cog-outline-filled.svg"
                                                         alt=""
-                                                /><span>Settings </span></a
+                                                /><span id="left_setting">Settings </span></a
                                             >
                                         </li>
                                     </ul>
@@ -639,12 +548,21 @@ Header END -->
                                     class="card border border-2 border-dashed h-150px shadow-none d-flex align-items-center justify-content-center text-center"
                             >
                                 <div>
+                                    {{if eq .message 'visitor'}}
                                     <a
-                                            class="stretched-link btn btn-light rounded-circle icon-md"
-                                            href="#!" data-bs-toggle="modal"
-                                            data-bs-target="#modalCreateEvents"
-                                    ><i class="fa-solid fa-plus"></i
-                                    ></a>
+                                    class="stretched-link btn btn-light rounded-circle icon-md"
+                                    href="/web/login" 
+                            >
+                                    {{else}}
+                                    <a
+                                    class="stretched-link btn btn-light rounded-circle icon-md"
+                                    href="#!" data-bs-toggle="modal"
+                                    data-bs-target="#modalCreateEvents"
+                            >
+                                    {{end}}
+                                    <i class="fa-solid fa-plus"></i
+                                        >
+                                   </a>
 
 
                                     <h6 class="mt-2 mb-0 small">Post a Journey</h6>
@@ -689,9 +607,13 @@ Header END -->
                             >
                                 <div class="card-img-overlay d-flex align-items-center p-2">
                                     <div class="w-100 mt-auto">
-                                        <!-- Name -->
+                                        <!-- Name -->111
                                         <a href="#!" class="stretched-link text-white small"
-                                        >Samuel Bishop</a
+                                        >   {{ if eq .message "user" }}
+                                        {{ .username }}
+                                    {{ else if eq .message "visitor" }}
+                                        User of Been
+                                    {{ end }}</a
                                         >
                                     </div>
                                 </div>
@@ -773,145 +695,7 @@ Header END -->
 
 
                 <!-- Card feed item START -->
-                <div class="card">
-                    <!-- Card header START -->
-                    <div
-                            class="card-header d-flex justify-content-between align-items-center border-0 pb-0"
-                    >
-                        <h6 class="card-title mb-0">People you may know</h6>
-                        <button class="btn btn-sm btn-primary-soft">See all</button>
-                    </div>
-                    <!-- Card header START -->
-
-                    <!-- Card body START -->
-                    <div class="card-body">
-                        <div class="tiny-slider arrow-hover">
-                            <div
-                                    class="tiny-slider-inner ms-n4"
-                                    data-arrow="true"
-                                    data-dots="false"
-                                    data-items-xl="3"
-                                    data-items-lg="2"
-                                    data-items-md="2"
-                                    data-items-sm="2"
-                                    data-items-xs="1"
-                                    data-gutter="12"
-                                    data-edge="30"
-                            >
-                                <!-- Slider items -->
-                                <div>
-                                    <!-- Card add friend item START -->
-                                    <div class="card shadow-none text-center">
-                                        <!-- Card body -->
-                                        <div class="card-body p-2 pb-0">
-                                            <div class="avatar avatar-xl">
-                                                <a href="#!"
-                                                ><img
-                                                        class="avatar-img rounded-circle"
-                                                        src="static/images/avatar/09.jpg"
-                                                        alt=""
-                                                /></a>
-                                            </div>
-                                            <h6 class="card-title mb-1 mt-3">
-                                                <a href="#!"> Amanda Reed </a>
-                                            </h6>
-                                            <p class="mb-0 small lh-sm">50 mutual connections</p>
-                                        </div>
-                                        <!-- Card footer -->
-                                        <div class="card-footer p-2 border-0">
-                                            <button class="btn btn-sm btn-primary-soft w-100">
-                                                Add friend
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <!-- Card add friend item END -->
-                                </div>
-                                <div>
-                                    <!-- Card add friend item START -->
-                                    <div class="card shadow-none text-center">
-                                        <!-- Card body -->
-                                        <div class="card-body p-2 pb-0">
-                                            <div class="avatar avatar-story avatar-xl">
-                                                <a href="#!"
-                                                ><img
-                                                        class="avatar-img rounded-circle"
-                                                        src="static/images/avatar/10.jpg"
-                                                        alt=""
-                                                /></a>
-                                            </div>
-                                            <h6 class="card-title mb-1 mt-3">
-                                                <a href="#!"> Larry Lawson </a>
-                                            </h6>
-                                            <p class="mb-0 small lh-sm">33 mutual connections</p>
-                                        </div>
-                                        <!-- Card footer -->
-                                        <div class="card-footer p-2 border-0">
-                                            <button class="btn btn-sm btn-primary-soft w-100">
-                                                Add friend
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <!-- Card add friend item END -->
-                                </div>
-                                <div>
-                                    <!-- Card add friend item START -->
-                                    <div class="card shadow-none text-center">
-                                        <!-- Card body -->
-                                        <div class="card-body p-2 pb-0">
-                                            <div class="avatar avatar-xl">
-                                                <a href="#!"
-                                                ><img
-                                                        class="avatar-img rounded-circle"
-                                                        src="static/images/avatar/11.jpg"
-                                                        alt=""
-                                                /></a>
-                                            </div>
-                                            <h6 class="card-title mb-1 mt-3">
-                                                <a href="#!"> Louis Crawford </a>
-                                            </h6>
-                                            <p class="mb-0 small lh-sm">45 mutual connections</p>
-                                        </div>
-                                        <!-- Card footer -->
-                                        <div class="card-footer p-2 border-0">
-                                            <button class="btn btn-sm btn-primary-soft w-100">
-                                                Add friend
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <!-- Card add friend item END -->
-                                </div>
-                                <div>
-                                    <!-- Card add friend item START -->
-                                    <div class="card shadow-none text-center">
-                                        <!-- Card body -->
-                                        <div class="card-body p-2 pb-0">
-                                            <div class="avatar avatar-xl">
-                                                <a href="#!"
-                                                ><img
-                                                        class="avatar-img rounded-circle"
-                                                        src="static/images/avatar/12.jpg"
-                                                        alt=""
-                                                /></a>
-                                            </div>
-                                            <h6 class="card-title mb-1 mt-3">
-                                                <a href="#!"> Dennis Barrett </a>
-                                            </h6>
-                                            <p class="mb-0 small lh-sm">21 mutual connections</p>
-                                        </div>
-                                        <!-- Card footer -->
-                                        <div class="card-footer p-2 border-0">
-                                            <button class="btn btn-sm btn-primary-soft w-100">
-                                                Add friend
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <!-- Card add friend item END -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Card body END -->
-                </div>
+                
                 <!-- Card feed item END -->
 
                 <!-- Share feed END -->
@@ -1258,150 +1042,155 @@ Header END -->
                                 <h5 class="card-title mb-0">Mileage Ranking</h5>
                             </div>
                             <!-- Card header END -->
+
+                         {{if eq .message 'visitor'}}   
                             <!-- Card body START -->
-                            <div class="card-body">
-                                <!-- Connection item START -->
-                                <div class="hstack gap-2 mb-3">
-                                    <!-- Avatar -->
-                                    <div class="avatar">
-                                        <a href="#!"
-                                        ><img
-                                                class="avatar-img rounded-circle"
-                                                src="static/images/avatar/04.jpg"
-                                                alt=""
-                                        /></a>
-                                    </div>
-                                    <!-- Title -->
-                                    <div class="overflow-hidden">
-                                        <a class="h6 mb-0" href="#!">Judy Nguyen </a>
-                                        <p class="mb-0 small text-truncate">News anchor</p>
-                                    </div>
-                                    <!-- Button -->
-                                    <div
-                                            class="btn btn-primary-soft rounded-circle icon-md ms-auto"
-                                            href="#"
-                                    >
-                                        <strong>1</strong>
-                                    </div>
+                         <p style="margin-left: 1.25em; margin-top: 20px;">Please log in!</p>
+                         {{else}}
+                         <div class="card-body">
+                            <!-- Connection item START -->
+                            <div class="hstack gap-2 mb-3">
+                                <!-- Avatar -->
+                                <div class="avatar">
+                                    <a href="#!"
+                                    ><img
+                                            class="avatar-img rounded-circle"
+                                            src="static/images/avatar/04.jpg"
+                                            alt=""
+                                    /></a>
                                 </div>
-                                <!-- Connection item END -->
-                                <!-- Connection item START -->
-                                <div class="hstack gap-2 mb-3">
-                                    <!-- Avatar -->
-                                    <div class="avatar avatar-story">
-                                        <a href="#!">
-                                            <img
-                                                    class="avatar-img rounded-circle"
-                                                    src="static/images/avatar/05.jpg"
-                                                    alt=""
-                                            />
-                                        </a>
-                                    </div>
-                                    <!-- Title -->
-                                    <div class="overflow-hidden">
-                                        <a class="h6 mb-0" href="#!">Amanda Reed </a>
-                                        <p class="mb-0 small text-truncate">Web Developer</p>
-                                    </div>
-                                    <!-- Button -->
-                                    <div
-                                            class="btn btn-primary-soft rounded-circle icon-md ms-auto"
-                                            href="#"
-                                    >
-                                        <strong>2</strong>
-                                    </div>
+                                <!-- Title -->
+                                <div class="overflow-hidden">
+                                    <a class="h6 mb-0" href="#!">Judy Nguyen </a>
+                                    <p class="mb-0 small text-truncate">News anchor</p>
                                 </div>
-                                <!-- Connection item END -->
-
-                                <!-- Connection item START -->
-                                <div class="hstack gap-2 mb-3">
-                                    <!-- Avatar -->
-                                    <div class="avatar">
-                                        <a href="#">
-                                            <img
-                                                    class="avatar-img rounded-circle"
-                                                    src="static/images/avatar/11.jpg"
-                                                    alt=""
-                                            />
-                                        </a>
-                                    </div>
-                                    <!-- Title -->
-                                    <div class="overflow-hidden">
-                                        <a class="h6 mb-0" href="#!">Billy Vasquez </a>
-                                        <p class="mb-0 small text-truncate">News anchor</p>
-                                    </div>
-                                    <!-- Button -->
-                                    <div
-                                            class="btn btn-primary-soft rounded-circle icon-md ms-auto"
-                                            href="#"
-                                    >
-                                        <strong>3</strong>
-                                    </div>
-                                </div>
-                                <!-- Connection item END -->
-
-                                <!-- Connection item START -->
-                                <div class="hstack gap-2 mb-3">
-                                    <!-- Avatar -->
-                                    <div class="avatar">
-                                        <a href="#">
-                                            <img
-                                                    class="avatar-img rounded-circle"
-                                                    src="static/images/avatar/01.jpg"
-                                                    alt=""
-                                            />
-                                        </a>
-                                    </div>
-                                    <!-- Title -->
-                                    <div class="overflow-hidden">
-                                        <a class="h6 mb-0" href="#!">Lori Ferguson </a>
-                                        <p class="mb-0 small text-truncate">
-                                            Web Developer at Webestica
-                                        </p>
-                                    </div>
-                                    <!-- Button -->
-                                    <div
-                                            class="btn btn-primary-soft rounded-circle icon-md ms-auto"
-                                            href="#"
-                                    >
-                                        <strong>4</strong>
-                                    </div>
-                                </div>
-                                <!-- Connection item END -->
-
-                                <!-- Connection item START -->
-                                <div class="hstack gap-2 mb-3">
-                                    <!-- Avatar -->
-                                    <div class="avatar">
-                                        <a href="#">
-                                            <img
-                                                    class="avatar-img rounded-circle"
-                                                    src="static/images/avatar/placeholder.jpg"
-                                                    alt=""
-                                            />
-                                        </a>
-                                    </div>
-                                    <!-- Title -->
-                                    <div class="overflow-hidden">
-                                        <a class="h6 mb-0" href="#!">Carolyn Ortiz </a>
-                                        <p class="mb-0 small text-truncate">News anchor</p>
-                                    </div>
-                                    <!-- Button -->
-                                    <div
-                                            class="btn btn-primary-soft rounded-circle icon-md ms-auto"
-                                            href="#"
-                                    >
-                                        <strong>5</strong>
-                                    </div>
-                                </div>
-                                <!-- Connection item END -->
-
-                                <!-- View more button -->
-                                <div class="d-grid mt-3">
-                                    <a class="btn btn-sm btn-primary-soft" href="#!"
-                                    >View more</a
-                                    >
+                                <!-- Button -->
+                                <div
+                                        class="btn btn-primary-soft rounded-circle icon-md ms-auto"
+                                        href="#"
+                                >
+                                    <strong>1</strong>
                                 </div>
                             </div>
+                            <!-- Connection item END -->
+                            <!-- Connection item START -->
+                            <div class="hstack gap-2 mb-3">
+                                <!-- Avatar -->
+                                <div class="avatar avatar-story">
+                                    <a href="#!">
+                                        <img
+                                                class="avatar-img rounded-circle"
+                                                src="static/images/avatar/05.jpg"
+                                                alt=""
+                                        />
+                                    </a>
+                                </div>
+                                <!-- Title -->
+                                <div class="overflow-hidden">
+                                    <a class="h6 mb-0" href="#!">Amanda Reed </a>
+                                    <p class="mb-0 small text-truncate">Web Developer</p>
+                                </div>
+                                <!-- Button -->
+                                <div
+                                        class="btn btn-primary-soft rounded-circle icon-md ms-auto"
+                                        href="#"
+                                >
+                                    <strong>2</strong>
+                                </div>
+                            </div>
+                            <!-- Connection item END -->
+
+                            <!-- Connection item START -->
+                            <div class="hstack gap-2 mb-3">
+                                <!-- Avatar -->
+                                <div class="avatar">
+                                    <a href="#">
+                                        <img
+                                                class="avatar-img rounded-circle"
+                                                src="static/images/avatar/11.jpg"
+                                                alt=""
+                                        />
+                                    </a>
+                                </div>
+                                <!-- Title -->
+                                <div class="overflow-hidden">
+                                    <a class="h6 mb-0" href="#!">Billy Vasquez </a>
+                                    <p class="mb-0 small text-truncate">News anchor</p>
+                                </div>
+                                <!-- Button -->
+                                <div
+                                        class="btn btn-primary-soft rounded-circle icon-md ms-auto"
+                                        href="#"
+                                >
+                                    <strong>3</strong>
+                                </div>
+                            </div>
+                            <!-- Connection item END -->
+
+                            <!-- Connection item START -->
+                            <div class="hstack gap-2 mb-3">
+                                <!-- Avatar -->
+                                <div class="avatar">
+                                    <a href="#">
+                                        <img
+                                                class="avatar-img rounded-circle"
+                                                src="static/images/avatar/01.jpg"
+                                                alt=""
+                                        />
+                                    </a>
+                                </div>
+                                <!-- Title -->
+                                <div class="overflow-hidden">
+                                    <a class="h6 mb-0" href="#!">Lori Ferguson </a>
+                                    <p class="mb-0 small text-truncate">
+                                        Web Developer at Webestica
+                                    </p>
+                                </div>
+                                <!-- Button -->
+                                <div
+                                        class="btn btn-primary-soft rounded-circle icon-md ms-auto"
+                                        href="#"
+                                >
+                                    <strong>4</strong>
+                                </div>
+                            </div>
+                            <!-- Connection item END -->
+
+                            <!-- Connection item START -->
+                            <div class="hstack gap-2 mb-3">
+                                <!-- Avatar -->
+                                <div class="avatar">
+                                    <a href="#">
+                                        <img
+                                                class="avatar-img rounded-circle"
+                                                src="static/images/avatar/placeholder.jpg"
+                                                alt=""
+                                        />
+                                    </a>
+                                </div>
+                                <!-- Title -->
+                                <div class="overflow-hidden">
+                                    <a class="h6 mb-0" href="#!">Carolyn Ortiz </a>
+                                    <p class="mb-0 small text-truncate">News anchor</p>
+                                </div>
+                                <!-- Button -->
+                                <div
+                                        class="btn btn-primary-soft rounded-circle icon-md ms-auto"
+                                        href="#"
+                                >
+                                    <strong>5</strong>
+                                </div>
+                            </div>
+                            <!-- Connection item END -->
+
+                            <!-- View more button -->
+                            <div class="d-grid mt-3">
+                                <a class="btn btn-sm btn-primary-soft" href="#!"
+                                >View more</a
+                                >
+                            </div>
+                        </div>
+                         {{end}}
                             <!-- Card body END -->
                         </div>
                     </div>
@@ -1419,6 +1208,9 @@ Header END -->
                             </div>
                             <!-- Card header END -->
                             <!-- Card body START -->
+                            {{if eq .message "visitor"}}
+                            <p style="margin-left: 1.25em; margin-top: 20px;">Please log in!</p>
+                            {{else}}
                             <div class="card-body position-relative pt-0">
                                 <!--                                <div class="card-body position-relative pt-0">-->
                                 <div class="row g-2">
@@ -1554,6 +1346,8 @@ Header END -->
                                     </div>
                                 </a>
                             </div>
+                            {{end}}
+                          
                             <!-- Card body END -->
                         </div>
                     </div>
@@ -2655,6 +2449,19 @@ JS libraries, plugins and custom scripts -->
 
 <script src="//webapi.amap.com/maps?v=1.3&key=f1742220707c5766bbcd9c781a33ed1a"></script>
 <script>
+    // var mode=0;
+    
+    // var left_profile=document.getElementById('left_profile');
+    // var left_friends=document.getElementById('left_friends');
+    // var left_activity=document.getElementById('left_activity');
+    // var left_myRoute=document.getElementById('left_myRoute');
+    // var left_messages=document.getElementById('left_messages');
+    // var left_notifications=document.getElementById('left_notifications');
+    // var left_setting=document.getElementById('left_setting');
+
+    // console.log(left_activity,left_friends,left_messages,left_myRoute,left_notifications,left_profile,left_setting)
+
+
     !function () {
         var infoWindow, map, level = 16,
             center = {lng: 103.985895, lat: 30.763873},
