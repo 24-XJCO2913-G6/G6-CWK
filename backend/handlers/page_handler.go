@@ -469,9 +469,6 @@ func ToProfile_app(c *gin.Context) {
 	journey, _ := GetTracks(Uid)
 	Info, _ := GetInfo(Uid)
 
-	fmt.Println(email)
-	fmt.Println(Uid)
-
 	c.JSON(http.StatusOK, gin.H{
 		"uid":      Uid,
 		"aToken":   c.GetHeader("aToken"),

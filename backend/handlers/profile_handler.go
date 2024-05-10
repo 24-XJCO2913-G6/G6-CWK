@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	. "main/backend/models"
 )
 
@@ -10,10 +11,11 @@ func GetName(Uid int64) (string, error) {
 	if Uid == -1 {
 		return "null", nil
 	}
-	has, err := Db.Get(user)
-	if !has || err != nil {
+	has, _ := Db.Get(user)
+	if !has {
 		return "null", nil
 	}
+	fmt.Println(user)
 	return user.Name, nil
 }
 
@@ -23,8 +25,8 @@ func GetEmail(Uid int64) (string, error) {
 	if Uid == -1 {
 		return "null", nil
 	}
-	has, err := Db.Get(user)
-	if !has || err != nil {
+	has, _ := Db.Get(user)
+	if !has {
 		return "null", nil
 	}
 	return user.Email, nil
@@ -36,8 +38,8 @@ func GetPhoto(Uid int64) (string, error) {
 	if Uid == -1 {
 		return "null", nil
 	}
-	has, err := Db.Get(user)
-	if !has || err != nil {
+	has, _ := Db.Get(user)
+	if !has {
 		return "null", nil
 	}
 	return user.ProfilePhot, nil
@@ -48,8 +50,8 @@ func GetSignature(Uid int64) (string, error) {
 	if Uid == -1 {
 		return "null", nil
 	}
-	has, err := Db.Get(user)
-	if !has || err != nil {
+	has, _ := Db.Get(user)
+	if !has {
 		return "null", nil
 	}
 	return user.Name, nil
@@ -66,8 +68,8 @@ func GetLike(Uid int64) ([]Liked, error) {
 	if Uid != -1 {
 		return nil, nil
 	}
-	has, err := Db.Get(likeList)
-	if !has || err != nil {
+	has, _ := Db.Get(likeList)
+	if !has {
 		return nil, nil
 	}
 	for _, liked := range *likeList {
@@ -150,7 +152,7 @@ func GetCollect(Uid int64) ([]Collected, error) {
 func GetInfo(Uid int64) (User_detail, error) {
 	var info = &User_detail{Uid: Uid}
 	has, err := Db.Get(&info)
-	if has || err != nil {
+	if has {
 		return User_detail{}, err
 	}
 	return *info, nil
