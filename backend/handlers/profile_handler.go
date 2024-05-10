@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	. "main/backend/models"
 )
 
@@ -163,6 +162,6 @@ func GetInfo(Uid int64) (User_detail, error) {
 	if len(infos) == 0 {
 		return User_detail{}, nil
 	}
-	log.Panicln(infos)
-	return infos[0], nil
+	info := infos[0]
+	return info, nil
 }
