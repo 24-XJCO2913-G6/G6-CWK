@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"log"
 	. "main/backend/models"
 	"net/http"
 	"strconv"
@@ -466,9 +467,9 @@ func ToProfile_app(c *gin.Context) {
 	//fmt.Println(Info)
 	//fmt.Println("---------")
 	//fmt.Println(c.Query("aToken"))
-	fmt.Println("---------")
-	fmt.Println(Info)
-	fmt.Println("---------")
+	log.Println("---------")
+	log.Println(Info)
+	log.Println("---------")
 
 	c.JSON(http.StatusOK, gin.H{
 		"message":  c.GetString("message"),

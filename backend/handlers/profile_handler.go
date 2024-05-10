@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"fmt"
+	"log"
 	. "main/backend/models"
 )
 
@@ -163,6 +163,6 @@ func GetInfo(Uid int64) (User_detail, error) {
 	if len(infos) == 0 {
 		return User_detail{}, nil
 	}
-	fmt.Println(infos)
+	log.Panicln(infos)
 	return infos[0], nil
 }
