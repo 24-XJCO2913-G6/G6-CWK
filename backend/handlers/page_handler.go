@@ -16,8 +16,12 @@ func ToIndex(c *gin.Context) {
 		Uid_tmp = "-1"
 	} else {
 		aToken := c.GetHeader("aToken")
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	blogcount, _ := BlogCount(Uid)
@@ -46,8 +50,12 @@ func ToIndex_app(c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 
@@ -81,8 +89,12 @@ func ToRank_app(c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	rank, _ := RankCheck(Uid)
@@ -102,8 +114,12 @@ func ToPublishTrack_app(c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	tracks, _ := GetTracks(Uid)
@@ -120,8 +136,12 @@ func ToPublish_app(c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	type BlogApp struct {
@@ -158,8 +178,12 @@ func ToLike_app(c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	type LikeData struct {
@@ -203,8 +227,12 @@ func ToCollect_app(c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	currentTime := time.Now()
@@ -248,8 +276,12 @@ func ToReview_app(c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	type ReviewData struct {
@@ -293,8 +325,12 @@ func ToFollow_app(c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	currentTime := time.Now()
@@ -323,8 +359,12 @@ func ToLikeList_app(c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	likelist, _ := GetLike(Uid)
@@ -342,8 +382,12 @@ func ToCollectList_app(c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	collectlist, _ := GetCollect(Uid)
@@ -362,8 +406,12 @@ func ToVip_app(c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	vip, _ := GetVip(Uid)
@@ -381,8 +429,12 @@ func TouploadInfo_app(c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	type UserInfoData struct {
@@ -429,8 +481,12 @@ func ToProfile(c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	name, _ := GetName(Uid)
@@ -568,8 +624,12 @@ func ToPostDetails(Id string, c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	Bid, _ := strconv.ParseInt(Id, 10, 64)
@@ -592,8 +652,12 @@ func ToLog(c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	photo, _ := GetPhoto(Uid)
@@ -611,8 +675,12 @@ func ToPostDetails_app(Id string, c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	Bid, _ := strconv.ParseInt(Id, 10, 64)
@@ -646,8 +714,12 @@ func ToFriendsBlogs(c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 
@@ -666,8 +738,12 @@ func ToShowLiked_app(c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 
@@ -686,8 +762,12 @@ func ToShowReviewed_app(c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 
@@ -705,8 +785,12 @@ func ToShowCollected_app(c *gin.Context) {
 	if aToken == "" {
 		Uid_tmp = "-1"
 	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
+		Claim, err := CheckToken(aToken)
+		if err != nil {
+			Uid_tmp = "-1"
+		} else {
+			Uid_tmp = Claim.Uid
+		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 

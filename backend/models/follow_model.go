@@ -89,7 +89,6 @@ func GetFans(uid int64) ([]Friend, error) {
 			}
 		}
 	}
-	fmt.Println(fans)
 	return fans, nil
 }
 

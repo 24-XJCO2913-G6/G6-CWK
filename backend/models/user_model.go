@@ -110,7 +110,7 @@ func AddUser(name string, email string, passwd string) int64 {
 		IsAdmin:     false,
 		IsVip:       false,
 		CreatedTime: time.Now().Format("2006-01-02 15:04:05"),
-		ProfilePhot: "",
+		ProfilePhot: "http://120.46.81.37:8080/app/static/images/default.png",
 	}
 	Uid, err := Db.Insert(user)
 	if err != nil {
