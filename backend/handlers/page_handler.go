@@ -461,6 +461,7 @@ func ToProfile_app(c *gin.Context) {
 	likelist, _ := GetLike(Uid)
 	journey, _ := GetTracks(Uid)
 	Info, _ := GetInfo(Uid)
+	blogs, _ := GetBlogs(Uid)
 	//
 	//fmt.Println("---------")
 	//fmt.Println(Info)
@@ -482,6 +483,7 @@ func ToProfile_app(c *gin.Context) {
 		"likeList": likelist,
 		"journey":  journey,
 		"info":     Info,
+		"blogs":    blogs,
 	})
 }
 func ToVip(c *gin.Context) {

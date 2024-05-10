@@ -169,3 +169,15 @@ func GetInfo(Uid int64) (User_detail, error) {
 	fmt.Println(infos)
 	return infos[0], nil
 }
+
+func GetBlogs(Uid int64) ([]Blog, error) {
+	var blogs []Blog
+	err := Db.Where("uid = ?", Uid).Find(&blogs)
+	if err != nil {
+		return []Blog{}, nil
+	}
+	if len(blogs) == 0 {
+		return []Blog{}, nil
+	}
+	return blogs, nil
+}
