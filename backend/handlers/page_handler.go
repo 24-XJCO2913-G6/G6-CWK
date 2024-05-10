@@ -473,8 +473,8 @@ func ToProfile_app(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message":  c.GetString("message"),
 		"uid":      Uid,
-		"aToken":   c.Query("aToken"),
-		"rToken":   c.Query("rToken"),
+		"aToken":   c.GetHeader("aToken"),
+		"rToken":   c.GetHeader("rToken"),
 		"username": name,
 		"email":    email,
 		"photo":    photo,
