@@ -468,6 +468,14 @@ func ToProfile_app(c *gin.Context) {
 	likelist, _ := GetLike(Uid)
 	journey, _ := GetTracks(Uid)
 	Info, _ := GetInfo(Uid)
+	//
+	//fmt.Println("---------")
+	//fmt.Println(Info)
+	//fmt.Println("---------")
+	//fmt.Println(c.Query("aToken"))
+	//fmt.Println("---------")
+	//fmt.Println(c.Query("rToken"))
+	//fmt.Println("---------")
 
 	c.JSON(http.StatusOK, gin.H{
 		"uid":      Uid,

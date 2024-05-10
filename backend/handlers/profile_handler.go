@@ -56,73 +56,74 @@ func GetSignature(Uid int64) (string, error) {
 }
 
 func GetLike(Uid int64) ([]Liked, error) {
-	var likedBlogs = new([]Liked)
-	var likeList = new([]Like)
-	var blogLiked = new([]Blog)
-	var reviews = new([]Review)
-	var likeCount = new([]Like)
+	var likedBlogs []Liked
+	var likeList []Like
+	var blogLiked []Blog
+	var reviews []Review
+	var likeCount []Like
 	var reviewAmount int64 = 0
 	var likeAmount int64 = 0
 	if Uid != -1 {
 		return nil, nil
 	}
-	has, _ := Db.Get(likeList)
-	if !has {
+
+	err := Db.Find(&likeList)
+	if err != nil {
 		return nil, nil
 	}
-	for _, liked := range *likeList {
+	for _, liked := range likeList {
 		Id := liked.Bid
-		err2 := Db.Where("Id = ?", Id).Find(blogLiked)
+		err2 := Db.Where("id = ?", Id).Find(&blogLiked)
 		if err2 != nil {
 			return nil, err2
 		}
-		err3 := Db.Where("Bid = ?", Id).Find(reviews)
+		err3 := Db.Where("bid = ?", Id).Find(&reviews)
 		if err3 != nil {
 			return nil, err3
 		}
-		err4 := Db.Where("Bid = ?", Id).Find(likeCount)
+		err4 := Db.Where("bid = ?", Id).Find(&likeCount)
 		if err4 != nil {
 			return nil, err4
 		}
-		reviewAmount = int64(len(*reviews))
-		likeAmount = int64(len(*likeCount))
-		likedBlog := Liked{Bid: (*blogLiked)[0].Id, Content: (*blogLiked)[0].Content, Picture: (*blogLiked)[0].Picture, Title: (*blogLiked)[0].Title, Visibility: (*blogLiked)[0].Visibility, Time: (*blogLiked)[0].Pub_time, Review: *reviews, ReviewCount: reviewAmount, LikeCount: likeAmount}
-		*likedBlogs = append(*likedBlogs, likedBlog)
+		reviewAmount = int64(len(reviews))
+		likeAmount = int64(len(likeCount))
+		likedBlog := Liked{Bid: (blogLiked)[0].Id, Content: (blogLiked)[0].Content, Picture: (blogLiked)[0].Picture, Title: (blogLiked)[0].Title, Visibility: (blogLiked)[0].Visibility, Time: (blogLiked)[0].Pub_time, Review: reviews, ReviewCount: reviewAmount, LikeCount: likeAmount}
+		likedBlogs = append(likedBlogs, likedBlog)
 	}
-	return *likedBlogs, nil
+	return likedBlogs, nil
 
 }
 func GetCollect(Uid int64) ([]Collected, error) {
-	var collectedBlogs = new([]Collected)
-	var collectList = new([]Collect)
-	var blogCollect = new([]Blog)
-	var reviews = new([]Review)
-	var collectCount = new([]Collect)
+	var collectedBlogs []Collected
+	var collectList []Collect
+	var blogCollect []Blog
+	var reviews []Review
+	var collectCount []Collect
 	var reviewAmount int64 = 0
 	var collectAmount int64 = 0
 	if Uid == -1 {
 		return nil, nil
 	}
-	for _, liked := range *collectList {
+	for _, liked := range collectList {
 		Id := liked.Bid
-		err2 := Db.Where("Id = ?", Id).Find(blogCollect)
+		err2 := Db.Where("id = ?", Id).Find(&blogCollect)
 		if err2 != nil {
 			return nil, err2
 		}
-		err3 := Db.Where("Bid = ?", Id).Find(reviews)
+		err3 := Db.Where("bid = ?", Id).Find(&reviews)
 		if err3 != nil {
 			return nil, err3
 		}
-		reviewAmount = int64(len(*reviews))
-		err4 := Db.Where("Bid = ?", Id).Find(collectCount)
+		reviewAmount = int64(len(reviews))
+		err4 := Db.Where("bid = ?", Id).Find(&collectCount)
 		if err4 != nil {
 			return []Collected{}, err4
 		}
-		collectAmount = int64(len(*collectCount))
-		collectedBlog := Collected{Bid: (*blogCollect)[0].Id, Content: (*blogCollect)[0].Content, Picture: (*blogCollect)[0].Picture, Title: (*blogCollect)[0].Title, Visibility: (*blogCollect)[0].Visibility, Time: (*blogCollect)[0].Pub_time, Review: (*reviews), ReviewCount: reviewAmount, CollectCount: collectAmount}
-		*collectedBlogs = append(*collectedBlogs, collectedBlog)
+		collectAmount = int64(len(collectCount))
+		collectedBlog := Collected{Bid: (blogCollect)[0].Id, Content: (blogCollect)[0].Content, Picture: (blogCollect)[0].Picture, Title: (blogCollect)[0].Title, Visibility: (blogCollect)[0].Visibility, Time: (blogCollect)[0].Pub_time, Review: (reviews), ReviewCount: reviewAmount, CollectCount: collectAmount}
+		collectedBlogs = append(collectedBlogs, collectedBlog)
 	}
-	return *collectedBlogs, nil
+	return collectedBlogs, nil
 }
 
 //func GetJourney(c *gin.Context) (string, error) {
@@ -148,10 +149,10 @@ func GetCollect(Uid int64) ([]Collected, error) {
 //}
 
 func GetInfo(Uid int64) (User_detail, error) {
-	var info = &User_detail{Uid: Uid}
-	has, err := Db.Get(&info)
-	if has {
-		return User_detail{}, err
+	var infos []User_detail
+	err := Db.Where("uid = ?", Uid).Find(&infos)
+	if err != nil {
+		return User_detail{}, nil
 	}
-	return *info, nil
+	return infos[0], nil
 }
