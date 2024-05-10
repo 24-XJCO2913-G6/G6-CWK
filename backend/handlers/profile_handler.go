@@ -52,7 +52,7 @@ func GetSignature(Uid int64) (string, error) {
 	if !has {
 		return "null", nil
 	}
-	return user.Name, nil
+	return user.Signature, nil
 }
 
 func GetLike(Uid int64) ([]Liked, error) {
