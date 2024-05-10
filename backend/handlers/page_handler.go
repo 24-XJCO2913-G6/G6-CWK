@@ -176,14 +176,14 @@ func ToLike_app(c *gin.Context) {
 	timeString := currentTime.Format("2006-01-02 15:04:05")
 	Bid, _ := strconv.ParseInt(likeData.Bid, 10, 64)
 	Lid1 := AddLike(Uid, Bid, timeString)
-	err1 := Db.Where("Uid = ?", Uid).Find(&user)
+	err1 := Db.Where("uid = ?", Uid).Find(&user)
 	if err1 != nil {
 		return
 	}
 	username := user.Name
 	photo := user.ProfilePhot
 	blogTitle := blog.Title
-	err2 := Db.Where("Bid = ?", Bid).Find(&blog)
+	err2 := Db.Where("bid = ?", Bid).Find(&blog)
 	if err2 != nil {
 		return
 	}
@@ -221,14 +221,14 @@ func ToCollect_app(c *gin.Context) {
 	}
 	Bid, _ := strconv.ParseInt(collectData.Bid, 10, 64)
 	Cid1 := AddCollect(Uid, Bid, timeString)
-	err1 := Db.Where("Uid = ?", Uid).Find(&user)
+	err1 := Db.Where("uid = ?", Uid).Find(&user)
 	if err1 != nil {
 		return
 	}
 	username := user.Name
 	photo := user.ProfilePhot
 	blogTitle := blog.Title
-	err2 := Db.Where("Bid = ?", Bid).Find(&blog)
+	err2 := Db.Where("bid = ?", Bid).Find(&blog)
 	if err2 != nil {
 		return
 	}
@@ -267,14 +267,14 @@ func ToReview_app(c *gin.Context) {
 	timeString := currentTime.Format("2006-01-02 15:04:05")
 	Bid, _ := strconv.ParseInt(reviewData.Bid, 10, 64)
 	Rid1 := AddReview(Uid, Bid, timeString, reviewData.Content)
-	err1 := Db.Where("Uid = ?", Uid).Find(&user)
+	err1 := Db.Where("uid = ?", Uid).Find(&user)
 	if err1 != nil {
 		return
 	}
 	username := user.Name
 	photo := user.ProfilePhot
 	blogTitle := blog.Title
-	err2 := Db.Where("Bid = ?", Bid).Find(&blog)
+	err2 := Db.Where("bid = ?", Bid).Find(&blog)
 	if err2 != nil {
 		return
 	}
@@ -439,6 +439,7 @@ func ToProfile(c *gin.Context) {
 	motto, _ := GetSignature(Uid)
 	likelist, _ := GetLike(Uid)
 	journey, _ := GetTracks(Uid)
+	blogs, _ := GetBlogs(Uid)
 	c.HTML(http.StatusOK, "my-profile.html", gin.H{
 		"message":  c.GetString("message"),
 		"uid":      Uid,
@@ -450,6 +451,7 @@ func ToProfile(c *gin.Context) {
 		"motto":    motto,
 		"likeList": likelist,
 		"journey":  journey,
+		"blogs":    blogs,
 	})
 }
 func ToProfile_app(c *gin.Context) {
@@ -461,6 +463,7 @@ func ToProfile_app(c *gin.Context) {
 	likelist, _ := GetLike(Uid)
 	journey, _ := GetTracks(Uid)
 	Info, _ := GetInfo(Uid)
+	blogs, _ := GetBlogs(Uid)
 	//
 	//fmt.Println("---------")
 	//fmt.Println(Info)
@@ -482,6 +485,7 @@ func ToProfile_app(c *gin.Context) {
 		"likeList": likelist,
 		"journey":  journey,
 		"info":     Info,
+		"blogs":    blogs,
 	})
 }
 func ToVip(c *gin.Context) {

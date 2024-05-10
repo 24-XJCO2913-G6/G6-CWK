@@ -11,7 +11,7 @@ import (
 
 func GetBlog(Id int64) (Blog, error) {
 	var blog Blog
-	err := Db.Where("Id = ?", Id).Find(&blog)
+	err := Db.Where("id = ?", Id).Find(&blog)
 	if err != nil {
 		return Blog{}, err
 	}
@@ -22,14 +22,14 @@ func GetReviews(Id int64) ([]ReviewInBlog, error) {
 	var reviews []Review
 	var reviews_in_blog []ReviewInBlog
 
-	err := Db.Where("Bid = ?", Id).Find(&reviews)
+	err := Db.Where("bid = ?", Id).Find(&reviews)
 	if err != nil {
 		return []ReviewInBlog{}, err
 	}
 	if len(reviews) != 0 {
 		for _, review := range reviews {
 			var reviewers []User
-			err := Db.Where("Uid = ?", review.Uid).Find(&reviewers)
+			err := Db.Where("uid = ?", review.Uid).Find(&reviewers)
 			if err != nil {
 				return []ReviewInBlog{}, err
 			}
@@ -74,7 +74,7 @@ func BlogPublish(c *gin.Context) {
 		fmt.Println("Visibility transfer fail:", err)
 		return
 	}
-	err2 := Db.Where("Tid = ?", Tid).Find(&track_tmp)
+	err2 := Db.Where("tid = ?", Tid).Find(&track_tmp)
 	if err2 != nil {
 		c.JSON(http.StatusOK, gin.H{"error": "Invalid Tid, not exists"})
 		return

@@ -17,7 +17,7 @@ func GetLikeMes(c *gin.Context) ([]LikedApp, error) {
 		Uid_tmp = Claim.Uid
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
-	err := Db.Where("Uid = ?", Uid).Find(&likedMessages)
+	err := Db.Where("uid = ?", Uid).Find(&likedMessages)
 	if err != nil {
 		return []LikedApp{}, err
 	}
@@ -37,7 +37,7 @@ func GetCollectMes(c *gin.Context) ([]CollectedApp, error) {
 		Uid_tmp = Claim.Uid
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
-	err := Db.Where("Uid = ?", Uid).Find(&collectMessages)
+	err := Db.Where("uid = ?", Uid).Find(&collectMessages)
 	if err != nil {
 		return []CollectedApp{}, err
 	}
@@ -57,7 +57,7 @@ func GetReviewMes(c *gin.Context) ([]ReviewedApp, error) {
 		Uid_tmp = Claim.Uid
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
-	err := Db.Where("Uid = ?", Uid).Find(&reviewMessages)
+	err := Db.Where("uid = ?", Uid).Find(&reviewMessages)
 	if err != nil {
 		return []ReviewedApp{}, err
 	}
