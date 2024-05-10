@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	. "main/backend/models"
 	"sort"
 	"strconv"
@@ -122,7 +123,11 @@ func BlogDisplay() ([]Blog_display, error) {
 			if err1 != nil {
 				return []Blog_display{}, err1
 			}
+			//fmt.Println("authors:")
+			//fmt.Println(authors)
 			has, err := Db.Where("follow_by_id = ? AND follow_id = ?", Uid, authors[0].Uid).Get(&followed)
+			//fmt.Println("followed:")
+			//fmt.Println(has)
 			if err != nil {
 				return []Blog_display{}, err
 			} else if !has {
@@ -139,9 +144,13 @@ func BlogDisplay() ([]Blog_display, error) {
 			Aid := authors[0].Uid
 			blog_dis := Blog_display{Author: author, Photo: photo, Pub_time: blog.Pub_time, Visibility: blog.Visibility,
 				Content: blog.Content, Picture: blog.Picture, Title: blog.Title, IsFollow: isFollow, Coordinates: track.Coordinates, AuthorId: Aid}
+			fmt.Println(blog_dis)
 			blogs_dis = append(blogs_dis, blog_dis)
 		}
+		fmt.Println(blogs_dis)
+		return blogs_dis, nil
+	} else {
+		return []Blog_display{}, nil
 	}
 
-	return []Blog_display{}, nil
 }
