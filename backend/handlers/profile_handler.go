@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	. "main/backend/models"
 )
 
@@ -15,7 +14,6 @@ func GetName(Uid int64) (string, error) {
 	if !has {
 		return "null", nil
 	}
-	fmt.Println(user)
 	return user.Name, nil
 }
 
