@@ -118,6 +118,8 @@ func BlogDisplay() ([]Blog_display, error) {
 	}
 	if len(blogs) != 0 {
 		for _, blog := range blogs {
+			//fmt.Println("blog:")
+			//fmt.Println(blog)
 			Uid := blog.Uid
 			err1 := Db.Where("uid = ?", Uid).Find(&authors)
 			if err1 != nil {
@@ -135,10 +137,12 @@ func BlogDisplay() ([]Blog_display, error) {
 			} else {
 				isFollow = 1
 			}
-			err4 := Db.Where("tid = ?", blog.Tid).Find(&track)
-			if err4 != nil {
+			has, err4 := Db.Where("tid = ?", blog.Tid).Get(&track)
+			if !has {
 				return []Blog_display{}, err4
 			}
+			//fmt.Println("track:")
+			//fmt.Println(track)
 			author := authors[0].Name
 			photo := authors[0].ProfilePhot
 			Aid := authors[0].Uid
@@ -146,6 +150,7 @@ func BlogDisplay() ([]Blog_display, error) {
 				Content: blog.Content, Picture: blog.Picture, Title: blog.Title, IsFollow: isFollow, Coordinates: track.Coordinates, AuthorId: Aid}
 			fmt.Println(blog_dis)
 			blogs_dis = append(blogs_dis, blog_dis)
+			//fmt.Println("---------------")
 		}
 		fmt.Println(blogs_dis)
 		return blogs_dis, nil
