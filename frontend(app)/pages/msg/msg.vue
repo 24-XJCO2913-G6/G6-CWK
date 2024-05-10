@@ -1,30 +1,17 @@
 <template>
 	<view>
-		<!-- 导航 -->
-		<!-- #ifndef APP-PLUS -->
-		<uni-nav-bar :shadow="false" :border="false" @click-left="clickLeft" @click-right="clickRight" title="Talk">
-			<!-- 左边图标 -->
-			<block slot="left">
-				<view class="iconfont icon-user-detail mx-2" style="font-size: 22px;"></view>
-			</block>
-			<!-- 右边图标 -->
-			<block slot="right">
-				<view class="icon iconfont icon-zengjia" style="font-size: 22px;"></view>
-			</block>
-		</uni-nav-bar>
-		<!-- #endif -->
 
 		<view class="icon-box">
 			<view class="icon-text-group" @click="handleClick('like')">
-				<image class="icon" src="../../static/images/like.png"></image>
+				<image class="icon" src="http://120.46.81.37:8080/app/static/images/like.png"></image>
 				<text class="icon-text">Like</text>
 			</view>
 			<view class="icon-text-group" @click="handleClick('collect')">
-				<image class="icon" src="../../static/images/collect.png"></image>
+				<image class="icon" src="http://120.46.81.37:8080/app/static/images/collect.png"></image>
 				<text class="icon-text">Collect</text>
 			</view>
 			<view class="icon-text-group" @click="handleClick('comment')">
-				<image class="icon" src="../../static/images/comment.png"></image>
+				<image class="icon" src="http://120.46.81.37:8080/app/static/images/comment.png"></image>
 				<text class="icon-text">Comment</text>
 			</view>
 		</view>

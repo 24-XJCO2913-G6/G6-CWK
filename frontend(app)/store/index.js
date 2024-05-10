@@ -15,34 +15,11 @@ export default new Vuex.Store({
 		loginStatus:false,
 		token:false,
 		user:{
-			// "id": 7,
-			// "username": "zcmcss",
-			// "userpic": "https://tangzhe123-com.oss-cn-shenzhen.aliyuncs.com/Appstatic/qsbk/demo/userpic/1.jpg",
-			// "password": true,
-			// "phone": "13450772004",
-			// "email": "123@qq.com",
-			// "status": 1,
-			// "create_time": null,
-			// "logintype": "username",
-			// "token": "a8bb3f6f50ff5049d70b6022b48e1f45c24a96f8",
-			// "userinfo": {
-			// 	"id": 1,
-			// 	"user_id": 7,
-			// 	"age": 23,
-			// 	"sex": 1,
-			// 	"qg": 1,
-			// 	"job": "IT",
-			// 	"path": "北京市-市辖区-朝阳区",
-			// 	"birthday": "1996-06-12"
-			// },
-			// user_bind:{
-			// 	"qq": {
-			// 		"id": 229,
-			// 		"nickname": "airson"
-			// 	}
-			// }
+			name:'mike'
 		},
-		
+		aToken:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMCIsInBhc3N3b3JkIjoiJDJhJDEwJHlzU2N2aVhzVzdPZXIxTlcvRUYvR09TcmtYalkvOFROZ1k3Lmp2ZTdDY3BQQzZncVJZckZTIiwiYXVkIjoiMCIsImV4cCI6MTcxNTI3OTc5OSwiaWF0IjoxNzE1MjY1Mzk5LCJuYmYiOjE3MTUyNjUzOTksInN1YiI6InRva2VuIn0.6zT3145pa7tyFjHUpJsxb5eyyGYEqdQAvdGEq94GyZg",
+		rToken:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTUyOTc3OTl9.Xs7uNvGwRkbjzkRMjRHdzdONLufaomG0r_l3QQmB0JQ",
+		login_id:1,
 		// Socket连接状态
 		IsOpen:false,
 		// SocketTask
@@ -69,6 +46,10 @@ export default new Vuex.Store({
 		}
 	},
 	mutations:{
+		 setTokens(state, { aToken, rToken }) {
+		      state.aToken = aToken;
+		      state.rToken = rToken;
+		    },
 		// 创建聊天对象
 		createToUser(state,ToUser){
 			state.ToUser = ToUser
@@ -135,6 +116,7 @@ export default new Vuex.Store({
 		// 初始化登录状态
 		initUser({state,dispatch}){
 			let user = uni.getStorageSync('user');
+			console.log(user)
 			if(user){
 				state.user = JSON.parse(user)
 				state.loginStatus = true
@@ -430,7 +412,7 @@ export default new Vuex.Store({
 				to_id:state.ToUser.user_id,
 				from_id:state.user.id,
 				from_username:state.user.username,
-				from_userpic:state.user.userpic ? state.user.userpic : '/static/default.jpg',
+				from_userpic:state.user.userpic ? state.user.userpic : 'http://120.46.81.37:8080/app/static/default.jpg',
 				type:data.type,
 				data:data.data,
 				time:new Date().getTime()
@@ -441,7 +423,7 @@ export default new Vuex.Store({
 			/*
 			{
 				"user_id": 331,
-				"avatar": "/static/default.jpg",
+				"avatar": "http://120.46.81.37:8080/app/static/default.jpg",
 				"username": "13450772004",
 				"update_time": 1578216988,
 				"data": "看看有么有移除",

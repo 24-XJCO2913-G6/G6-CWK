@@ -7,42 +7,22 @@
 			<view class="iconfont icon-sousuo position-absolute text-muted" 
 			style="left: 30rpx;"></view>
 			<input class="flex-1 rounded bg-light" style="padding: 5rpx 0 5rpx 50rpx;" type="text" v-model="searchText" @confirm="searchEvent"
-			placeholder="搜索" 
+			placeholder="search" 
 			placeholder-style="color: #CCCCCC;"/>
+			
 			<text class="pl-2" @click="goBack">取消</text>
 		</view>
-		<view style="height: 88rpx;"></view>
+		<view style="height: 88rpx;">
+		</view>
 		<!-- #endif -->
-		
-		<template v-if="searchList.length === 0">
-			<!-- 搜索历史 -->
-			<view class="py-2 font-md px-2">搜索历史</view>
-			<view class="flex flex-wrap">
-				<view class="border rounded font mx-2 my-1 px-2" 
-				v-for="(item,index) in list" :key="index"
-				hover-class="bg-light"
-				@click="clickSearchHistory(item)">{{item}}</view>
-			</view>
-		</template>
-		<template v-else>
+		<template >
 			<!-- 数据列表 -->
-			<block v-for="(item,index) in searchList" :key="index">
-				<template v-if="type ==='post'">
-					<!-- 帖子 -->
-					<common-list :item="item" :index="index"></common-list>
-				</template>
-				<template v-else-if="type === 'topic'">
-					<!-- 话题 -->
-					<topic-list :item="item" :index="index"></topic-list>
-				</template>
-				<template v-else>
+			<block v-for="(item,index) in searchList" :key="index">		
+				<template >
 					<!-- 用户 -->
 					<user-list :item="item" :index="index"></user-list>
 				</template>
 			</block>
-			
-			<!-- 上拉加载 -->
-			<load-more :loadmore="loadmore"></load-more>
 		</template>
 		
 	</view>
@@ -54,6 +34,7 @@
 	import topicList from '@/components/news/topic-list.vue';
 	import userList from '@/components/user-list/user-list.vue';
 	import loadMore from '@/components/common/load-more.vue';
+	import { mapState } from 'vuex'
 	export default {
 		components: {
 			commonList,
@@ -64,14 +45,43 @@
 		data() {
 			return {
 				searchText:"",
-				list:[],
-				// 搜索结果
-				searchList:[],
-				// 当前搜索类型
+				userList:[
+					{
+					user_id:1,
+					username:'Yodo',
+					user_pic:'http://120.46.81.37:8080/app/static/user_pic/1.jpg',
+					},
+					{
+					user_id:2,
+					username:'Verooo',
+					user_pic:'http://120.46.81.37:8080/app/static/user_pic/2.jpg',
+					},
+					{
+					user_id:3,
+					username:'Peace of summer',
+					user_pic:'http://120.46.81.37:8080/app/static/user_pic/3.jpg',
+					}
+					],
+
 				type:"post",
 				loadmore:"上拉加载更多",
 				page:1
 			}
+		},
+		computed:{
+			searchList(){
+				if(this.searchText){
+				return this.userList.filter(x=>{
+					return x.username.includes(this.searchText);
+				})
+				}
+				else{
+					return []
+				}
+				
+				
+			}
+			
 		},
 		// 监听导航输入
 		onNavigationBarSearchInputChanged(e){
@@ -83,47 +93,24 @@
 				this.searchEvent()
 			}
 		},
-		onLoad(e) {
-			if (e.type) {
-				this.type = e.type
-			}
-			let pageTitle = '帖子'
-			switch (this.type){
-				case 'post':
-				pageTitle = '帖子'
-				// 监听关注和顶踩操作
-				uni.$on('updateFollowOrSupport',(e)=>{
-					switch (e.type){
-						case 'follow': // 关注
-						this.follow(e.data.user_id)
-							break;
-						default:
-							break;
-					}
-				})
-					break;
-				case 'topic':
-				pageTitle = '话题'
-					break;
-				case 'user':
-				pageTitle = '用户'
-					break;
-			}
-			// 修改搜索占位
-			// #ifdef APP-PLUS
-			let currentWebview = this.$mp.page.$getAppWebview();
-			let tn = currentWebview.getStyle().titleNView; 
-			tn.searchInput.placeholder = '搜索'+pageTitle; 
-			currentWebview.setStyle({
-				titleNView: tn  
-			})
-			// #endif
-			// 取出搜索历史
-			let list = uni.getStorageSync('historySeachText')
-			if(list){
-				this.list = JSON.parse(list)
-			}
-			
+		onLoad() {
+			uni.request({
+			url: 'http://120.46.81.37:8080/app/all_users',
+				method: 'GET',
+				data: {	 
+						  'aToken': this.aToken,
+						  'rToken':this.rToken,
+				},
+					header: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+			  success: (res) => {
+				this.userList= res.data;
+			  },
+			  fail: (err) => {
+				console.error('Failed to fetch posts:', err);
+			  }
+			    })
 		},
 		onUnload() {
 			if(this.type === 'post'){

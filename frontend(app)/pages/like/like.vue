@@ -19,28 +19,36 @@ export default {
   data() {
     return {
       likes: [
-          {post_id:1, username: 'Verooo', title: 'School walk', date: '04-20', avatar: '../../static/user_pic/2.jpg' },
-		  {post_id:2,  username: 'Super Girl', title: 'School walk', date: '04-14', avatar: '../../static/user_pic/4.jpg' },
-		  { post_id:13, username: 'Yaoyao', title: 'School walk', date: '04-13', avatar: '../../static/user_pic/6.jpg' },
-		  { post_id:11, username: 'Yodo', title: 'School walk', date: '04-13', avatar: '../../static/user_pic/1.jpg' },
-		  { post_id:12, username: 'Peace of summer', title: 'School walk', date: '04-13', avatar: '../../static/user_pic/3.jpg' },
-		 { post_id:14, username: 'Jelly cat', title: 'School walk', date: '04-13', avatar: '../../static/user_pic/5.jpg' },
-		  // ...更多点赞消息对象
-		  // ...更多点赞消息对象
-          // ...更多点赞消息对象
+          {post_id:1, username: 'Verooo', title: 'School walk', date: '04-20', avatar: 'http://120.46.81.37:8080/app/static/user_pic/2.jpg' },
+		  {post_id:2,  username: 'Super Girl', title: 'School walk', date: '04-14', avatar: 'http://120.46.81.37:8080/app/static/user_pic/4.jpg' },
+		  { post_id:13, username: 'Yaoyao', title: 'School walk', date: '04-13', avatar: 'http://120.46.81.37:8080/app/static/user_pic/6.jpg' },
+		  { post_id:11, username: 'Yodo', title: 'School walk', date: '04-13', avatar: 'http://120.46.81.37:8080/app/static/user_pic/1.jpg' },
+		  { post_id:12, username: 'Peace of summer', title: 'School walk', date: '04-13', avatar: 'http://120.46.81.37:8080/app/static/user_pic/3.jpg' },
+		 { post_id:14, username: 'Jelly cat', title: 'School walk', date: '04-13', avatar: 'http://120.46.81.37:8080/app/static/user_pic/5.jpg' },
+	
         ]
     };
   },
   methods: {
    
   },
+computed:{
+			...mapState({
+				loginStatus:state=>state.loginStatus,
+				aToken: state => state.aToken,
+				rToken: state=>state.rToken
+				
+			}),
+		},
   onLoad(){
 	  uni.request({
 	  url: 'http://120.46.81.37:8080/app/get_likes',
-	  	header: {
-	  		'aToken': aToken,
-	  		'rToken':rToken,
-	  	},
+	  	method: 'GET',
+header: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
+				},
 	    success: (res) => {
 	  	this.likes= res.data;
 	    },

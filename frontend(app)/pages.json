@@ -14,15 +14,8 @@
 							"disabled": true,
 							"placeholder": "search",
 							"placeholderColor": "#6D6C67"
-						},
-						"buttons": [{
-							"color": "#333333",
-							"colorPressed": "#FD597C",
-							"float": "right",
-							"fontSize": "20px",
-							"fontSrc": "/static/iconfont.ttf",
-							"text": "\ue668"
-						}]
+						}
+			
 					}
 				}
 			}
@@ -30,10 +23,30 @@
 			"path": "pages/news/news",
 			"style": {
 				"app-plus": {
+					// 导航栏配置
+					"titleNView": {
+						// 搜索框配置
+						"searchInput": {
+							"align": "center",
+							"backgroundColor": "#F5F4F2",
+							"borderRadius": "4px",
+							"disabled": true,
+							"placeholder": "search",
+							"placeholderColor": "#6D6C67"
+						}
+							
+					}
+				}
+			}
+		},{
+			"path": "pages/upload/upload",
+			"style": {
+				"app-plus": {
 					"titleNView": false
 				}
 			}
-		}, {
+		},
+		{
 			"path": "pages/msg/msg",
 			"style": {
 				"navigationBarTitleText": "Messages",
@@ -45,20 +58,21 @@
 							"colorPressed": "#FD597C",
 							"float": "left",
 							"fontSize": "20px",
-							"fontSrc": "/static/iconfont.ttf",
+							"fontSrc": "http://120.46.81.37:8080/app/static/iconfont.ttf",
 							"text": "\ue611"
 						}, {
 							"color": "#333333",
 							"colorPressed": "#FD597C",
 							"float": "right",
 							"fontSize": "20px",
-							"fontSrc": "/static/iconfont.ttf",
+							"fontSrc": "http://120.46.81.37:8080/app/static/iconfont.ttf",
 							"text": "\ue649"
 						}]
 					}
 				}
 			}
-		}, {
+		},
+		{
 			"path": "pages/my/my",
 			"style": {
 				"navigationBarTitleText": "My",
@@ -90,7 +104,7 @@
 							"colorPressed": "#FD597C",
 							"float": "right",
 							"fontSize": "14px",
-							"text": "搜索"
+							"text": "search"
 						}]
 					}
 				}
@@ -159,7 +173,7 @@
 							"colorPressed": "#FD597C",
 							"float": "right",
 							"fontSize": "20px",
-							"fontSrc": "/static/iconfont.ttf",
+							"fontSrc": "http://120.46.81.37:8080/app/static/iconfont.ttf",
 							"text": "\ue628"
 						}]
 					}
@@ -239,25 +253,23 @@
 					}
 				}
 			}
-		}
-		,{
-		    "path" : "pages/my-post/my-post",
-		    "style" : {
-				"navigationBarTitleText":"My Post",
-				"app-plus":{
-					"titleNView":{
-						"buttons":[{
-							"type":"menu"
+		}, {
+			"path": "pages/my-post/my-post",
+			"style": {
+				"navigationBarTitleText": "My Post",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+							"type": "menu"
 						}]
 					}
 				}
 			}
-		}
-		,{
-		    "path" : "pages/user-list/user-list",
-		    "style" : {
-				"app-plus":{
-					"titleNView":false
+		}, {
+			"path": "pages/user-list/user-list",
+			"style": {
+				"app-plus": {
+					"titleNView": false
 				}
 			}
 		}, {
@@ -282,7 +294,7 @@
 					}
 				}
 			}
-		},  {
+		}, {
 			"path": "pages/rank/rank",
 			"style": {
 				"navigationBarTitleText": "Rank",
@@ -360,17 +372,16 @@
 			}
 		},
 		{
-			"path" : "pages/my-space/my-space",
-			"style" : 
-			{
-				"navigationBarTitleText" : "",
-				"enablePullDownRefresh" : false
+			"path": "pages/my-space/my-space",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
 			}
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "社区交友",
+		"navigationBarTitleText": "Been",
 		"navigationBarBackgroundColor": "#FFFFFF",
 		"backgroundColor": "#FFFFFF"
 	},
@@ -382,29 +393,35 @@
 		"list": [{
 			"pagePath": "pages/index/index",
 			"text": "Home",
-			"iconPath": "static/tabbar/index.png",
-			"selectedIconPath": "static/tabbar/indexed.png"
+			"iconPath": "http://120.46.81.37:8080/app/static/tabbar/index.png",
+			"selectedIconPath": "http://120.46.81.37:8080/app/static/tabbar/indexed.png"
 		}, {
 			"pagePath": "pages/news/news",
 			"text": "Feed",
-			"iconPath": "static/tabbar/feed.png",
-			"selectedIconPath": "static/tabbar/feed.png"
+			"iconPath": "http://120.46.81.37:8080/app/static/tabbar/feed.png",
+			"selectedIconPath": "http://120.46.81.37:8080/app/static/tabbar/feed.png"
 		}, {
+			"pagePath": "pages/upload/upload",
+			"text": "Post",
+			"iconPath": "http://120.46.81.37:8080/app/static/tabbar/upload.png",
+			"selectedIconPath": "http://120.46.81.37:8080/app/static/tabbar/upload.png"
+		},
+		{
 			"pagePath": "pages/add-input/add-input",
-
 			"text": "Add",
-			"iconPath": "static/tabbar/add.png",
-			"selectedIconPath": "static/tabbar/add.png"
-		}, {
+			
+			"iconPath": "http://120.46.81.37:8080/app/static/tabbar/add.png",
+			"selectedIconPath": "http://120.46.81.37:8080/app/static/tabbar/add.png"
+		},{
 			"pagePath": "pages/msg/msg",
 			"text": "Message",
-			"iconPath": "static/tabbar/paper.png",
-			"selectedIconPath": "static/tabbar/papered.png"
+			"iconPath": "http://120.46.81.37:8080/app/static/tabbar/paper.png",
+			"selectedIconPath": "http://120.46.81.37:8080/app/static/tabbar/papered.png"
 		}, {
 			"pagePath": "pages/my/my",
 			"text": "My",
-			"iconPath": "static/tabbar/home.png",
-			"selectedIconPath": "static/tabbar/homeed.png"
+			"iconPath": "http://120.46.81.37:8080/app/static/tabbar/home.png",
+			"selectedIconPath": "http://120.46.81.37:8080/app/static/tabbar/homeed.png"
 		}]
 	}
 }

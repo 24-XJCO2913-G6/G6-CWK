@@ -24,7 +24,7 @@
 						id: 1,
 						latitude: "", //纬度
 						longitude: "", //经度
-						iconPath: "/static/images/business_map/my.png", //图标路径
+						iconPath: "http://120.46.81.37:8080/app/static/images/business_map/my.png", //图标路径
 						width: "30", //图标的宽
 						height: "30" //图标的高
 					}

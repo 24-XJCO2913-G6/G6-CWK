@@ -8,10 +8,10 @@
 				<text class="expire-value" style="display: inline-block; text-align: center;">{{ expireDate }}</text>
 			</view>
 		</view>
-		
+
 		<view v-if="isVip" class="cancel-vip">
-		    <button class="cancel-button" @click="cancelVip">Cancel Membership</button>
-		  </view>
+			<button class="cancel-button" @click="cancelVip">Cancel Membership</button>
+		</view>
 
 		<view class="member-row">
 			<view class="member-item" @click="handleClick('Month')" :class="{active: activeOption === 'Month'}">
@@ -141,8 +141,20 @@
 				selectedPayment: '',
 				// 新增会员到期时间属性
 				expireDate: '', // 假设这是从后端获取的会员到期时间
-				isVip: true, // 初始时假设用户不是会员
+				isVip: false, // 初始时假设用户不是会员
 			};
+		},
+		onLoad() {
+			// 在组件加载时检查会员状态
+			this.checkVipStatus();
+		},
+computed:{
+			...mapState({
+				loginStatus:state=>state.loginStatus,
+				aToken: state => state.aToken,
+				rToken: state=>state.rToken
+				
+			}),
 		},
 		methods: {
 			handleClick(option) {
@@ -152,10 +164,14 @@
 				this.selectedPayment = option;
 			},
 			checkVipStatus() {
-				// 这里使用uni.request来发送请求，您需要根据实际情况替换URL和参数
 				uni.request({
-					url: '你的后端服务地址/vip/用户的唯一标识符', // 替换为实际的URL和用户标识符
+					url: 'http://120.46.81.37:8080/app/isvip',
 					method: 'GET',
+			header: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
+				},
 					success: (res) => {
 						if (res.statusCode === 200) {
 							const data = res.data;
@@ -164,6 +180,8 @@
 							} else {
 								this.isVip = false; // 否则，设置为false
 							}
+						} else {
+							console.error('检查会员状态失败，状态码：', res.statusCode);
 						}
 					},
 					fail: (error) => {
@@ -176,54 +194,34 @@
 					url: '../payment/payment',
 				});
 			},
+			// 纯前端的取消会员
 			// cancelVip() {
 			//   uni.showModal({
 			//     title: 'Cancel Membership',
 			//     message: 'Are you sure you want to cancel your membership?',
 			//     success: (res) => {
 			//       if (res.confirm) {
+			//         // 模拟显示加载提示
 			//         uni.showLoading({
 			//           title: 'Processing',
 			//         });
-			//         // Call the backend API to cancel the membership
-			//         uni.request({
-			//           url: 'YOUR_BACKEND_API_URL/cancelVip', // Replace with the actual backend API URL
-			//           method: 'POST',
-			//           header: {
-			//             'Authorization': 'Bearer YOUR_ACCESS_TOKEN', // Replace with the actual token if needed
-			//           },
-			//           success: (res) => {
-			//             uni.hideLoading();
-			//             if (res.statusCode === 200) {
-			//               uni.showToast({
-			//                 title: 'Membership cancelled successfully',
-			//               });
-			//               // Check for refund status if your backend provides it
-			//               // if (res.data.refundStatus) {
-			//               //   uni.showToast({
-			//               //     title: 'Refund processed successfully',
-			//               //     icon: 'success',
-			//               //   });
-			//               // }
-			//               // Update UI state
-			//               this.isVip = false;
-			//               this.expireDate = '';
-			//             } else {
-			//               uni.showToast({
-			//                 title: 'Failed to cancel membership',
-			//                 icon: 'none',
-			//               });
-			//             }
-			//           },
-			//           fail: (error) => {
-			//             console.error('Failed to cancel membership', error);
-			//             uni.hideLoading();
-			//             uni.showToast({
-			//               title: 'Failed to cancel membership',
-			//               icon: 'none',
-			//             });
-			//           },
-			//         });
+			//         // 模拟取消会员成功的场景
+			//         setTimeout(() => {
+			//           // 隐藏加载提示
+			//           uni.hideLoading();
+			//           // 更新UI状态，模拟取消会员成功
+			//           this.isVip = false;
+			//           this.expireDate = '';
+			//           // 显示成功提示
+			//           uni.showToast({
+			//             title: 'Membership cancelled successfully',
+			//           });
+			//           // 如果需要，也可以模拟显示退款成功的提示
+			//           uni.showToast({
+			//             title: 'Refund processed successfully',
+			//             icon: 'success',
+			//           });
+			//         }, 1500); // 延迟1.5秒模拟网络请求
 			//       }
 			//     },
 			//     fail: (error) => {
@@ -231,53 +229,69 @@
 			//     },
 			//   });
 			// },
+		
 			cancelVip() {
-			  uni.showModal({
-			    title: 'Cancel Membership',
-			    message: 'Are you sure you want to cancel your membership?',
-			    success: (res) => {
-			      if (res.confirm) {
-			        // 模拟显示加载提示
-			        uni.showLoading({
-			          title: 'Processing',
-			        });
-			        // 模拟取消会员成功的场景
-			        setTimeout(() => {
-			          // 隐藏加载提示
-			          uni.hideLoading();
-			          // 更新UI状态，模拟取消会员成功
-			          this.isVip = false;
-			          this.expireDate = '';
-			          
-			          // 显示成功提示
-			          uni.showToast({
-			            title: 'Membership cancelled successfully',
-			          });
-			          // 如果需要，也可以模拟显示退款成功的提示
-			          uni.showToast({
-			            title: 'Refund processed successfully',
-			            icon: 'success',
-			          });
-			        }, 1500); // 延迟1.5秒模拟网络请求
-			      }
-			    },
-			    fail: (error) => {
-			      console.error('Modal Error', error);
-			    },
-			  });
+				uni.showModal({
+					title: 'Cancel Membership',
+					message: 'Are you sure you want to cancel your membership?',
+					success: (res) => {
+						if (res.confirm) {
+							uni.showLoading({
+								title: 'Processing',
+							});
+							uni.request({
+								url: 'http://120.46.81.37:8080/cancelVip', // API URL
+								method: 'POST',
+								header: {
+													'Content-Type': 'application/x-www-form-urlencoded',
+													'aToken': this.aToken,
+													'rToken':this.rToken,
+												},
+								success: (res) => {
+									uni.hideLoading();
+									if (res.statusCode === 200) {
+										uni.showToast({
+											title: 'Membership cancelled successfully',
+										});
+										// 更新UI状态
+										this.isVip = false;
+										this.expireDate = '';
+									} else {
+										uni.showToast({
+											title: 'Failed to cancel membership',
+											icon: 'none',
+										});
+									}
+								},
+								fail: (error) => {
+									console.error('Failed to cancel membership', error);
+									uni.hideLoading();
+									uni.showToast({
+										title: 'Failed to cancel membership',
+										icon: 'none',
+									});
+								},
+							});
+						}
+					},
+					fail: (error) => {
+						console.error('Modal Error', error);
+					},
+				});
 			},
-			// 假设这是获取会员到期时间的方法
 			getExpireDate() {
-				// 这里应该是一个API请求，获取用户的会员到期时间
-				// 请替换为实际的后端API地址
 				uni.request({
-					url: '你的后端服务地址/api/getVipExpireDate',
+					url: 'http://120.46.81.37:8080/app/vip',
 					method: 'GET',
-					// 其他配置...
+				header: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
+				},
 					success: (res) => {
 						if (res.statusCode === 200) {
-							
-							// this.expireDate = res.data.expireDate; // 假设返回的到期时间在res.data.expireDate
+							// 假设返回的到期时间在res.data.expireDate
+							this.expireDate = res.data.expireDate;
 						} else {
 							console.error('获取会员到期时间失败，状态码：', res.statusCode);
 						}
@@ -286,8 +300,6 @@
 						console.error('获取会员到期时间失败', error);
 					}
 				});
-				// 模拟返回一个到期时间字符串
-				this.expireDate = '2024-06-4';
 			}
 		},
 		// 在组件创建时获取会员到期时间
@@ -312,18 +324,18 @@
 		margin-right: 10px;
 		/* 标签和时间之间的间距 */
 	}
-	
+
 	.cancel-vip {
-	  margin-top: 5px;
-	  margin-bottom: 45px;
-	  text-align: center;
+		margin-top: 5px;
+		margin-bottom: 45px;
+		text-align: center;
 	}
-	
+
 	.cancel-button {
-	  /* 您的样式 */
-	  background-color:  #007bff;
-	  color: #fff;
-	  /* ... */
+		/* 您的样式 */
+		background-color: #007bff;
+		color: #fff;
+		/* ... */
 	}
 
 	.expire-value {

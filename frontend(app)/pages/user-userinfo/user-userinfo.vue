@@ -2,7 +2,7 @@
 	<view>
 		<uni-list-item title="Avatar" @click="changeUserpic">
 			<view class="flex align-center" slot="right">
-				<image :src="user.userpic ? user.userpic : '/static/default.jpg'"
+				<image :src="user.userpic ? user.userpic : 'http://120.46.81.37:8080/app/static/default.jpg'"
 				style="width: 100rpx;height: 100rpx;"
 				class="rounded-circle"></image>
 				<text class="iconfont icon-bianji1 ml-2"></text>
@@ -14,9 +14,9 @@
 				<text class="iconfont icon-bianji1 ml-2"></text>
 			</view>
 		</uni-list-item>
-		<uni-list-item title="Sex" @click="changeSex">
+		<uni-list-item title="Sex" >
 			<view class="flex align-center" slot="right">
-				<text>{{sexText}}</text>
+				<input class="uni-input text-right" v-model="sex" />
 				<text class="iconfont icon-bianji1 ml-2"></text>
 			</view>
 		</uni-list-item>
@@ -28,21 +28,21 @@
 				</view>
 			</uni-list-item>
 		</picker>
-		<uni-list-item title="Relationship Status" @click="changeEmotion">
+		<uni-list-item title="Relationship Status" >
 			<view class="flex align-center" slot="right">
-				<text>{{emotionText}}</text>
+				<input class="uni-input text-right" v-model="relationship" />
 				<text class="iconfont icon-bianji1 ml-2"></text>
 			</view>
 		</uni-list-item>
-		<uni-list-item title="Job" @click="changeJob">
+		<uni-list-item title="Job" >
 			<view class="flex align-center" slot="right">
-				<text>{{job}}</text>
+				<input class="uni-input text-right" v-model="job" />
 				<text class="iconfont icon-bianji1 ml-2"></text>
 			</view>
 		</uni-list-item>
-		<uni-list-item title="Hometown" @click="showCityPicker">
+		<uni-list-item title="Hometown" >
 			<view class="flex align-center" slot="right">
-				<text>{{pickerText}}</text>
+				<input class="uni-input text-right" v-model="hometown" />
 				<text class="iconfont icon-bianji1 ml-2"></text>
 			</view>
 		</uni-list-item>
@@ -58,8 +58,6 @@
 </template>
 
 <script>
-	const sexArray = ['Secret', 'Male', 'Female']
-	const emotionArray = ['Secret', 'Unmarried', 'Married']
 	import uniListItem from '@/components/uni-ui/uni-list-item/uni-list-item.vue';
 	
 	import mpvueCityPicker from '@/components/uni-ui/mpvue-citypicker/mpvueCityPicker.vue';
@@ -77,14 +75,23 @@
 				cityPickerValueDefault: [0, 0, 1],
 				avatar:'',
 				username:"昵称",
-				sex:0,
-				job:"保密",
+				sex:'',
+				job:"",
 				birthday:"2019-03-18",
 				hometown:'',
 				relationship:'',
+				emotion:''
 			
 				
 			}
+		},
+		computed: {
+			...mapState({
+				aToken:state=>state.aToken,
+				rToken:state=>state.rToken,
+				
+			}),
+		
 		},
 		// 监听返回
 		onBackPress() {
@@ -100,27 +107,27 @@
 			}
 		},
 		onLoad() {
-			console.log('aa')
-			// let userinfo = this.user.userinfo
-			// if(userinfo){
-			// 	this.pickerText = userinfo.path
-			// 	this.username = this.user.username
-			// 	this.sex =  userinfo.sex
-			// 	this.emotion = userinfo.qg
-			// 	this.job  = userinfo.job
-			// 	this.birthday  = userinfo.birthday
-			// }
+			console.log('aa');
+			console.log('token', this.aToken, this.rToken)
 			uni.request({
-				  url: 'http://localhost:8080/app/profile_detail',
+				  url: 'http://localhost:8080/app/profile/149',
 				  method: 'GET',
+				  data:{
+					  'aToken': this.aToken,
+					  'rToken':this.rToken,
+				  },
+				  header: {
+				      'Content-Type': 'application/x-www-form-urlencoded',
+				  },
 				  success: (res) => {
-					 this.avatar =res.avatar
-					 this.username = res.nickname
-					 this.sex =  res.sex
-					 this.job  = res.job
-					 this.birthday  =res.birthday
-					 this.hometown=res.hometown
-					 this.relationship=res.relationship
+					  console.log('获取的个人信息',res)
+						this.user_pic=res.user_pic
+						this.username = res.username
+						this.sex =  res.sex
+						this.job  = res.job
+						this.birthday  =res.birthday
+						this.hometown=res.hometown
+						this.relation=res.relation
 				  },
 				  fail: (err) => {
 					  console.error('Error fetching person info:', err);
@@ -128,17 +135,7 @@
 				  }
 			})
 		},
-		computed: {
-			...mapState({
-				user:state=>state.user
-			}),
-			sexText() {
-				return sexArray[this.sex]
-			},
-			emotionText(){
-				return emotionArray[this.emotion]
-			}
-		},
+
 		methods: {
 			showCityPicker(){
 				this.$refs.mpvueCityPicker.show()
@@ -196,43 +193,43 @@
 				    }
 				});
 			},
-			// 修改职业
-			changeJob(){
-				let JobArray = ['IT','教师','农名']
-				uni.showActionSheet({
-				    itemList: JobArray,
-				    success:(res)=>{
-				        this.job = JobArray[res.tapIndex]
-				    }
-				});
-			},
 			// 提交
 			submit(){
 				let obj = {
-					name:this.username,
+					user_pic:this.user_pic,
+					username:this.username,
 					sex:this.sex,
-					qg:this.emotion,
+					relationship:this.relationship,
 					job:this.job,
 					birthday:this.birthday,
-					path:this.pickerText
+					hometown:this.hometown
 				}
-				this.$H.post('/edituserinfo',obj,{
-					token:true
-				}).then(res=>{
-					console.log(res);
-					this.$store.commit('editUserInfo',{
-						key:"username",
-						value:this.username
-					})
-					this.$store.commit('editUserUserInfo',obj)
-					uni.navigateBack({
-						delta: 1
-					});
-					uni.showToast({
-						title: '修改资料成功',
-						icon: 'none'
-					});
-				})
+				console.log(obj);
+				uni.request({
+				url: 'http://120.46.81.37:8080/app/edit_profile',
+				method: 'POST',
+				data: obj,
+				header: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
+				},
+				      success: (res) => {
+					   this.user_pic=res.user_pic
+				       this.username = res.username
+				       this.sex =  res.sex
+				       this.job  = res.job
+				       this.birthday  =res.birthday
+				       this.hometown=res.hometown
+				       this.relationship=res.relationship
+				      },
+				      fail: (err) => {
+				        console.error('Failed to fetch posts:', err);
+				      }
+				    });
+			
+				
+				
 			}
 		}
 	}

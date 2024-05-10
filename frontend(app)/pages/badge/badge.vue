@@ -2,7 +2,7 @@
 	<view class="container">
 		<!-- 用户头像和用户名 -->
 		<view class="user-info">
-			<image class="avatar" src="../../static/common/nothing.png" />
+			<image class="avatar" src="http://120.46.81.37:8080/app/static/common/nothing.png" />
 			
 		</view>
 		<!-- 徽章盒子 -->
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+	import { mapState } from 'vuex'
 	export default {
 		data() {
 			return {
@@ -29,15 +30,15 @@
 						name: 'Running Mileage',
 						medals: [{
 								id: 1,
-								src: '../../static/images/badge01.jpg'
+								src: 'http://120.46.81.37:8080/app/static/images/badge01.jpg'
 							},
 							{
 								id: 2,
-								src: '../../static/images/badge02.jpg'
+								src: 'http://120.46.81.37:8080/app/static/images/badge02.jpg'
 							},
 							{
 								id: 3,
-								src: '../../static/images/badge03.jpg'
+								src: 'http://120.46.81.37:8080/app/static/images/badge03.jpg'
 							},
 							// ... more medals
 						]
@@ -46,23 +47,23 @@
 						name: 'Vehicle Mileage',
 						medals: [{
 								id: 4,
-								src: '../../static/images/badge04.jpg'
+								src: 'http://120.46.81.37:8080/app/static/images/badge04.jpg'
 							},
 							{
 								id: 5,
-								src: '../../static/images/badge05.jpg'
+								src: 'http://120.46.81.37:8080/app/static/images/badge05.jpg'
 							},
 							{
 								id: 9,
-								src: '../../static/images/badge05.jpg'
+								src: 'http://120.46.81.37:8080/app/static/images/badge05.jpg'
 							},
 							{
 								id: 10,
-								src: '../../static/images/badge05.jpg'
+								src: 'http://120.46.81.37:8080/app/static/images/badge05.jpg'
 							},
 							{
 								id: 11,
-								src: '../../static/images/badge05.jpg'
+								src: 'http://120.46.81.37:8080/app/static/images/badge05.jpg'
 							},
 							// ... more medals
 						]
@@ -71,15 +72,15 @@
 						name: 'Participation Honor',
 						medals: [{
 								id: 6,
-								src: '../../static/images/badge06.jpg'
+								src: 'http://120.46.81.37:8080/app/static/images/badge06.jpg'
 							},
 							{
 								id: 7,
-								src: '../../static/images/badge07.jpg'
+								src: 'http://120.46.81.37:8080/app/static/images/badge07.jpg'
 							},
 							{
 								id: 8,
-								src: '../../static/images/badge08.jpg'
+								src: 'http://120.46.81.37:8080/app/static/images/badge08.jpg'
 							},
 							// ... more medals
 						]

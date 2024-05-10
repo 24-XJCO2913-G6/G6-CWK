@@ -10,12 +10,7 @@
 		</uni-nav-bar>
 		<!-- #endif -->
 		<!-- 文本域 -->
-<view class="page-body">
-			<view class="page-section page-section-gap">
-				<map style="width: 100%; height: 300px;" :latitude="latitude" :longitude="longitude" :markers="covers">
-				</map>
-			</view>
-		</view>
+		<mymap  :path="path" :center='center' :zoom='16' :mapheight='80'></mymap>
 		<br><br>
 
 
@@ -51,14 +46,18 @@
 					<!-- <button @click="toggleRecording"
 						:style="{ backgroundColor: isPaused ? '#33cc33' : '#4ba3c7', color: '#fff' }">{{ isPaused ? 'Resume' : 'Pause' }}</button> -->
 					<image @tap="toggleRecording"
-						:src="isPaused ? '/static/images/pause.png' : '/static/images/resume.png'" mode="aspectFit"
-						style="width: 50px; height: 50px;">
+						:src="isPaused ?  'http://120.46.81.37:8080/app/static/images/resume.png':'http://120.46.81.37:8080/app/static/images/pause.png'" mode="aspectFit"
+						style="width: 50px; height: 50px;background-color: #eaeff5; " >
 					</image>
 				</view>
 				<view style="flex: 1;">
 					<button @click="stopRecording" style="background-color: #4ba3c7; color: #fff;">End</button>
 				</view>
-
+				<!-- <view class="button-group">
+					<button @click="toggleRecording"
+						:style="{ backgroundColor: isPaused ? '#33cc33' : '#4ba3c7', color: '#fff' }">{{ isPaused ? 'Resume' : 'Pause' }}</button>
+					<button @click="stopRecording" style="background-color: #4ba3c7; color: #fff;">End Journey</button>
+				</view> -->
 			</view>
 		</view>
 
@@ -77,20 +76,21 @@
 
 
 <script>
-	const isOpenArray = ['Public', 'Only me', "Only friends"];
+	
 	import uniNavBar from '@/components/uni-ui/uni-nav-bar/uni-nav-bar.vue';
 	import uploadImage from '@/components/common/upload-image.vue';
-	import mymap from '../../components/map/mymap3.vue';
+	import mymap3 from '../../components/map/mymap3.vue';
 
-
+import { mapState } from 'vuex'
 	export default {
 		components: {
 			uniNavBar,
 			uploadImage,
-			mymap
+			mymap3
 		},
 		data() {
 			return {
+				 isOpenArray :['Public', 'Only VIP'],
 				showflag: false,
 				currentCountdown: 3,
 				isRecording: false,
@@ -102,7 +102,7 @@
 				imageList: [],
 				// 是否已经弹出提示框
 				showBack: false,
-				isopen: 1,
+				isopen: 0,
 				topic: {
 					id: 0,
 					title: ""
@@ -114,12 +114,15 @@
 				startTime: '',
 				endTime: '',
 				endDate: '',
-				path: [[103.984143, 30.762446],
-				[103.984143, 30.762546],
-				[103.984143, 30.762646]
-					
+				mydisabled:true,
+				path: [
+					[103.985895, 30.763873], // 起点坐标
+					[103.986895, 30.764873], // 中间点坐标
+					[103.987895, 30.765873] // 终点坐标
 				],
-				center: [103.984143, 30.762446],
+				center: [103.985895, 30.763873],
+
+
 			}
 		},
 		computed: {
@@ -134,7 +137,7 @@
 				return this.imageList.length > 0
 			},
 			isopenText() {
-				return isOpenArray[this.isopen]
+				return this.isOpenArray[this.isopen]
 			},
 			// 文章分类可选项
 			range() {
@@ -189,14 +192,6 @@
 		},
 		// 页面加载时
 		onLoad() {
-			uni.getLocation({
-							type: 'wgs84',
-							success: function (res) {
-								console.log('当前位置的经度：' + res.longitude);
-								console.log('当前位置的纬度：' + res.latitude);
-								console.log('当前位置的速度：' + res.speed);
-							}
-						})
 			uni.getStorage({
 				key: "add-input",
 				success: (res) => {
@@ -206,7 +201,7 @@
 						this.imageList = result.imageList
 					}
 				}
-			}),
+			})
 			// 监听选择话题事件
 			uni.$on('chooseTopic', (e) => {
 				this.topic.id = e.id
@@ -218,59 +213,8 @@
 		beforeDestroy() {
 			uni.$off('chooseTopic', (e) => {})
 		},
-		mounted() {
-		    // 初始化地图上下文对象
-		    this.mapContext = uni.createMapContext('myMap');
-			this.startPath();
-		    // 启动路径更新定时器
-		    this.updatePath();
-		},
 		methods: {
-			startPath() {
-			    uni.getLocation({
-			        type: 'wgs84',
-			        success: (res) => {
-			            console.log('初始位置的经度：' + res.longitude);
-			            console.log('初始位置的纬度：' + res.latitude);
-			
-			            // 记录初始位置坐标
-			            this.center = [res.longitude, res.latitude];
 
-			            
-			            // 如果 path 数组为空，则添加初始位置坐标作为第一个点
-			            if (this.path.length === 0) {
-			                this.path.push([res.longitude, res.latitude]);
-							console.log('初始位置的纬度：' + this.path.length);
-			            }
-			        },
-			        fail: (err) => {
-			            console.error('获取位置信息失败：', err);
-			        }
-			    });
-			},
-
-			updatePath() {
-			        setInterval(() => {
-			            uni.getLocation({
-			                type: 'wgs84',
-			                success: (res) => {
-								console.log('当前位置的经度：' + res.longitude);
-								console.log('当前位置的纬度：' + res.latitude);
-			                    this.path.push([res.longitude, res.latitude]);
-								
-			                    this.center = [res.longitude, res.latitude];
-			                    this.drawPath(); // Call drawPath to draw the updated path
-			                },
-			                fail: (err) => {
-			                    console.error('获取位置信息失败：', err);
-			                }
-			            });
-			        }, 20000);
-			    },
-			
-		
-			
-			
 			startTimer() {
 				this.showflag = true;
 				let t = setInterval(() => {
@@ -279,12 +223,14 @@
 						this.showflag = false
 						this.currentCountdown = 3
 						clearInterval(t)
+						this.mydisabled=false;
 					}
 
 				}, 1000)
 			},
 
 			startRecording() {
+			
 				this.startTimer()
 				this.isRecording = true;
 				console.log('你好')
@@ -308,6 +254,7 @@
 			},
 			// Method to toggle recording (pause/resume)
 			toggleRecording() {
+				if(!this.mydisabled){
 				if (this.isPaused) {
 					// If paused, resume the timer
 					this.timer = setInterval(() => {
@@ -319,15 +266,15 @@
 				}
 				// Toggle the paused state
 				this.isPaused = !this.isPaused;
-			},
+			}},
 			stopRecording() {
+			
 				this.isRecording = false;
 				this.time = 0;
 				clearInterval(this.timer);
 				// You can add logic to stop recording distance and time here
 				// Once stopped, you can update the distance and time values accordingly
 			},
-
 			// 发布
 			submit() {
 				// if(this.post_class_id == 0){
@@ -381,7 +328,7 @@
 			// 切换可见性
 			changeIsopen() {
 				uni.showActionSheet({
-					itemList: isOpenArray,
+					itemList: this.isOpenArray,
 					success: (res) => {
 						this.isopen = res.tapIndex
 					}
@@ -509,16 +456,16 @@
 	}
 
 	.countdown {
-		width: 120px;
-		height: 120px;
+		width: 180px;
+		height: 180px;
 		border-radius: 100%;
 		background-color: rgba(70, 130, 180, 0.8);
 		color: white;
 		position: fixed;
 		top: 30%;
 		text-align: center;
-		line-height: 120px;
-		font-size: 70px;
+		line-height: 180px;
+		font-size: 120px;
 		font-weight: bold;
 
 	}

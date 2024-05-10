@@ -3,16 +3,16 @@
 		<!-- 帖子详情页详细信息 -->
 		<common-list :item="info"  @follow="follow" @doSupport="doSupport" @doComment="doComment"
 			@doShare="doShare">
-			<image v-for="item of info.post_pic" :src="item"
+		<!-- 	<image v-for="item of info.post_pic" :src="item"
 						style="height: 350rpx; margin-bottom: 10px;margin-top:10px" class="rounded w-100" mode="aspectFill"></image>
-					{{info.content}}
+					{{info.content}} -->
 		</common-list>
 		
 		<divider></divider>
 		<!-- <view class="p-2 font-md font-weight-bold">
 			Comment {{comments.length}}
 		</view> -->
-		<view class="px-2">
+	<!-- 	<view class="px-2">
 
 			<view class="uni-comment-list" v-for="(item,index) in info.comments" :key="index">
 				<view v-if="item.fid" style="width: 60rpx;"></view>
@@ -32,7 +32,7 @@
 				</view>
 			</view>
 
-		</view>
+		</view> -->
 
 		<!-- 占位 -->
 		<view style="height: 100rpx;"></view>
@@ -49,6 +49,7 @@
 	import moreShare from '@/components/common/more-share.vue';
 	import mymap from '../../components/map/mymap.vue';
 	import $T from '@/common/time.js';
+	import { mapState } from 'vuex'
 	export default {
 		components: {
 			commonList,
@@ -59,28 +60,28 @@
 		data() {
 			return {
 				// 当前帖子信息
-				info: {
-					id: 15,
-					user_id: 0,
-					username: "昵称",
-					userpic: "",
-					newstime: 0,
-					isFollow: false,
-					title: "",
-					content:"wow",
-					titlepic: "",
-					support: {
-						type: "support", // 顶
-						support_count: 0,
-						unsupport_count: 0
-					},
-					comment_count: 0,
-					share_num: 0,
-				},
-				images: [],
+			// 	info: {
+			// 		id: 15,
+			// 		user_id: 0,
+			// 		username: "昵称",
+			// 		userpic: "",
+			// 		newstime: 0,
+			// 		isFollow: false,
+			// 		title: "",
+			// 		content:"wow",
+			// 		titlepic: "",
+			// 		support: {
+			// 			type: "support", // 顶
+			// 			support_count: 0,
+			// 			unsupport_count: 0
+			// 		},
+			// 		comment_count: 0,
+			// 		share_num: 0,
+			// 	},
+			// 	images: [],
 			
-				focus: false,
-				reply_id: 0
+			// 	focus: false,
+			// 	reply_id: 0
 			}
 		},
 		onLoad(e) {
@@ -108,6 +109,12 @@
 			uni.$off('updateFollowOrSupport', (e) => {})
 		},
 		computed: {
+			...mapState({
+				loginStatus:state=>state.loginStatus,
+				aToken: state => state.aToken,
+				rToken: state=>state.rToken
+				
+			}),
 			imagesList() {
 				return this.images.map(item => item.url)
 			}
@@ -142,10 +149,60 @@
 				
 				
 			},
+			submitComment(commentContent) {
+				console.log(commentContent)
+			      // 假设用户已经输入了评论内容到某个数据属性，如 this.commentContent
+			    
+				  console.log(commentData.postId)
+			      // 发送POST请求到后台
+			      uni.request({
+			        url:  'http://120.46.81.37:8080/review',
+			        method: 'POST',
+			        data: {
+			        postId: this.info.post_id, // 帖子的ID,不确定待改
+			        commentContent: commentContent, // 用户输入的评论内容
+			      },
+			header: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
+				},
+			        success: (res) => {
+						let data=res.data;
+			          if (res.statusCode === 200) {
+			            // 假设后台返回的评论数据包含新的评论ID
+			            const newCommentId = res.data.newCommentId;
+			            // 更新评论列表
+			            this.info.comments.unshift({
+			              userpic: data.userpic,
+			              username: data.username,
+			              data: this.commentContent,
+			              time: $T().time('yyyy-mm-dd'),
+			              id: newCommentId, 
+			            });
+			            // 清空评论输入
+			            this.commentContent = '';
+			          } else {
+			            // 处理错误情况
+			            uni.showToast({
+			              title: '评论失败',
+			              icon: 'none',
+			            });
+			          }
+			        },
+			        fail: (error) => {
+			          // 网络请求失败的处理
+			          uni.showToast({
+			            title: '网络错误',
+			            icon: 'none',
+			          });
+			        }
+			      });
+			    },
 			// 提交评论
 			submit(data) {
-				this.comments++;
-				this.info.comments.unshift({userpic:'../../static/user_pic/4.jpg',username:'Super girl',data:data,time:'2024-4-9'})
+				this.submitComment(data);
+			
 			},
 		
 			// 输入框失去焦点

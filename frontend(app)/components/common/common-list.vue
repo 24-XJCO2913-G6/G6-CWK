@@ -2,24 +2,22 @@
 
 	<view class="p-2 animated fast fadeIn">
 
-		<!-- 头像昵称 | 关注按钮 -->
+
 		<view class="flex align-center justify-between">
 			<view class="flex align-center">
-				<!-- 头像 -->
-				<image class="rounded-circle mr-2" :src="item.userpic" style="width: 65rpx;height: 65rpx;" lazy-load
+		
+				<image class="rounded-circle mr-2" :src="item.Photo" style="width: 65rpx;height: 65rpx;" lazy-load
 					@click="navigateToPage"></image>
-				<!-- vip -->
-				<!-- 昵称发布时间 -->
 				<view>
 					<view class="font" style="line-height: 1.5;">
-						{{item.name}}
+						{{item.Author}}
 					</view>
 					<text class="font-sm text-light-muted" style="line-height: 1.5;">
-						{{item.time}}
+						{{item.Pub_time}}
 					</text>
 				</view>
 				<view v-if="item.visibility== 1">
-					<image src="../../static/images/VIP.png"
+					<image src="http://120.46.81.37:8080/static/images/VIP.png"
 						style="width: 25px; height: 25px; background-color: white; margin-bottom: 2px;">
 					</image>
 				</view>
@@ -27,13 +25,17 @@
 			</view>
 
 			<!-- 按钮 -->
-			<view class="flex align-center justify-center rounded bg-main text-white animated faster"
+			<view v-if='!ifme||item.isFollow' class="flex align-center justify-center rounded bg-main text-white animated faster"
 				:style="[defaultcss]" hover-class="jello" @click='myfollow(item.user_id)' id='myfollow' >
 				Follow
 			</view>
 		</view>
 		<view class="font-md my-1" @click='openDetail'>{{item.title}}</view>
-		<mymap :path="item.path" :center='item.center' :zoom='17' :mapheight='25' :post_id='item.post_id'></mymap>
+		<map style='height:200px;width:100%;' scale='16' :latitude="item.center[1]" :longitude="item.center[0]"  :polyline="item.path" :markers="item.markers" >
+
+		 </map>
+		                      
+
 		<slot></slot>
 		<!-- 标题 -->
 
@@ -68,12 +70,24 @@
 		mapState
 	} from 'vuex';
 	import mymap from '../../components/map/mymap.vue';
+
 	export default {
 		components: {
-			mymap
+			mymap,"map": "@uni/map"
 		},
 		data(){
-			return {defaultcss:'width: 90rpx;height: 50rpx;'}
+			return {defaultcss:'width: 90rpx;height: 50rpx;',
+					latitude: 39.909,
+						longitude: 116.39742,
+						covers: [{
+							latitude: 39.909,
+							longitude: 116.39742,
+						
+						}, {
+							latitude: 39.90,
+							longitude: 116.39,
+				
+						}]}
 		},
 		props: {
 			item: Object,
@@ -84,7 +98,8 @@
 			isdetail: {
 				type: Boolean,
 				default: false
-			}
+			},
+			ifme:Boolean
 		},
 		filters: {
 			formatTime(value) {
@@ -105,17 +120,17 @@
 				});
 			},
 			myfollow(user_id){
-				console.log(login_id,'关注了',user_id)
+				console.log('关注了',user_id)
 				uni.request({
 				    url: 'http://120.46.81.37:8080/app/follow',
 				    method: 'POST',
 				  data: {
-				      'user_id': user_id
+				      'user_id': user_id,
 				  },
 					header: {
 					    'Content-Type': 'application/x-www-form-urlencoded',
-						'aToken': aToken,
-						'rToken':rToken,
+						'aToken': this.aToken,
+						'rToken':this.rToken,
 					},
 				    success: function (res) {
 				        console.log('Post request successful:', res.data);
@@ -133,12 +148,12 @@
 				    url: 'http://120.46.81.37:8080/app/like',
 				    method: 'POST',
 				    data: {
-				        'post_id': post_id
+				        'post_id': post_id,
 				    },
 					header: {
 					    'Content-Type': 'application/x-www-form-urlencoded',
-						'aToken': aToken,
-						'rToken':rToken,
+						'aToken': this.aToken,
+						'rToken':this.rToken,
 					},
 				    success: function (res) {
 				        console.log('Post request successful:', res.data);
@@ -168,13 +183,13 @@
 				    url: 'http://120.46.81.37:8080/app/collect',
 				    method: 'POST',
 				  data: {
-				      'post_id': post_id
+				      'post_id': post_id,
 				  },
-					header: {
-					    'Content-Type': 'application/x-www-form-urlencoded',
-						'aToken': aToken,
-						'rToken':rToken,
-					},
+			header: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
+				},
 				    success: function (res) {
 				        console.log('Post request successful:', res.data);
 						if(res.data==1){

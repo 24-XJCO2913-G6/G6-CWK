@@ -41,62 +41,19 @@
 						</view>
 					</view>
 					<view class="rideBox">
-						<text class="ride-mileage">Cycling mileage/</text>
+						<text class="ride-mileage">  Cycling mileage</text>
 						<view class="ride-text">
 							<text class="ride-textA">{{ currentMileage }}</text> <!-- 绑定当前里程数 -->
 							<text class="ride-textB">km</text>
 						</view>
 					</view>
-					<!-- <view class="placeBox">
-						<view class="twig">
-							<view class="tag">Start</view>
-							<view class="taginfo">江门豪爵研发中心</view>
-						</view>
-						<view class="twig">
-							<view class="tag">End</view>
-							<view class="taginfo">席帽山森林公园</view>
-						</view>
-					</view> -->
-					<!-- <view class="rideBox">
-						<text class="ride-mileage">Cycling mileage/</text>
-						<view class="ride-text">
-							<text class="ride-textA">25.9</text>
-							<text class="ride-textB">km</text>
-						</view>
-					</view> -->
 				</view>
 
-				<!-- <view class="num-storey">
-					<view class="ride-numbox">
-						<view class="ride-num numA">01：19：46</view>
-						<view class="ride-name">Duration of ride</view>
-					</view>
-					<view class="ride-numbox">
-						<view class="ride-num">
-							<text class="numA">78</text>
-							<text class="numB">km/h</text>
-						</view>
-						<view class="ride-name">Max speed</view>
-					</view>
-					<view class="ride-numbox">
-						<view class="ride-num">
-							<text class="numA">59.3</text>
-							<text class="numB">km/h</text>
-						</view>
-						<view class="ride-name">Avg speed</view>
-					</view>
-				</view> -->
 
 				<view class="num-storey">
 					<view class="ride-numbox">
 						<view class="ride-num numA">{{ currentTrackStats.duration }}</view>
 						<view class="ride-name">Duration of ride</view>
-					</view>
-					<view class="ride-numbox">
-						<view class="ride-num">
-							<text class="numA">{{ currentTrackStats.maxSpeed }}</text>
-						</view>
-						<view class="ride-name">Max speed</view>
 					</view>
 					<view class="ride-numbox">
 						<view class="ride-num">
@@ -115,7 +72,8 @@
 					<button v-if="currentSelectedTrackId" @click="downloadTrack" style="background-color: #4ba3c7; color: white;">Download Track</button>
 				</view> -->
 				<view class="download-btn">
-				  <button v-if="currentSelectedTrackId !== null" @click="downloadTrack" style="background-color: #4ba3c7; color: white;">Download Track</button>
+					<button v-if="currentSelectedTrackId > 0 " @click="downloadTrack"
+						style="background-color: #4ba3c7; color: white;">Download Track</button>
 				</view>
 
 
@@ -124,6 +82,7 @@
 	</template>
 
 	<script>
+		import { mapState } from 'vuex'
 		export default {
 			components: {},
 			data() {
@@ -144,24 +103,20 @@
 					currentMileage: 3.7, // 初始化里程，可根据实际情况设置
 					currentTrackStats: {
 						duration: '01:19:46',
-						maxSpeed: '7 km/h',
 						avgSpeed: '14.3 km/h'
 					}, // 初始化为一个空对象
 					// 为每个轨迹添加统计信息
 					trackStats: {
 						'-1': { // 今天的轨迹
 							duration: '00:8:46',
-							maxSpeed: '7 km/h',
 							avgSpeed: '14.3 km/h'
 						},
 						'1': { // 轨迹1的统计信息
 							duration: '00:3:40',
-							maxSpeed: '25 km/h',
 							avgSpeed: '15 km/h'
 						},
 						'2': { // 轨迹2的统计信息
 							duration: '0:5:06',
-							maxSpeed: '20 km/h',
 							avgSpeed: '14.0 km/h'
 						}
 					},
@@ -174,7 +129,7 @@
 						polylineId: 1,
 						longitude: 103.977527,
 						latitude: 30.767054,
-						iconPath: "/static/img/icon/green.png",
+						iconPath: "http://120.46.81.37:8080/app/static/img/icon/green.png",
 						width: 38,
 						height: 38,
 						stationName: '1',
@@ -188,7 +143,7 @@
 						polylineId: 1,
 						longitude: 103.977527,
 						latitude: 30.767054,
-						iconPath: "/static/img/icon/red.png",
+						iconPath: "http://120.46.81.37:8080/app/static/img/icon/red.png",
 						width: 38,
 						height: 38,
 						stationName: '1',
@@ -202,7 +157,7 @@
 						polylineId: 2,
 						longitude: 103.977527,
 						latitude: 30.767054,
-						iconPath: "/static/img/icon/green.png",
+						iconPath: "http://120.46.81.37:8080/app/static/img/icon/green.png",
 						width: 38,
 						height: 38,
 						stationName: '2',
@@ -216,7 +171,7 @@
 						polylineId: 2,
 						longitude: 103.997555,
 						latitude: 30.767054,
-						iconPath: "/static/img/icon/red.png",
+						iconPath: "http://120.46.81.37:8080/app/static/img/icon/red.png",
 						width: 38,
 						height: 38,
 						stationName: '终',
@@ -676,35 +631,56 @@
 				this.locusBtn()
 			},
 			methods: {
-				// downloadTrack(trajectoryId) {
-				// 	const polyline = this.polylineinit.find(item => item.id === trajectoryId);
-				// 	if (!polyline) {
-				// 		console.error('Polyline not found for the given id:', trajectoryId);
-				// 		return;
-				// 	}
-
-				// 	// 将坐标转换为文本格式
-				// 	const coordinates = polyline.points.map(point => `${point.longitude},${point.latitude}`).join('\n');
-				// 	let csvContent = `data:text/csv;charset=utf-8,${encodeURIComponent(coordinates)}`;
-
-				// 	// 创建一个链接元素，用于下载
-				// 	const encodedUri = encodeURI(csvContent);
-				// 	const link = document.createElement('a');
-				// 	link.setAttribute('href', encodedUri);
-				// 	link.setAttribute('download', `track${trajectoryId}.txt`);
-
-				// 	// 模拟点击操作，触发下载
-				// 	document.body.appendChild(link);
-				// 	link.click();
-				// 	document.body.removeChild(link);
-
-				// 	// 提示用户下载成功
-				// 	uni.showToast({
-				// 		title: '下载成功',
-				// 		icon: 'success',
-				// 		duration: 2000
-				// 	});
-				// },
+				fetchRoutes() {
+					uni.request({
+						url: 'http://120.46.81.37:8080/app/myroutes',
+						method: 'GET',
+						data: {
+							aToken: this.aToken,
+							rToken: this.rToken,
+						},
+						header: {
+							'Content-Type': 'application/json;charset=utf-8',
+						},
+						success: (res) => {
+							if (res.statusCode === 200) {
+								try {
+									const responseData = JSON.parse(res.data);
+									this.infoArr = responseData.infoArr || this.infoArr;
+									this.startPlace = responseData.startPlace || this.startPlace;
+									this.endPlace = responseData.endPlace || this.endPlace;
+									this.currentMileage = responseData.currentMileage || this.currentMileage;
+									this.currentTrackStats = responseData.currentTrackStats || this
+										.currentTrackStats;
+									this.trackStats = responseData.trackStats ? {
+										...this.trackStats,
+										...responseData.trackStats
+									} : this.trackStats;
+									this.rSelect = responseData.rSelect || this.rSelect;
+									this.longitude = responseData.longitude || this.longitude;
+									this.latitude = responseData.latitude || this.latitude;
+									this.customCalloutMarkerIds = responseData.customCalloutMarkerIds || this
+										.customCalloutMarkerIds;
+									this.markersinit = responseData.markersinit || this.markersinit;
+									this.markers = responseData.markers || this.markers;
+									this.polylineinit = responseData.polylineinit || this.polylineinit;
+									this.polyline = responseData.polyline || this.polyline;
+								} catch (error) {
+									console.error('解析响应数据出错', error);
+								}
+							} else {
+								console.error('请求失败，状态码：', res.statusCode);
+							}
+						},
+						fail: (error) => {
+							console.error('网络请求失败', error);
+						}
+					});
+				},
+				// 这个方法可能需要在组件加载时调用，以获取初始数据
+				loadInitialData() {
+					this.fetchRoutes();
+				},
 				downloadTrack() {
 					// 检查是否有选中的轨迹
 					if (!this.currentSelectedTrackId) {
@@ -728,7 +704,8 @@
 					}
 
 					// 将轨迹坐标转换为字符串
-					const coordinates = selectedTrack.points.map(point => `${point.longitude},${point.latitude}`).join('\n');
+					const coordinates = selectedTrack.points.map(point => `${point.longitude},${point.latitude}`)
+						.join('\n');
 
 					// 创建一个Blob对象，表示下载的文件
 					const blob = new Blob([coordinates], {
@@ -754,127 +731,46 @@
 					});
 				},
 
-				// tapInfo(e) {
-				// 	this.currentSelectedTrackId = trackId;
-
-				// 	// if (this.rSelect.indexOf(e) == -1) {
-				// 	// 	this.rSelect.splice(0, this.rSelect.length); //清空
-				// 	// 	this.rSelect.push(e);
-				// 	// } else {
-				// 	// 	this.rSelect.splice(this.rSelect.indexOf(e), 1); //取消
-				// 	// }
-				// 	// 接下来是处理 rSelect 的逻辑
-				// 	    let index = this.rSelect.indexOf(trackId);
-				// 	    if (index === -1) {
-				// 	      this.rSelect.push(trackId); // 如果不存在，添加到 rSelect 中
-				// 	    } else {
-				// 	      this.rSelect.splice(index, 1); // 如果已存在，从 rSelect 中移除
-				// 	    }
-
-				// 	this.locusBtn();
-				// 	// 更新当前选中的轨迹ID
-				// 	this.currentSelectedTrackId = trackId;
-				// 	// 更新统计信息
-				// 	this.currentTrackStats = this.computedCurrentTrackStats; // 使用计算属性更新 currentTrackStats
-				// 	switch (e) {
-				// 		case -1:
-				// 			// 今天的轨迹
-				// 			this.startPlace = '————————';
-				// 			this.endPlace = '————————';
-				// 			this.currentMileage = 3.7;
-				// 			break;
-				// 		case 1:
-				// 			// 轨迹1
-				// 			this.startPlace = 'Dormitory 14';
-				// 			this.endPlace = 'Teaching Building 5';
-				// 			this.currentMileage = 1.2;
-				// 			break;
-				// 		case 2:
-				// 			// 轨迹2
-				// 			this.startPlace = 'School infirmary';
-				// 			this.endPlace = 'Stadium';
-				// 			this.currentMileage = 2.5;
-				// 			break;
-				// 			// 可以根据实际情况添加更多的case
-				// 	}
-				// },
-
-				// tapInfo(trackId) {
-				// 	// 清除 rSelect 中的所有项
-				// 	this.rSelect.splice(0, this.rSelect.length);
-
-				// 	// 如果 trackId 不是 -1，则将其添加到 rSelect 中
-				// 	if (trackId !== -1) {
-				// 		this.rSelect.push(trackId);
-				// 	}
-
-				// 	// 更新当前选中的轨迹ID
-				// 	this.currentSelectedTrackId = trackId;
-
-				// 	// 调用 locusBtn 方法更新轨迹显示
-				// 	this.locusBtn();
-
-				// 	// 根据 trackId 更新页面上显示的数据
-				// 	switch (trackId) {
-				// 		case -1:
-				// 			// 今天的轨迹
-				// 			this.startPlace = '————————';
-				// 			this.endPlace = '————————';
-				// 			this.currentMileage = 3.7;
-				// 			break;
-				// 		case 1:
-				// 			// 轨迹1
-				// 			this.startPlace = 'Dormitory 14';
-				// 			this.endPlace = 'Teaching Building 5';
-				// 			this.currentMileage = 1.2;
-				// 			break;
-				// 		case 2:
-				// 			// 轨迹2
-				// 			this.startPlace = 'School infirmary';
-				// 			this.endPlace = 'Stadium';
-				// 			this.currentMileage = 2.5;
-				// 			break;
-				// 			// 可以根据实际情况添加更多的case
-				// 	}
-				// },
-				
 				tapInfo(trackId) {
-				    // 根据 trackId 更新 rSelect 数组
-				    if (this.rSelect[0] === trackId) {
-				      // 如果点击的是当前已选中的轨迹，则取消选中
-				      this.rSelect.splice(0, 1);
-				    } else {
-				      // 否则，清空 rSelect 并添加新的轨迹 ID
-				      this.rSelect.splice(0, this.rSelect.length, trackId);
-				    }
-				
-				    // 更新当前选中的轨迹ID
-				    this.currentSelectedTrackId = this.rSelect[0];
-				
-				    // 调用 locusBtn 方法更新轨迹显示
-				    this.locusBtn();
-				
-				    // 根据 trackId 更新页面上显示的数据
-				    if (trackId === -1) {
-				      // 今天的轨迹或所有轨迹
-				      this.startPlace = '————————';
-				      this.endPlace = '————————';
-				      this.currentMileage = 3.7;
-				    } else {
-				      // 根据实际轨迹ID设置起始点和终点
-				      // 这里需要根据实际数据设置
-				    }
-				
-				    // 如果选择了 "All tracks"，则隐藏下载按钮
-				    if (trackId === -1) {
-				      this.currentSelectedTrackId = null;
-				    }
-				  },
+					// 根据 trackId 更新 rSelect 数组
+					if (this.rSelect[0] === trackId) {
+						// 如果点击的是当前已选中的轨迹，则取消选中
+						this.rSelect.splice(0, 1);
+					} else {
+						// 否则，清空 rSelect 并添加新的轨迹 ID
+						this.rSelect.splice(0, this.rSelect.length, trackId);
+					}
+
+					// 更新当前选中的轨迹ID
+					this.currentSelectedTrackId = this.rSelect[0];
+
+					// 调用 locusBtn 方法更新轨迹显示
+					this.locusBtn();
+
+					// 根据 trackId 更新页面上显示的数据
+					if (trackId === -1) {
+						// 今天的轨迹或所有轨迹
+						this.startPlace = '————————';
+						this.endPlace = '————————';
+						this.currentMileage = 3.7;
+					} else {
+						// 根据实际轨迹ID设置起始点和终点
+						// 这里需要根据实际数据设置
+					}
+
+					// 如果选择了 "All tracks"，则隐藏下载按钮
+					if (trackId === -1) {
+						this.currentSelectedTrackId = null;
+					}
+				},
 				computed: {
 					currentTrackStats() {
 						// 返回当前选中轨迹的统计信息
 						return this.trackStats[this.rSelect[0]];
 					}
+				},
+				mounted() {
+					this.loadInitialData();
 				},
 
 				locusBtn() {
@@ -913,7 +809,7 @@
 		.download-btn {
 			margin-top: 7px;
 			font-weight: bold;
-			
+
 		}
 
 		.scroll-view_H {
@@ -1068,7 +964,7 @@
 		}
 
 		.ride-numbox {
-			width: 27%;
+			width: 43%;
 			height: 120rpx;
 			margin-top: 14rpx;
 			padding: 5rpx 20rpx;
