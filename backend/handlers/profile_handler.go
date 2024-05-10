@@ -146,11 +146,12 @@ func GetCollect(Uid int64) ([]Collected, error) {
 //	Signature := users[0].Signature
 //	return Signature, nil
 //}
-//func GetInfo(Uid int64) (User_detail, error) {
-//	var info User_detail
-//	err := Db.Where("uid = ?", Uid).Find(&info)
-//	if err != nil {
-//		return User_detail{}, err
-//	}
-//	return info, nil
-//}
+
+func GetInfo(Uid int64) (User_detail, error) {
+	var info = &User_detail{Uid: Uid}
+	has, err := Db.Get(&info)
+	if has || err != nil {
+		return User_detail{}, err
+	}
+	return *info, nil
+}

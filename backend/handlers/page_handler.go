@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	. "main/backend/models"
 	"net/http"
@@ -56,6 +57,10 @@ func ToIndex_app(c *gin.Context) {
 		Uid_tmp = Claim.Uid
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
+
+	fmt.Println(Uid)
+	fmt.Println(aToken)
+
 	isVip, _ := IsVip(Uid)
 	blogcount, _ := BlogCount(Uid)
 	followcount, _ := FollowCount(Uid)
@@ -353,7 +358,7 @@ func ToCollectList_app(c *gin.Context) {
 		Uid_tmp = Claim.Uid
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
-	collectlist, _ := GetCollect(c)
+	collectlist, _ := GetCollect(Uid)
 	c.JSON(http.StatusOK, gin.H{
 		"uid":         Uid,
 		"aToken":      c.GetHeader("aToken"),
@@ -463,6 +468,10 @@ func ToProfile_app(c *gin.Context) {
 	likelist, _ := GetLike(Uid)
 	journey, _ := GetTracks(Uid)
 	Info, _ := GetInfo(Uid)
+
+	fmt.Println(email)
+	fmt.Println(Uid)
+
 	c.JSON(http.StatusOK, gin.H{
 		"uid":      Uid,
 		"aToken":   c.GetHeader("aToken"),
