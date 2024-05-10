@@ -105,7 +105,7 @@ func RankCheck(Uid int64) ([]Records, error) {
 	return recordlist, nil
 }
 
-func BlogDisplay() ([]Blog_display, error) {
+func BlogDisplay(Uid int64) ([]Blog_display, error) {
 	var blogs []Blog
 	var authors []User
 	var blogs_dis []Blog_display
@@ -120,14 +120,14 @@ func BlogDisplay() ([]Blog_display, error) {
 		for _, blog := range blogs {
 			//fmt.Println("blog:")
 			//fmt.Println(blog)
-			Uid := blog.Uid
-			err1 := Db.Where("uid = ?", Uid).Find(&authors)
+			Aid := blog.Uid
+			err1 := Db.Where("uid = ?", Aid).Find(&authors)
 			if err1 != nil {
 				return []Blog_display{}, err1
 			}
 			//fmt.Println("authors:")
 			//fmt.Println(authors)
-			has, err := Db.Where("follow_by_id = ? AND follow_id = ?", Uid, authors[0].Uid).Get(&followed)
+			has, err := Db.Where("follow_by_id = ? AND follow_id = ?", Uid, Aid).Get(&followed)
 			//fmt.Println("followed:")
 			//fmt.Println(has)
 			if err != nil {
@@ -145,7 +145,6 @@ func BlogDisplay() ([]Blog_display, error) {
 			//fmt.Println(track)
 			author := authors[0].Name
 			photo := authors[0].ProfilePhot
-			Aid := authors[0].Uid
 			blog_dis := Blog_display{Author: author, Photo: photo, Pub_time: blog.Pub_time, Visibility: blog.Visibility,
 				Content: blog.Content, Picture: blog.Picture, Title: blog.Title, IsFollow: isFollow, Coordinates: track.Coordinates, AuthorId: Aid}
 			fmt.Println(blog_dis)
