@@ -36,51 +36,22 @@ func AddFollow(FollowId int64, FollowById int64, Time string) int64 {
 	return Fid
 }
 
-// GetFollowings 返回指定用户关注的用户
-func GetFollowings(uid int64) ([]Friend, error) {
-	var followings []Friend
+// GetFans 返回指定用户关注的用户
+func GetFans(uid int64) ([]Friend, error) {
+	var fans []Friend
 
 	// 查询该用户关注的用户
-	var followingUIDs []int64
-	err := Db.Table("follow").Cols("follow_by_id").Where("follow_id = ?", uid).Find(&followingUIDs)
+	var fanUIDs []int64
+	err := Db.Table("follow").Cols("follow_by_id").Where("follow_id = ?", uid).Find(&fanUIDs)
 	if err != nil {
 		return nil, err
 	}
 
 	// 查询关注的用户的信息
-	if len(followingUIDs) != 0 {
-		for _, followingUID := range followingUIDs {
+	if len(fanUIDs) != 0 {
+		for _, followingUID := range fanUIDs {
 			var friend Friend
 			has, err := Db.Table("user").Cols("uid", "name", "profile_phot").Where("uid = ?", followingUID).Get(&friend)
-			if err != nil {
-				return nil, err
-			}
-			if has {
-				followings = append(followings, friend)
-			}
-		}
-
-	}
-
-	return followings, nil
-}
-
-// GetFans 返回指定用户的粉丝
-func GetFans(uid int64) ([]Friend, error) {
-	var fans []Friend
-
-	// 查询关注该用户的用户，即该用户的粉丝
-	var followerUIDs []int64
-	err := Db.Table("follow").Cols("follow_id").Where("follow_by_id = ?", uid).Find(&followerUIDs)
-	if err != nil {
-		return nil, err
-	}
-	fmt.Println(followerUIDs)
-	// 查询粉丝的信息
-	if len(followerUIDs) != 0 {
-		for _, followerUID := range followerUIDs {
-			var friend Friend
-			has, err := Db.Table("user").Cols("uid", "name", "profile_phot").Where("uid = ?", followerUID).Get(&friend)
 			if err != nil {
 				return nil, err
 			}
@@ -88,33 +59,61 @@ func GetFans(uid int64) ([]Friend, error) {
 				fans = append(fans, friend)
 			}
 		}
+
 	}
+
 	return fans, nil
 }
 
-func GetFriends(uid int64) ([]Friend, error) {
-	var friends []Friend
+// GetFans 返回指定用户的粉丝
+func GetFollowings(uid int64) ([]Friend, error) {
+	var followings []Friend
 
-	// 查询所有关注该用户的关注者
-	var follows []Follow
-	err := Db.Where("follow_id = ?", uid).Find(&follows)
+	// 查询关注该用户的用户，即该用户的粉丝
+	var followingUIDs []int64
+	err := Db.Table("follow").Cols("follow_id").Where("follow_by_id = ?", uid).Find(&followingUIDs)
 	if err != nil {
 		return nil, err
 	}
-
-	// 查询这些关注者的信息，即用户的朋友信息
-	if len(follows) != 0 {
-		for _, follow := range follows {
+	fmt.Println(followingUIDs)
+	// 查询粉丝的信息
+	if len(followingUIDs) != 0 {
+		for _, followerUID := range followingUIDs {
 			var friend Friend
-			has, err := Db.Table("user").Cols("uid", "name", "profile_phot").Where("uid = ?", follow.FollowById).Get(&friend)
+			has, err := Db.Table("user").Cols("uid", "name", "profile_phot").Where("uid = ?", followerUID).Get(&friend)
 			if err != nil {
 				return nil, err
 			}
 			if has {
-				friends = append(friends, friend)
+				followings = append(followings, friend)
 			}
 		}
 	}
+	return followings, nil
+}
 
+func GetFriends(Uid int64) ([]Friend, error) {
+	var friends []Friend
+
+	// 查询所有关注该用户的关注者
+	followings, _ := GetFollowings(Uid)
+	fans, _ := GetFans(Uid)
+
+	//fmt.Println("followings:")
+	//fmt.Println(followings)
+	//fmt.Println("fans:")
+	//fmt.Println(fans)
+
+	if min(len(fans), len(followings)) == 0 {
+		return nil, nil
+	}
+	for _, fan := range fans {
+		for _, following := range followings {
+			if fan.Uid == following.Uid {
+				friends = append(friends, fan)
+			}
+		}
+	}
+	//fmt.Println(friends)
 	return friends, nil
 }

@@ -830,7 +830,7 @@ func ToFans(c *gin.Context) {
 func ToFriends(c *gin.Context) {
 	Uid, _ := strconv.ParseInt(c.Param("uid"), 10, 64)
 
-	friends, err := GetFollowings(Uid)
+	friends, err := GetFriends(Uid)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
