@@ -12,10 +12,11 @@ type Track struct {
 	// 如[x,y],[x,y]
 }
 type Records struct {
-	Uid      int64
-	Distance string
-	Name     string
-	Photo    string
+	Uid         int64
+	Distance    string
+	Name        string
+	Photo       string
+	Coordinates string
 }
 
 func BuildModelTrack() {
