@@ -1,5 +1,7 @@
 package models
 
+import "fmt"
+
 type Follow struct {
 	Fid        int64 `xorm:"pk autoincr"` // 轨迹的唯一标识符，被标记为主键
 	FollowId   int64
@@ -49,7 +51,7 @@ func GetFollowings(uid int64) ([]Friend, error) {
 	if len(followingUIDs) != 0 {
 		for _, followingUID := range followingUIDs {
 			var friend Friend
-			has, err := Db.Table("user").Cols("uid", "name", "ProfilePho").Where("uid = ?", followingUID).Get(&friend)
+			has, err := Db.Table("user").Cols("uid", "name", "profile_phot").Where("uid = ?", followingUID).Get(&friend)
 			if err != nil {
 				return nil, err
 			}
@@ -57,6 +59,7 @@ func GetFollowings(uid int64) ([]Friend, error) {
 				followings = append(followings, friend)
 			}
 		}
+
 	}
 
 	return followings, nil
@@ -72,12 +75,12 @@ func GetFans(uid int64) ([]Friend, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	fmt.Println(followerUIDs)
 	// 查询粉丝的信息
 	if len(followerUIDs) != 0 {
 		for _, followerUID := range followerUIDs {
 			var friend Friend
-			has, err := Db.Table("user").Cols("uid", "name", "ProfilePho").Where("uid = ?", followerUID).Get(&friend)
+			has, err := Db.Table("user").Cols("uid", "name", "profile_phot").Where("uid = ?", followerUID).Get(&friend)
 			if err != nil {
 				return nil, err
 			}
@@ -86,7 +89,7 @@ func GetFans(uid int64) ([]Friend, error) {
 			}
 		}
 	}
-
+	fmt.Println(fans)
 	return fans, nil
 }
 
@@ -104,7 +107,7 @@ func GetFriends(uid int64) ([]Friend, error) {
 	if len(follows) != 0 {
 		for _, follow := range follows {
 			var friend Friend
-			has, err := Db.Table("user").Cols("uid", "name", "ProfilePho").Where("uid = ?", follow.FollowById).Get(&friend)
+			has, err := Db.Table("user").Cols("uid", "name", "profile_phot").Where("uid = ?", follow.FollowById).Get(&friend)
 			if err != nil {
 				return nil, err
 			}
