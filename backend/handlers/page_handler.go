@@ -25,8 +25,15 @@ func ToIndex(c *gin.Context) {
 	signature, _ := SignatureCheck(Uid)
 	rank, _ := RankCheck(Uid)
 	blogs, _ := BlogDisplay()
+	var message string
+	if Uid == -1 {
+		message = "vister"
+
+	} else {
+		message = "user"
+	}
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"message":     c.PostForm("message"),
+		"message":     message,
 		"aToken":      c.GetHeader("aToken"),
 		"rToken":      c.GetHeader("rToken"),
 		"Uid":         Uid,
@@ -56,7 +63,15 @@ func ToIndex_app(c *gin.Context) {
 	signature, _ := SignatureCheck(Uid)
 	rank, _ := RankCheck(Uid)
 	blogs, _ := BlogDisplay()
+	var message string
+	if Uid == -1 {
+		message = "vister"
+
+	} else {
+		message = "user"
+	}
 	c.JSON(http.StatusOK, gin.H{
+		"message":     message,
 		"aToken":      c.GetHeader("aToken"),
 		"rToken":      c.GetHeader("rToken"),
 		"Uid":         Uid,

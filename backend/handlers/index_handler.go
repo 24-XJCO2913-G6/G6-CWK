@@ -111,12 +111,18 @@ func RankCheck(Uid int64) ([]Records, error) {
 	for _, user := range users {
 		// 处理每一行数据
 		tracks, _ = GetTracks(user.Uid)
+		maxTrack := tracks[0].Coordinates
+		maxDis := tracks[0].Distance
 		for _, record := range tracks {
 			Dis, _ := strconv.ParseFloat(record.Distance, 64)
 			totaldis += Dis
+			if maxDis < record.Distance {
+				maxDis = record.Distance
+				maxTrack = record.Coordinates
+			}
 		}
 		DisSum := strconv.FormatFloat(totaldis, 'f', -1, 64)
-		record := Records{Uid: user.Uid, Distance: DisSum, Name: user.Name, Photo: user.ProfilePhot}
+		record := Records{Uid: user.Uid, Distance: DisSum, Name: user.Name, Photo: user.ProfilePhot, Coordinates: maxTrack}
 		recordlist = append(recordlist, record)
 	}
 	sort.Slice(recordlist, func(i, j int) bool {
