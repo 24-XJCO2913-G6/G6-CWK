@@ -46,14 +46,16 @@ func GetFollowings(uid int64) ([]Friend, error) {
 	}
 
 	// 查询关注的用户的信息
-	for _, followingUID := range followingUIDs {
-		var friend Friend
-		has, err := Db.Table("user").Cols("uid", "name", "ProfilePho").Where("uid = ?", followingUID).Get(&friend)
-		if err != nil {
-			return nil, err
-		}
-		if has {
-			followings = append(followings, friend)
+	if len(followingUIDs) != 0 {
+		for _, followingUID := range followingUIDs {
+			var friend Friend
+			has, err := Db.Table("user").Cols("uid", "name", "ProfilePho").Where("uid = ?", followingUID).Get(&friend)
+			if err != nil {
+				return nil, err
+			}
+			if has {
+				followings = append(followings, friend)
+			}
 		}
 	}
 
@@ -72,14 +74,16 @@ func GetFans(uid int64) ([]Friend, error) {
 	}
 
 	// 查询粉丝的信息
-	for _, followerUID := range followerUIDs {
-		var friend Friend
-		has, err := Db.Table("user").Cols("uid", "name", "ProfilePho").Where("uid = ?", followerUID).Get(&friend)
-		if err != nil {
-			return nil, err
-		}
-		if has {
-			fans = append(fans, friend)
+	if len(followerUIDs) != 0 {
+		for _, followerUID := range followerUIDs {
+			var friend Friend
+			has, err := Db.Table("user").Cols("uid", "name", "ProfilePho").Where("uid = ?", followerUID).Get(&friend)
+			if err != nil {
+				return nil, err
+			}
+			if has {
+				fans = append(fans, friend)
+			}
 		}
 	}
 
@@ -97,14 +101,16 @@ func GetFriends(uid int64) ([]Friend, error) {
 	}
 
 	// 查询这些关注者的信息，即用户的朋友信息
-	for _, follow := range follows {
-		var friend Friend
-		has, err := Db.Table("user").Cols("uid", "name", "ProfilePho").Where("uid = ?", follow.FollowById).Get(&friend)
-		if err != nil {
-			return nil, err
-		}
-		if has {
-			friends = append(friends, friend)
+	if len(follows) != 0 {
+		for _, follow := range follows {
+			var friend Friend
+			has, err := Db.Table("user").Cols("uid", "name", "ProfilePho").Where("uid = ?", follow.FollowById).Get(&friend)
+			if err != nil {
+				return nil, err
+			}
+			if has {
+				friends = append(friends, friend)
+			}
 		}
 	}
 

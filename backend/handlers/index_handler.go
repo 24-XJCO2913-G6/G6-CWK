@@ -82,48 +82,57 @@ func RankCheck(Uid int64) ([]Records, error) {
 	var users []User
 	var friend User
 	err := Db.Where("FollowById = ?", Uid).Find(&followlist)
-	for _, follower := range followlist {
-		has, err := Db.Where("FollowById = ? AND FollowId = ?", follower.FollowId, Uid).Get(&followbylist)
+	if len(followbylist) != 0 {
+		for _, follower := range followlist {
+			has, err := Db.Where("FollowById = ? AND FollowId = ?", follower.FollowId, Uid).Get(&followbylist)
 
-		if err != nil {
-			return []Records{}, err
-		} else if !has {
-			continue
-		} else {
-			arr = append(arr, follower.FollowId)
+			if err != nil {
+				return []Records{}, err
+			} else if !has {
+				continue
+			} else {
+				arr = append(arr, follower.FollowId)
+			}
+
 		}
-
 	}
+
 	if err != nil {
 		return []Records{}, err
 	}
-	for _, friendid := range arr {
-		has, err := Db.Where("Uid = ?", friendid).Get(&friend)
-		if err != nil {
-			return []Records{}, err
-		} else if !has {
-			fmt.Printf("user(id) not exist:%d\n", friendid)
-		} else {
-			users = append(users, friend)
+	if len(arr) != 0 {
+		for _, friendid := range arr {
+			has, err := Db.Where("Uid = ?", friendid).Get(&friend)
+			if err != nil {
+				return []Records{}, err
+			} else if !has {
+				fmt.Printf("user(id) not exist:%d\n", friendid)
+			} else {
+				users = append(users, friend)
+			}
 		}
 	}
+
 	// 遍历结果集
 	for _, user := range users {
 		// 处理每一行数据
 		tracks, _ = GetTracks(user.Uid)
-		maxTrack := tracks[0].Coordinates
-		maxDis := tracks[0].Distance
-		for _, record := range tracks {
-			Dis, _ := strconv.ParseFloat(record.Distance, 64)
-			totaldis += Dis
-			if maxDis < record.Distance {
-				maxDis = record.Distance
-				maxTrack = record.Coordinates
+		if len(tracks) != 0 {
+			maxTrack := tracks[0].Coordinates
+			maxDis := tracks[0].Distance
+			for _, record := range tracks {
+				Dis, _ := strconv.ParseFloat(record.Distance, 64)
+				totaldis += Dis
+				if maxDis < record.Distance {
+					maxDis = record.Distance
+					maxTrack = record.Coordinates
+				}
 			}
+			DisSum := strconv.FormatFloat(totaldis, 'f', -1, 64)
+			record := Records{Uid: user.Uid, Distance: DisSum, Name: user.Name, Photo: user.ProfilePhot, Coordinates: maxTrack}
+			recordlist = append(recordlist, record)
 		}
-		DisSum := strconv.FormatFloat(totaldis, 'f', -1, 64)
-		record := Records{Uid: user.Uid, Distance: DisSum, Name: user.Name, Photo: user.ProfilePhot, Coordinates: maxTrack}
-		recordlist = append(recordlist, record)
+
 	}
 	sort.Slice(recordlist, func(i, j int) bool {
 		return recordlist[i].Distance > recordlist[j].Distance
@@ -144,30 +153,33 @@ func BlogDisplay() ([]Blog_display, error) {
 	if err2 != nil {
 		return []Blog_display{}, err2
 	}
-	for _, blog := range blogs {
-		Uid := blog.Uid
-		err1 := Db.Where("Uid = ?", Uid).Find(&authors)
-		if err1 != nil {
-			return []Blog_display{}, err1
+	if len(blogs) != 0 {
+		for _, blog := range blogs {
+			Uid := blog.Uid
+			err1 := Db.Where("Uid = ?", Uid).Find(&authors)
+			if err1 != nil {
+				return []Blog_display{}, err1
+			}
+			has, err := Db.Where("FollowById = ? AND FollowId = ?", Uid, authors[0].Uid).Get(&followed)
+			if err != nil {
+				return []Blog_display{}, err
+			} else if !has {
+				isFollow = 0
+			} else {
+				isFollow = 1
+			}
+			err4 := Db.Where("Tid = ?", blog.Tid).Find(&track)
+			if err4 != nil {
+				return []Blog_display{}, err4
+			}
+			author := authors[0].Name
+			photo := authors[0].ProfilePhot
+			Aid := authors[0].Uid
+			blog_dis := Blog_display{Author: author, Photo: photo, Pub_time: blog.Pub_time, Visibility: blog.Visibility,
+				Content: blog.Content, Picture: blog.Picture, Title: blog.Title, IsFollow: isFollow, Coordinates: track.Coordinates, AuthorId: Aid}
+			blogs_dis = append(blogs_dis, blog_dis)
 		}
-		has, err := Db.Where("FollowById = ? AND FollowId = ?", Uid, authors[0].Uid).Get(&followed)
-		if err != nil {
-			return []Blog_display{}, err
-		} else if !has {
-			isFollow = 0
-		} else {
-			isFollow = 1
-		}
-		err4 := Db.Where("Tid = ?", blog.Tid).Find(&track)
-		if err4 != nil {
-			return []Blog_display{}, err4
-		}
-		author := authors[0].Name
-		photo := authors[0].ProfilePhot
-		Aid := authors[0].Uid
-		blog_dis := Blog_display{Author: author, Photo: photo, Pub_time: blog.Pub_time, Visibility: blog.Visibility,
-			Content: blog.Content, Picture: blog.Picture, Title: blog.Title, IsFollow: isFollow, Coordinates: track.Coordinates, AuthorId: Aid}
-		blogs_dis = append(blogs_dis, blog_dis)
 	}
+
 	return []Blog_display{}, nil
 }

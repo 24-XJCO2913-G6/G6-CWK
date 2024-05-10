@@ -26,15 +26,18 @@ func GetReviews(Id int64) ([]ReviewInBlog, error) {
 	if err != nil {
 		return []ReviewInBlog{}, err
 	}
-	for _, review := range reviews {
-		var reviewers []User
-		err := Db.Where("Uid = ?", review.Uid).Find(&reviewers)
-		if err != nil {
-			return []ReviewInBlog{}, err
+	if len(reviews) != 0 {
+		for _, review := range reviews {
+			var reviewers []User
+			err := Db.Where("Uid = ?", review.Uid).Find(&reviewers)
+			if err != nil {
+				return []ReviewInBlog{}, err
+			}
+			reviewInBlog := ReviewInBlog{Time: review.Time, Content: review.Content, Reviewer: reviewers[0].Name, Reviewer_photo: reviewers[0].ProfilePhot}
+			reviews_in_blog = append(reviews_in_blog, reviewInBlog)
 		}
-		reviewInBlog := ReviewInBlog{Time: review.Time, Content: review.Content, Reviewer: reviewers[0].Name, Reviewer_photo: reviewers[0].ProfilePhot}
-		reviews_in_blog = append(reviews_in_blog, reviewInBlog)
 	}
+
 	return reviews_in_blog, nil
 }
 
@@ -99,13 +102,15 @@ func GetFriendsBlogs(uid int64) ([]Blog, error) {
 	}
 
 	// 遍历每个朋友，查询其发布的所有博客
-	for _, friend := range friends {
-		var blogs []Blog
-		err := Db.Where("uid = ?", friend.Uid).Find(&blogs)
-		if err != nil {
-			return nil, err
+	if len(friends) != 0 {
+		for _, friend := range friends {
+			var blogs []Blog
+			err := Db.Where("uid = ?", friend.Uid).Find(&blogs)
+			if err != nil {
+				return nil, err
+			}
+			allBlogs = append(allBlogs, blogs...)
 		}
-		allBlogs = append(allBlogs, blogs...)
 	}
 
 	return allBlogs, nil

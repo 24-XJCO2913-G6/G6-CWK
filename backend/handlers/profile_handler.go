@@ -72,27 +72,30 @@ func GetLike(Uid int64) ([]Liked, error) {
 	if err != nil {
 		return nil, nil
 	}
-	for _, liked := range likeList {
-		Id := liked.Bid
-		err2 := Db.Where("id = ?", Id).Find(&blogLiked)
-		if err2 != nil {
-			return nil, err2
-		}
-		err3 := Db.Where("bid = ?", Id).Find(&reviews)
-		if err3 != nil {
-			return nil, err3
-		}
-		err4 := Db.Where("bid = ?", Id).Find(&likeCount)
-		if err4 != nil {
-			return nil, err4
-		}
-		reviewAmount = int64(len(reviews))
-		likeAmount = int64(len(likeCount))
-		if len(blogLiked) != 0 {
-			likedBlog := Liked{Bid: (blogLiked)[0].Id, Content: (blogLiked)[0].Content, Picture: (blogLiked)[0].Picture, Title: (blogLiked)[0].Title, Visibility: (blogLiked)[0].Visibility, Time: (blogLiked)[0].Pub_time, Review: reviews, ReviewCount: reviewAmount, LikeCount: likeAmount}
-			likedBlogs = append(likedBlogs, likedBlog)
+	if len(likeList) != 0 {
+		for _, liked := range likeList {
+			Id := liked.Bid
+			err2 := Db.Where("id = ?", Id).Find(&blogLiked)
+			if err2 != nil {
+				return nil, err2
+			}
+			err3 := Db.Where("bid = ?", Id).Find(&reviews)
+			if err3 != nil {
+				return nil, err3
+			}
+			err4 := Db.Where("bid = ?", Id).Find(&likeCount)
+			if err4 != nil {
+				return nil, err4
+			}
+			reviewAmount = int64(len(reviews))
+			likeAmount = int64(len(likeCount))
+			if len(blogLiked) != 0 {
+				likedBlog := Liked{Bid: (blogLiked)[0].Id, Content: (blogLiked)[0].Content, Picture: (blogLiked)[0].Picture, Title: (blogLiked)[0].Title, Visibility: (blogLiked)[0].Visibility, Time: (blogLiked)[0].Pub_time, Review: reviews, ReviewCount: reviewAmount, LikeCount: likeAmount}
+				likedBlogs = append(likedBlogs, likedBlog)
+			}
 		}
 	}
+
 	return likedBlogs, nil
 
 }
