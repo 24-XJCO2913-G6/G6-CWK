@@ -29,7 +29,7 @@ func ToIndex(c *gin.Context) {
 	followbycount, _ := FollowByCount(Uid)
 	signature, _ := SignatureCheck(Uid)
 	rank, _ := RankCheck(Uid)
-	blogs, _ := BlogDisplay()
+	blogs, _ := BlogDisplay(Uid)
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"message":     c.GetString("message"),
 		"aToken":      c.GetHeader("aToken"),
@@ -69,6 +69,8 @@ func ToIndex_app(c *gin.Context) {
 	signature, _ := SignatureCheck(Uid)
 	rank, _ := RankCheck(Uid)
 	blogs, _ := BlogDisplay()
+
+	//fmt.Println(blogs)
 	c.JSON(http.StatusOK, gin.H{
 		"message":     c.GetString("message"),
 		"aToken":      c.GetHeader("aToken"),
@@ -525,9 +527,9 @@ func ToProfile_app(c *gin.Context) {
 	//fmt.Println(Info)
 	//fmt.Println("---------")
 	//fmt.Println(c.Query("aToken"))
-	fmt.Println("---------")
-	fmt.Println(Info)
-	fmt.Println("---------")
+	//fmt.Println("---------")
+	//fmt.Println(Info)
+	//fmt.Println("---------")
 
 	c.JSON(http.StatusOK, gin.H{
 		"message":  c.GetString("message"),
