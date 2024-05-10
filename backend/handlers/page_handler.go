@@ -466,9 +466,9 @@ func ToProfile_app(c *gin.Context) {
 	//fmt.Println(Info)
 	//fmt.Println("---------")
 	//fmt.Println(c.Query("aToken"))
-	//fmt.Println("---------")
-	//fmt.Println(c.Query("rToken"))
-	//fmt.Println("---------")
+	fmt.Println("---------")
+	fmt.Println(Info)
+	fmt.Println("---------")
 
 	c.JSON(http.StatusOK, gin.H{
 		"message":  c.GetString("message"),
