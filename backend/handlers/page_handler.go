@@ -26,15 +26,8 @@ func ToIndex(c *gin.Context) {
 	signature, _ := SignatureCheck(Uid)
 	rank, _ := RankCheck(Uid)
 	blogs, _ := BlogDisplay()
-	var message string
-	if Uid == -1 {
-		message = "vister"
-
-	} else {
-		message = "user"
-	}
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"message":     message,
+		"message":     c.GetString("message"),
 		"aToken":      c.GetHeader("aToken"),
 		"rToken":      c.GetHeader("rToken"),
 		"Uid":         Uid,
@@ -68,15 +61,8 @@ func ToIndex_app(c *gin.Context) {
 	signature, _ := SignatureCheck(Uid)
 	rank, _ := RankCheck(Uid)
 	blogs, _ := BlogDisplay()
-	var message string
-	if Uid == -1 {
-		message = "vister"
-
-	} else {
-		message = "user"
-	}
 	c.JSON(http.StatusOK, gin.H{
-		"message":     message,
+		"message":     c.GetString("message"),
 		"aToken":      c.GetHeader("aToken"),
 		"rToken":      c.GetHeader("rToken"),
 		"Uid":         Uid,
@@ -103,6 +89,7 @@ func ToRank_app(c *gin.Context) {
 	//tracks, _ := GetTracks()
 	//todo: rank track
 	c.JSON(http.StatusOK, gin.H{
+		"message": c.GetString("message"),
 		"aToken":  c.GetHeader("aToken"),
 		"rToken":  c.GetHeader("rToken"),
 		"records": rank, //排名(降序) 距离：.Distance 用户名：.Name 头像：.Photo
@@ -121,9 +108,10 @@ func ToPublishTrack_app(c *gin.Context) {
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	tracks, _ := GetTracks(Uid)
 	c.JSON(http.StatusOK, gin.H{
-		"aToken": c.GetHeader("aToken"),
-		"rToken": c.GetHeader("rToken"),
-		"tracks": tracks, //.StrDate .StrTime .EndData .EndTime
+		"message": c.GetString("message"),
+		"aToken":  c.GetHeader("aToken"),
+		"rToken":  c.GetHeader("rToken"),
+		"tracks":  tracks, //.StrDate .StrTime .EndData .EndTime
 	})
 }
 func ToPublish_app(c *gin.Context) {
@@ -360,6 +348,7 @@ func ToCollectList_app(c *gin.Context) {
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	collectlist, _ := GetCollect(Uid)
 	c.JSON(http.StatusOK, gin.H{
+		"message":     c.GetString("message"),
 		"uid":         Uid,
 		"aToken":      c.GetHeader("aToken"),
 		"rToken":      c.GetHeader("rToken"),
@@ -379,9 +368,10 @@ func ToVip_app(c *gin.Context) {
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	vip, _ := GetVip(Uid)
 	c.JSON(http.StatusOK, gin.H{
-		"aToken": c.GetHeader("aToken"),
-		"rToken": c.GetHeader("rToken"),
-		"vip":    vip, // .StrTime .EndTime
+		"message": c.GetString("message"),
+		"aToken":  c.GetHeader("aToken"),
+		"rToken":  c.GetHeader("rToken"),
+		"vip":     vip, // .StrTime .EndTime
 	})
 }
 
@@ -419,15 +409,17 @@ func TouploadInfo_app(c *gin.Context) {
 
 func ToLogin(c *gin.Context) {
 	c.HTML(http.StatusOK, "sign-in.html", gin.H{
-		"aToken": c.GetHeader("aToken"),
-		"rToken": c.GetHeader("rToken"),
+		"message": c.GetString("message"),
+		"aToken":  c.GetHeader("aToken"),
+		"rToken":  c.GetHeader("rToken"),
 	})
 }
 
 func ToRegister(c *gin.Context) {
 	c.HTML(http.StatusOK, "sign-up.html", gin.H{
-		"aToken": c.GetHeader("aToken"),
-		"rToken": c.GetHeader("rToken"),
+		"message": c.GetString("message"),
+		"aToken":  c.GetHeader("aToken"),
+		"rToken":  c.GetHeader("rToken"),
 	})
 }
 
@@ -448,6 +440,7 @@ func ToProfile(c *gin.Context) {
 	likelist, _ := GetLike(Uid)
 	journey, _ := GetTracks(Uid)
 	c.HTML(http.StatusOK, "my-profile.html", gin.H{
+		"message":  c.GetString("message"),
 		"uid":      Uid,
 		"aToken":   c.GetHeader("aToken"),
 		"rToken":   c.GetHeader("rToken"),
@@ -478,9 +471,10 @@ func ToProfile_app(c *gin.Context) {
 	//fmt.Println("---------")
 
 	c.JSON(http.StatusOK, gin.H{
+		"message":  c.GetString("message"),
 		"uid":      Uid,
-		"aToken":   c.GetHeader("aToken"),
-		"rToken":   c.GetHeader("rToken"),
+		"aToken":   c.Query("aToken"),
+		"rToken":   c.Query("rToken"),
 		"username": name,
 		"email":    email,
 		"photo":    photo,
@@ -492,36 +486,41 @@ func ToProfile_app(c *gin.Context) {
 }
 func ToVip(c *gin.Context) {
 	c.HTML(http.StatusOK, "vip.html", gin.H{
-		"aToken": c.GetHeader("aToken"),
-		"rToken": c.GetHeader("rToken"),
+		"message": c.GetString("message"),
+		"aToken":  c.GetHeader("aToken"),
+		"rToken":  c.GetHeader("rToken"),
 	})
 }
 
 func ToBill(c *gin.Context) {
 	c.HTML(http.StatusOK, "checkout.html", gin.H{
-		"aToken": c.GetHeader("aToken"),
-		"rToken": c.GetHeader("rToken"),
+		"message": c.GetString("message"),
+		"aToken":  c.GetHeader("aToken"),
+		"rToken":  c.GetHeader("rToken"),
 	})
 }
 
 func ToDownload(c *gin.Context) {
 	c.HTML(http.StatusOK, "app-download.html", gin.H{
-		"aToken": c.GetHeader("aToken"),
-		"rToken": c.GetHeader("rToken"),
+		"message": c.GetString("message"),
+		"aToken":  c.GetHeader("aToken"),
+		"rToken":  c.GetHeader("rToken"),
 	})
 }
 
 func ToHelp(c *gin.Context) {
 	c.HTML(http.StatusOK, "help.html", gin.H{
-		"aToken": c.GetHeader("aToken"),
-		"rToken": c.GetHeader("rToken"),
+		"message": c.GetString("message"),
+		"aToken":  c.GetHeader("aToken"),
+		"rToken":  c.GetHeader("rToken"),
 	})
 }
 
 func ToHelpDetails(c *gin.Context, searchText string) {
 	c.HTML(http.StatusOK, "help-details.html", gin.H{
-		"aToken": c.GetHeader("aToken"),
-		"rToken": c.GetHeader("rToken"),
+		"message": c.GetString("message"),
+		"aToken":  c.GetHeader("aToken"),
+		"rToken":  c.GetHeader("rToken"),
 	})
 }
 

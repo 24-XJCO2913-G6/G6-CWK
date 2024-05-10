@@ -87,8 +87,10 @@ func GetLike(Uid int64) ([]Liked, error) {
 		}
 		reviewAmount = int64(len(reviews))
 		likeAmount = int64(len(likeCount))
-		likedBlog := Liked{Bid: (blogLiked)[0].Id, Content: (blogLiked)[0].Content, Picture: (blogLiked)[0].Picture, Title: (blogLiked)[0].Title, Visibility: (blogLiked)[0].Visibility, Time: (blogLiked)[0].Pub_time, Review: reviews, ReviewCount: reviewAmount, LikeCount: likeAmount}
-		likedBlogs = append(likedBlogs, likedBlog)
+		if len(blogLiked) != 0 {
+			likedBlog := Liked{Bid: (blogLiked)[0].Id, Content: (blogLiked)[0].Content, Picture: (blogLiked)[0].Picture, Title: (blogLiked)[0].Title, Visibility: (blogLiked)[0].Visibility, Time: (blogLiked)[0].Pub_time, Review: reviews, ReviewCount: reviewAmount, LikeCount: likeAmount}
+			likedBlogs = append(likedBlogs, likedBlog)
+		}
 	}
 	return likedBlogs, nil
 
@@ -120,8 +122,11 @@ func GetCollect(Uid int64) ([]Collected, error) {
 			return []Collected{}, err4
 		}
 		collectAmount = int64(len(collectCount))
-		collectedBlog := Collected{Bid: (blogCollect)[0].Id, Content: (blogCollect)[0].Content, Picture: (blogCollect)[0].Picture, Title: (blogCollect)[0].Title, Visibility: (blogCollect)[0].Visibility, Time: (blogCollect)[0].Pub_time, Review: (reviews), ReviewCount: reviewAmount, CollectCount: collectAmount}
-		collectedBlogs = append(collectedBlogs, collectedBlog)
+		if len(blogCollect) != 0 {
+			collectedBlog := Collected{Bid: (blogCollect)[0].Id, Content: (blogCollect)[0].Content, Picture: (blogCollect)[0].Picture, Title: (blogCollect)[0].Title, Visibility: (blogCollect)[0].Visibility, Time: (blogCollect)[0].Pub_time, Review: (reviews), ReviewCount: reviewAmount, CollectCount: collectAmount}
+			collectedBlogs = append(collectedBlogs, collectedBlog)
+		}
+
 	}
 	return collectedBlogs, nil
 }
@@ -152,6 +157,9 @@ func GetInfo(Uid int64) (User_detail, error) {
 	var infos []User_detail
 	err := Db.Where("uid = ?", Uid).Find(&infos)
 	if err != nil {
+		return User_detail{}, nil
+	}
+	if len(infos) == 0 {
 		return User_detail{}, nil
 	}
 	return infos[0], nil

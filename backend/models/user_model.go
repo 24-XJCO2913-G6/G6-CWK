@@ -12,9 +12,9 @@ type User struct {
 	Passwd      string `xorm:"NOT NULL"`               // 密码
 	IsAdmin     bool   `xorm:"NOT NULL DEFAULT false"` // 管理员标记
 	IsVip       bool   `xorm:"NOT NULL DEFAULT false"` // VIP标记
-	CreatedTime string `xorm:"UNIQUE NOT NULL"`        // 创造日期
-	ProfilePhot string `xorm:""`                       // 个人头像
-	Signature   string `xorm:""`                       // 签名
+	CreatedTime string `xorm:"NOT NULL"`               // 创造日期
+	ProfilePhot string `xorm:"NOT NULL"`               // 个人头像
+	Signature   string `xorm:"NOT NULL"`               // 签名
 }
 
 type User_detail struct {
