@@ -8,7 +8,7 @@ import (
 
 func GetLikeMes(c *gin.Context) ([]LikedApp, error) {
 	var likedMessages []LikedApp
-	aToken := c.Query("aToken")
+	aToken := c.GetHeader("aToken")
 	var Uid_tmp string
 	if aToken == "" {
 		Uid_tmp = "-1"
@@ -28,7 +28,7 @@ func GetLikeMes(c *gin.Context) ([]LikedApp, error) {
 
 func GetCollectMes(c *gin.Context) ([]CollectedApp, error) {
 	var collectMessages []CollectedApp
-	aToken := c.Query("aToken")
+	aToken := c.GetHeader("aToken")
 	var Uid_tmp string
 	if aToken == "" {
 		Uid_tmp = "-1"
@@ -48,7 +48,7 @@ func GetCollectMes(c *gin.Context) ([]CollectedApp, error) {
 
 func GetReviewMes(c *gin.Context) ([]ReviewedApp, error) {
 	var reviewMessages []ReviewedApp
-	aToken := c.Query("aToken")
+	aToken := c.GetHeader("aToken")
 	var Uid_tmp string
 	if aToken == "" {
 		Uid_tmp = "-1"

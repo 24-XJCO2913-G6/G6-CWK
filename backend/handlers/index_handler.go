@@ -2,26 +2,15 @@ package handlers
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	. "main/backend/models"
 	"sort"
 	"strconv"
 )
 
-func BlogCount(c *gin.Context) (int64, error) {
-
+func BlogCount(Uid int64) (int64, error) {
 	var blogList []Blog
-	var Uid_tmp string
-	if c.PostForm("aToken") == "" {
-		Uid_tmp = "-1"
-	} else {
-		aToken := c.PostForm("aToken")
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
-	}
-	Uid, err := strconv.ParseInt(Uid_tmp, 10, 64)
 	var TotalamountBlog int64
-	if (Uid == -1) || (err != nil) {
+	if Uid != -1 {
 		err := Db.Where("Uid = ?", Uid).Find(&blogList)
 		if err != nil {
 			return 0, err
@@ -35,19 +24,10 @@ func BlogCount(c *gin.Context) (int64, error) {
 	return TotalamountBlog, nil
 }
 
-func FollowByCount(c *gin.Context) (int64, error) {
+func FollowByCount(Uid int64) (int64, error) {
 	var followByList []Follow
-	var Uid_tmp string
-	if c.PostForm("aToken") == "" {
-		Uid_tmp = "-1"
-	} else {
-		aToken := c.PostForm("aToken")
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
-	}
-	Uid, err := strconv.ParseInt(Uid_tmp, 10, 64)
 	var TotalamountFollowBy int64
-	if (Uid == -1) || (err != nil) {
+	if Uid != -1 {
 		err := Db.Where("FollowId = ?", Uid).Find(&followByList)
 		if err != nil {
 			return 0, err
@@ -60,19 +40,10 @@ func FollowByCount(c *gin.Context) (int64, error) {
 	return TotalamountFollowBy, nil
 }
 
-func FollowCount(c *gin.Context) (int64, error) {
+func FollowCount(Uid int64) (int64, error) {
 	var followList []Follow
-	var Uid_tmp string
-	if c.PostForm("aToken") == "" {
-		Uid_tmp = "-1"
-	} else {
-		aToken := c.PostForm("aToken")
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
-	}
-	Uid, err := strconv.ParseInt(Uid_tmp, 10, 64)
 	var TotalamountFollow int64 = 0
-	if (Uid == -1) || (err != nil) {
+	if Uid != -1 {
 		err := Db.Where("FollowById = ?", Uid).Find(&followList)
 		if err != nil {
 			return 0, err
@@ -86,19 +57,10 @@ func FollowCount(c *gin.Context) (int64, error) {
 	return TotalamountFollow, nil
 }
 
-func SignatureCheck(c *gin.Context) (string, error) {
+func SignatureCheck(Uid int64) (string, error) {
 	var signaturelist []User
-	var Uid_tmp string
-	if c.PostForm("aToken") == "" {
-		Uid_tmp = "-1"
-	} else {
-		aToken := c.PostForm("aToken")
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
-	}
-	Uid, err := strconv.ParseInt(Uid_tmp, 10, 64)
 	var Signature string
-	if (Uid == -1) || (err != nil) {
+	if Uid != -1 {
 		err := Db.Where("Uid = ?", Uid).Find(&signaturelist)
 		if err != nil {
 			return "null", err
@@ -109,7 +71,7 @@ func SignatureCheck(c *gin.Context) (string, error) {
 	return Signature, nil
 }
 
-func RankCheck(c *gin.Context) ([]Records, error) {
+func RankCheck(Uid int64) ([]Records, error) {
 	var recordlist []Records
 	var tracks []Track
 	var followlist []Follow
@@ -119,15 +81,6 @@ func RankCheck(c *gin.Context) ([]Records, error) {
 	// 查询并按照 i 值进行分组，并将 distance 求和
 	var users []User
 	var friend User
-	aToken := c.Query("aToken")
-	var Uid_tmp string
-	if aToken == "" {
-		Uid_tmp = "-1"
-	} else {
-		Claim, _ := CheckToken(aToken)
-		Uid_tmp = Claim.Uid
-	}
-	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	err := Db.Where("FollowById = ?", Uid).Find(&followlist)
 	for _, follower := range followlist {
 		has, err := Db.Where("FollowById = ? AND FollowId = ?", follower.FollowId, Uid).Get(&followbylist)

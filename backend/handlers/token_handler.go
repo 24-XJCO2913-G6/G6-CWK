@@ -107,8 +107,8 @@ func JwtToken() gin.HandlerFunc {
 			return
 		}
 		// 读取请求体中的 aToken 和 rToken
-		aToken := c.PostForm("aToken")
-		rToken := c.PostForm("rToken")
+		aToken := c.GetHeader("aToken")
+		rToken := c.GetHeader("rToken")
 
 		//c.JSON(200, gin.H{"header": origin, "rToken": rToken})
 

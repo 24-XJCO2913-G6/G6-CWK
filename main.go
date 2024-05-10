@@ -91,7 +91,7 @@ func main() {
 	appGroup := engine.Group("/app")
 	{
 		appGroup.GET("/")
-		appGroup.GET("/index", ToIndex_app)
+		appGroup.GET("/index", ToIndex_app) //blog 中返回了AuthorId
 
 		// POST请求
 		{
@@ -131,6 +131,7 @@ func main() {
 
 			// 返回用户排名 (个人)
 			appGroup.GET("/rank", ToRank_app)
+			appGroup.POST("/upload_info", TouploadInfo_app)
 		}
 
 		// 帖子相关
@@ -146,6 +147,9 @@ func main() {
 			// 返回朋友帖子
 			appGroup.GET("/friend_blog", ToFriendsBlogs)
 			//appGroup.GET("/profile_detail")
+			appGroup.GET("/show_liked", ToShowLiked_app)
+			appGroup.GET("/show_collected", ToShowCollected_app)
+			appGroup.GET("/show_reviewed", ToShowReviewed_app)
 		}
 
 		// 获取路径信息

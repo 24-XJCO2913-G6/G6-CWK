@@ -41,15 +41,21 @@ func GetReviews(Id int64) ([]ReviewInBlog, error) {
 var track_tmp []Track
 
 func BlogPublish(c *gin.Context) {
+	aToken := c.GetHeader("aToken")
+	var Uid_tmp string
+	if aToken == "" {
+		Uid_tmp = "-1"
+	} else {
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
+	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	err := c.Request.ParseForm()
 	if err != nil {
 		return
 	}
-	Claim, _ := CheckToken(c.GetString("aToken"))
-	Uid_tmp := Claim.Uid
 	visibility_tmp := c.PostForm("visibility")
 	currentTime := time.Now()
-	Uid, err := strconv.ParseInt(Uid_tmp, 10, 64)
 	timeString := currentTime.Format("2006-01-02 15:04:05")
 	title := c.PostForm("title")
 	description := c.PostForm("content")
@@ -103,4 +109,35 @@ func GetFriendsBlogs(uid int64) ([]Blog, error) {
 	}
 
 	return allBlogs, nil
+}
+
+func GetLikedMess(Uid int64) ([]LikedApp, error) {
+
+	var likeMess []LikedApp
+	err := Db.Where("uid = ?", Uid).Find(&likeMess)
+	if err != nil {
+		return nil, err
+	}
+
+	return likeMess, nil
+}
+func GetCollectedMess(Uid int64) ([]CollectedApp, error) {
+
+	var collectMess []CollectedApp
+	err := Db.Where("uid = ?", Uid).Find(&collectMess)
+	if err != nil {
+		return nil, err
+	}
+
+	return collectMess, nil
+}
+func GetReviewedMess(Uid int64) ([]ReviewedApp, error) {
+
+	var reviewMess []ReviewedApp
+	err := Db.Where("uid = ?", Uid).Find(&reviewMess)
+	if err != nil {
+		return nil, err
+	}
+
+	return reviewMess, nil
 }

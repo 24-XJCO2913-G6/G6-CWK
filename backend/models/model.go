@@ -30,4 +30,5 @@ func BuildModel() {
 	BuildModelReviewApp()
 	BuildModelCollectApp()
 	BuildModelLikeApp()
+	BuildModelUserInfo()
 }

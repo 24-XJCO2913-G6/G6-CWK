@@ -17,6 +17,17 @@ type User struct {
 	Signature   string `xorm:""`                       // 签名
 }
 
+type User_detail struct {
+	Did      int64 `xorm:"pk autoincr"`
+	Uid      int64
+	Born     string
+	Status   string
+	Job      string
+	LivesIn  string
+	JoinedOn string
+	Email    string
+}
+
 type Liked struct {
 	Bid         int64
 	Content     string
@@ -42,6 +53,13 @@ type Collected struct {
 
 func BuildModelUser() {
 	err := Db.Sync2(new(User))
+	if err != nil {
+		panic(err)
+	}
+}
+
+func BuildModelUserInfo() {
+	err := Db.Sync2(new(User_detail))
 	if err != nil {
 		panic(err)
 	}
@@ -99,6 +117,23 @@ func AddUser(name string, email string, passwd string) int64 {
 		return Uid
 	}
 	return Uid
+}
+
+func AddUserInfo(Uid int64, Born string, Status string, Job string, LivesIn string, JoinedOn string, Email string) int64 {
+	userInfo := &User_detail{
+		Uid:      Uid,
+		Born:     Born,
+		Status:   Status,
+		Job:      Job,
+		LivesIn:  LivesIn,
+		JoinedOn: JoinedOn,
+		Email:    Email,
+	}
+	Did, err := Db.Insert(userInfo)
+	if err != nil {
+		return Did
+	}
+	return Did
 }
 
 func AllUsers() []User {

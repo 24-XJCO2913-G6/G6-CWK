@@ -6,70 +6,58 @@ import (
 	"strconv"
 )
 
-func GetName(c *gin.Context) (string, error) {
+func GetName(Uid int64) (string, error) {
 
 	var users []User
-	aToken := c.GetString("aToken")
-	Claims, _ := CheckToken(aToken)
-	Uid, err := strconv.ParseInt(Claims.Uid, 10, 64)
-	if (Uid == -1) || (err != nil) {
-		err := Db.Where("Uid = ?", Uid).Find(&users)
-		if err != nil {
-			return "null", err
+	if Uid != -1 {
+		err1 := Db.Where("Uid = ?", Uid).Find(&users)
+		if err1 != nil {
+			return "null", err1
 		}
 	}
 	Name := users[0].Name
 	return Name, nil
 }
 
-func GetEmail(c *gin.Context) (string, error) {
+func GetEmail(Uid int64) (string, error) {
 
 	var users []User
-	aToken := c.GetString("aToken")
-	Claims, _ := CheckToken(aToken)
-	Uid, err := strconv.ParseInt(Claims.Uid, 10, 64)
-	if (Uid == -1) || (err != nil) {
-		err := Db.Where("Uid = ?", Uid).Find(&users)
-		if err != nil {
-			return "null", err
+	if Uid != -1 {
+		err1 := Db.Where("Uid = ?", Uid).Find(&users)
+		if err1 != nil {
+			return "null", err1
 		}
 	}
 	Email := users[0].Email
 	return Email, nil
 }
 
-func GetPhoto(c *gin.Context) (string, error) {
+func GetPhoto(Uid int64) (string, error) {
 
 	var users []User
-	aToken := c.GetString("aToken")
-	Claims, _ := CheckToken(aToken)
-	Uid, err := strconv.ParseInt(Claims.Uid, 10, 64)
-	if (Uid == -1) || (err != nil) {
-		err := Db.Where("Uid = ?", Uid).Find(&users)
-		if err != nil {
-			return "null", err
+	if Uid != -1 {
+		err1 := Db.Where("Uid = ?", Uid).Find(&users)
+		if err1 != nil {
+			return "null", err1
 		}
 	}
 	ProfilePhot := users[0].ProfilePhot
 	return ProfilePhot, nil
 }
-func GetSignature(c *gin.Context) (string, error) {
+func GetSignature(Uid int64) (string, error) {
 
 	var users []User
-	aToken := c.GetString("aToken")
-	Claims, _ := CheckToken(aToken)
-	Uid, err := strconv.ParseInt(Claims.Uid, 10, 64)
-	if (Uid == -1) || (err != nil) {
-		err := Db.Where("Uid = ?", Uid).Find(&users)
-		if err != nil {
-			return "null", err
+	if Uid != -1 {
+		err1 := Db.Where("Uid = ?", Uid).Find(&users)
+		if err1 != nil {
+			return "null", err1
 		}
 	}
 	Signature := users[0].Signature
 	return Signature, nil
 }
 
-func GetLike(c *gin.Context) ([]Liked, error) {
+func GetLike(Uid int64) ([]Liked, error) {
 	var likedBlogs []Liked
 	var likeList []Like
 	var blogLiked []Blog
@@ -77,31 +65,28 @@ func GetLike(c *gin.Context) ([]Liked, error) {
 	var likeCount []Like
 	var reviewAmount int64 = 0
 	var likeAmount int64 = 0
-	aToken := c.GetString("aToken")
-	Claims, _ := CheckToken(aToken)
-	Uid, err := strconv.ParseInt(Claims.Uid, 10, 64)
-	if (Uid == -1) || (err != nil) {
-		err := Db.Where("Uid = ?", Uid).Find(&likeList)
-		if err != nil {
-			return []Liked{}, err
+	if Uid != -1 {
+		err1 := Db.Where("Uid = ?", Uid).Find(&likeList)
+		if err1 != nil {
+			return []Liked{}, err1
 		}
 	}
 	for _, liked := range likeList {
 		Id := liked.Bid
-		err := Db.Where("Id = ?", Id).Find(&blogLiked)
-		if err != nil {
-			return []Liked{}, err
-		}
-		err2 := Db.Where("Bid = ?", Id).Find(&reviews)
+		err2 := Db.Where("Id = ?", Id).Find(&blogLiked)
 		if err2 != nil {
-			return []Liked{}, err
+			return []Liked{}, err2
+		}
+		err3 := Db.Where("Bid = ?", Id).Find(&reviews)
+		if err3 != nil {
+			return []Liked{}, err3
 		}
 		for range reviews {
 			reviewAmount += 1
 		}
-		err3 := Db.Where("Bid = ?", Id).Find(&likeCount)
-		if err3 != nil {
-			return []Liked{}, err
+		err4 := Db.Where("Bid = ?", Id).Find(&likeCount)
+		if err4 != nil {
+			return []Liked{}, err4
 		}
 		for range likeCount {
 			likeAmount += 1
@@ -119,9 +104,15 @@ func GetCollect(c *gin.Context) ([]Collected, error) {
 	var collectCount []Collect
 	var reviewAmount int64 = 0
 	var collectAmount int64 = 0
-	aToken := c.GetString("aToken")
-	Claims, _ := CheckToken(aToken)
-	Uid, err := strconv.ParseInt(Claims.Uid, 10, 64)
+	aToken := c.GetHeader("aToken")
+	var Uid_tmp string
+	if aToken == "" {
+		Uid_tmp = "-1"
+	} else {
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
+	Uid, err := strconv.ParseInt(Uid_tmp, 10, 64)
 	if (Uid == -1) || (err != nil) {
 		err1 := Db.Where("Uid = ?", Uid).Find(&collectList)
 		if err1 != nil {
@@ -156,15 +147,29 @@ func GetCollect(c *gin.Context) ([]Collected, error) {
 func GetJourney(c *gin.Context) (string, error) {
 
 	var users []User
-	aToken := c.GetString("aToken")
-	Claims, _ := CheckToken(aToken)
-	Uid, err := strconv.ParseInt(Claims.Uid, 10, 64)
+	aToken := c.GetHeader("aToken")
+	var Uid_tmp string
+	if aToken == "" {
+		Uid_tmp = "-1"
+	} else {
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
+	}
+	Uid, err := strconv.ParseInt(Uid_tmp, 10, 64)
 	if (Uid == -1) || (err != nil) {
-		err := Db.Where("Uid = ?", Uid).Find(&users)
-		if err != nil {
-			return "null", err
+		err1 := Db.Where("Uid = ?", Uid).Find(&users)
+		if err1 != nil {
+			return "null", err1
 		}
 	}
 	Signature := users[0].Signature
 	return Signature, nil
+}
+func GetInfo(Uid int64) (User_detail, error) {
+	var info User_detail
+	err := Db.Where("uid = ?", Uid).Find(&info)
+	if err != nil {
+		return User_detail{}, err
+	}
+	return info, nil
 }
