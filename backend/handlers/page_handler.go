@@ -68,7 +68,7 @@ func ToIndex_app(c *gin.Context) {
 	followbycount, _ := FollowByCount(Uid)
 	signature, _ := SignatureCheck(Uid)
 	rank, _ := RankCheck(Uid)
-	blogs, _ := BlogDisplay()
+	blogs, _ := BlogDisplay(Uid)
 
 	//fmt.Println(blogs)
 	c.JSON(http.StatusOK, gin.H{
