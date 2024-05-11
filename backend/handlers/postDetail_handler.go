@@ -53,10 +53,7 @@ func BlogPublish(c *gin.Context) {
 		Uid_tmp = Claim.Uid
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
-	err := c.Request.ParseForm()
-	if err != nil {
-		return
-	}
+
 	visibility_tmp := c.PostForm("visibility")
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
@@ -65,6 +62,8 @@ func BlogPublish(c *gin.Context) {
 	photos := c.PostForm("imgs")
 	Tid_tmp := c.PostForm("route_id")
 	Tid, err := strconv.ParseInt(Tid_tmp, 10, 64)
+
+	fmt.Println(visibility_tmp, timeString, title, description, photos, Tid)
 	if err != nil {
 		fmt.Println("Tid transfer fail:", err)
 		return
