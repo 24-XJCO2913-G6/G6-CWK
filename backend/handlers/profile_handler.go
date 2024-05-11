@@ -132,6 +132,11 @@ func GetCollect(Uid int64) ([]Collected, error) {
 		}
 
 	}
+
+	fmt.Println("------------collection--------------")
+	fmt.Println(collectedBlogs)
+	fmt.Println("------------collection--------------")
+
 	return collectedBlogs, nil
 }
 
