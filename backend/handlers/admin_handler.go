@@ -74,39 +74,39 @@ func ToIndexAdmin(c *gin.Context) {
 }
 
 func ToUsersInfo(c *gin.Context) {
-	users := AllUsers()
-
-	type UserInfo struct {
-		id              string
-		name            string
-		created_time    string
-		is_vip          string
-		password        string
-		email           string
-		vip_expiry_date string
-		photo           string
-		gender          string
-		birthday        string
-		status          string
-		job             string
-		hometown        string
-	}
-
-	for _, user := range users {
-		var vip_expiry_date string
-		if user.IsVip {
-			var vipInfo []Vip
-			err := Db.Where("uid = ?", user.Uid).Find(&vipInfo)
-			if err != nil || len(vipInfo) == 0 {
-				vip_expiry_date = ""
-			} else {
-				vip_expiry_date = vipInfo[0].EndTime
-			}
-		} else {
-			vip_expiry_date = ""
-		}
-
-	}
+	//users := AllUsers()
+	//
+	//type UserInfo struct {
+	//	id              string
+	//	name            string
+	//	created_time    string
+	//	is_vip          string
+	//	password        string
+	//	email           string
+	//	vip_expiry_date string
+	//	photo           string
+	//	gender          string
+	//	birthday        string
+	//	status          string
+	//	job             string
+	//	hometown        string
+	//}
+	//
+	//for _, user := range users {
+	//	var vip_expiry_date string
+	//	if user.IsVip {
+	//		var vipInfo []Vip
+	//		err := Db.Where("uid = ?", user.Uid).Find(&vipInfo)
+	//		if err != nil || len(vipInfo) == 0 {
+	//			vip_expiry_date = ""
+	//		} else {
+	//			vip_expiry_date = vipInfo[0].EndTime
+	//		}
+	//	} else {
+	//		vip_expiry_date = ""
+	//	}
+	//
+	//}
 }
 
 func ToOrdersInfo(c *gin.Context) {
