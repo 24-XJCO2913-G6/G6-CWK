@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/websocket"
 	. "main/backend/handlers"
 	. "main/backend/models"
+	"net/http"
 )
 
 func main() {
@@ -121,6 +122,12 @@ func main() {
 
 		// 用户相关
 		{
+			// 返回所有用户
+			appGroup.GET("/users", func(c *gin.Context) {
+				users := AllUsers()
+				c.JSON(http.StatusBadRequest, gin.H{"users": users})
+			})
+
 			// 获取用户主页
 			appGroup.GET("/profile/:uid", ToProfile_app)
 
@@ -176,22 +183,30 @@ func main() {
 	}
 	backGroup := engine.Group("/admin")
 	{
-		// 审核帖子
-		backGroup.POST("/pass/:Vid")
+		// 审核通过帖子
+		backGroup.POST("/pass/:Vid", ToPassVipBlog)
 
 		// 删除帖子
-		backGroup.DELETE("/delete/:Vid")
+		backGroup.POST("/delete/:Vid", ToDeleteVipBlog)
 
 		// 主页
-		backGroup.GET("/index")
+		backGroup.GET("/index", ToIndexAdmin)
 
-		// 收入预测
+		// TODO 收入预测
 		backGroup.GET("/dashboard")
 		//backGroup.POST("/blogCheck", ToPostCheck)
 
-		// 获取用户信息
-		backGroup.GET("user")
+		// TODO 获取用户信息
+		backGroup.GET("/users", ToUsersInfo)
 
+		// 获取订单信息
+		backGroup.GET("/orders", ToOrdersInfo)
+
+		// TODO 获取待审核帖子信息
+		backGroup.GET("/pendings", ToPendingsInfo)
+
+		// 获取logs信息
+		backGroup.GET("/logs", ToLogsInfo)
 	}
 	err := engine.Run()
 	if err != nil {
