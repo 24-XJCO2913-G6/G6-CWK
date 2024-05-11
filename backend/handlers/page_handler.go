@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	. "main/backend/models"
 	"net/http"
@@ -58,8 +59,8 @@ func ToIndex_app(c *gin.Context) {
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 
-	//fmt.Println(Uid)
-	//fmt.Println(aToken)
+	fmt.Println(Uid)
+	fmt.Println(aToken)
 
 	isVip, _ := IsVip(Uid)
 	blogcount, _ := BlogCount(Uid)
@@ -136,10 +137,12 @@ func ToPublish_app(c *gin.Context) {
 	var Uid_tmp string
 	if aToken == "" {
 		Uid_tmp = "-1"
+		c.JSON(http.StatusOK, gin.H{"error": "Blog upload unsuccessfully."})
 	} else {
 		Claim, err := CheckToken(aToken)
 		if err != nil {
 			Uid_tmp = "-1"
+			c.JSON(http.StatusOK, gin.H{"error": "Blog upload unsuccessfully."})
 		} else {
 			Uid_tmp = Claim.Uid
 		}
@@ -178,28 +181,21 @@ func ToLike_app(c *gin.Context) {
 	var Uid_tmp string
 	if aToken == "" {
 		Uid_tmp = "-1"
+		c.JSON(http.StatusOK, gin.H{"error": "Like unsuccessfully."})
 	} else {
 		Claim, err := CheckToken(aToken)
 		if err != nil {
 			Uid_tmp = "-1"
+			c.JSON(http.StatusOK, gin.H{"error": "Like unsuccessfully."})
 		} else {
 			Uid_tmp = Claim.Uid
 		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
-	type LikeData struct {
-		Bid string `json:"post_id"`
-	}
-	var likeData LikeData
-	w := c.Writer
-	r := c.Request
-	if err := json.NewDecoder(r.Body).Decode(&likeData); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+	likeBid := c.Param("Bid")
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
-	Bid, _ := strconv.ParseInt(likeData.Bid, 10, 64)
+	Bid, _ := strconv.ParseInt(likeBid, 10, 64)
 	Lid1 := AddLike(Uid, Bid, timeString)
 	err1 := Db.Where("uid = ?", Uid).Find(&user)
 	if err1 != nil {
@@ -227,28 +223,22 @@ func ToCollect_app(c *gin.Context) {
 	var Uid_tmp string
 	if aToken == "" {
 		Uid_tmp = "-1"
+		c.JSON(http.StatusOK, gin.H{"error": "Collect unsuccessfully."})
 	} else {
 		Claim, err := CheckToken(aToken)
 		if err != nil {
 			Uid_tmp = "-1"
+			c.JSON(http.StatusOK, gin.H{"error": "Collect unsuccessfully."})
 		} else {
 			Uid_tmp = Claim.Uid
 		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
+	collectBid := c.Param("Bid")
+
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
-	type CollectData struct {
-		Bid string `json:"post_id"`
-	}
-	var collectData CollectData
-	w := c.Writer
-	r := c.Request
-	if err := json.NewDecoder(r.Body).Decode(&collectData); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	Bid, _ := strconv.ParseInt(collectData.Bid, 10, 64)
+	Bid, _ := strconv.ParseInt(collectBid, 10, 64)
 	Cid1 := AddCollect(Uid, Bid, timeString)
 	err1 := Db.Where("uid = ?", Uid).Find(&user)
 	if err1 != nil {
@@ -285,21 +275,13 @@ func ToReview_app(c *gin.Context) {
 		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
-	type ReviewData struct {
-		Bid     string `json:"post_id"`
-		Content string `json:"commentContent"`
-	}
-	var reviewData ReviewData
-	w := c.Writer
-	r := c.Request
-	if err := json.NewDecoder(r.Body).Decode(&reviewData); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+	reviewBid := c.Param("Bid")
+	content := c.PostForm("commentContent")
+
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
-	Bid, _ := strconv.ParseInt(reviewData.Bid, 10, 64)
-	Rid1 := AddReview(Uid, Bid, timeString, reviewData.Content)
+	Bid, _ := strconv.ParseInt(reviewBid, 10, 64)
+	Rid1 := AddReview(Uid, Bid, timeString, content)
 	err1 := Db.Where("uid = ?", Uid).Find(&user)
 	if err1 != nil {
 		return
@@ -325,10 +307,12 @@ func ToFollow_app(c *gin.Context) {
 	var Uid_tmp string
 	if aToken == "" {
 		Uid_tmp = "-1"
+		c.JSON(http.StatusOK, gin.H{"error": "Follow unsuccessfully."})
 	} else {
 		Claim, err := CheckToken(aToken)
 		if err != nil {
 			Uid_tmp = "-1"
+			c.JSON(http.StatusOK, gin.H{"error": "Follow unsuccessfully."})
 		} else {
 			Uid_tmp = Claim.Uid
 		}
@@ -336,17 +320,8 @@ func ToFollow_app(c *gin.Context) {
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
-	type FollowData struct {
-		Uid string `json:"post_id"`
-	}
-	var followData FollowData
-	w := c.Writer
-	r := c.Request
-	if err := json.NewDecoder(r.Body).Decode(&followData); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	FollowUid, _ := strconv.ParseInt(followData.Uid, 10, 64)
+	followUid := c.Param("Uid")
+	FollowUid, _ := strconv.ParseInt(followUid, 10, 64)
 	Fid := AddFollow(FollowUid, Uid, timeString)
 	if Fid == -1 {
 		c.JSON(http.StatusOK, gin.H{"error": "Follow unsuccessfully."})
