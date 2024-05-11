@@ -518,7 +518,7 @@ func ToProfile_app(c *gin.Context) {
 	tmp_blogs, _ := BlogDisplay(Uid)
 	var blogs []Blog_display
 	for _, blog := range tmp_blogs {
-		if blog.Bid == Uid {
+		if blog.AuthorId == Uid {
 			blogs = append(blogs, blog)
 		}
 	}

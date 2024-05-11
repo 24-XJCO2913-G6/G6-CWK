@@ -106,7 +106,7 @@ func GetFriendsBlogs(uid int64) ([]Blog_display, error) {
 
 		for _, blog := range tmp_blogs {
 			for _, friend := range friends {
-				if blog.Bid == friend.Uid {
+				if blog.AuthorId == friend.Uid {
 					blogs = append(blogs, blog)
 				}
 			}
