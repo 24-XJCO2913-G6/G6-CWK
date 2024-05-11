@@ -83,10 +83,7 @@ func main() {
 		webGroup.GET("/notifications", ToNotifications)
 		webGroup.GET("/setting", ToSetting)
 		webGroup.GET("/ws", ToWs)
-		webGroup.GET("/post_detail/:Id", func(c *gin.Context) {
-			Id := c.Param("Id")
-			ToPostDetails(Id, c)
-		})
+		webGroup.GET("/post_detail/:Id", ToPostDetails)
 	}
 
 	appGroup := engine.Group("/app")
@@ -157,10 +154,7 @@ func main() {
 		// 帖子相关
 		{
 			// 查看帖子详细信息
-			appGroup.GET("/post_detail/:Id", func(c *gin.Context) {
-				Id := c.Param("Id")
-				ToPostDetails_app(Id, c)
-			})
+			appGroup.GET("/post_detail/:Id", ToPostDetails_app)
 
 			// 首页对帖子标题或内容进行查询
 			appGroup.GET("/search/:text", ToSearchedBlogs)

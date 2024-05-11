@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	. "main/backend/models"
@@ -500,22 +499,13 @@ func TouploadInfo_app(c *gin.Context) {
 		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
-	type UserInfoData struct {
-		Born     string `json:"born"`
-		Status   string `json:"status"`
-		Job      string `json:"job"`
-		LivesIn  string `json:"livesin"`
-		JoinedOn string `json:"joinedon"`
-		Email    string `json:"email"`
-	}
-	var userInfoData UserInfoData
-	w := c.Writer
-	r := c.Request
-	if err := json.NewDecoder(r.Body).Decode(&userInfoData); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	Did := AddUserInfo(Uid, userInfoData.Born, userInfoData.Status, userInfoData.Job, userInfoData.LivesIn, userInfoData.JoinedOn, userInfoData.Email)
+	Born := c.PostForm("born")
+	Status := c.PostForm("status")
+	Job := c.PostForm("job")
+	LivesIn := c.PostForm("livesin")
+	JoinedOn := c.PostForm("joinedon")
+	Email := c.PostForm("email")
+	Did := AddUserInfo(Uid, Born, Status, Job, LivesIn, JoinedOn, Email)
 	clientIP := c.ClientIP()
 	userAgent := c.Request.UserAgent()
 	currentTime := time.Now()
@@ -699,7 +689,8 @@ func ToWs(c *gin.Context) {
 	wshandler(c.Writer, c.Request)
 }
 
-func ToPostDetails(Id string, c *gin.Context) {
+func ToPostDetails(c *gin.Context) {
+	Id := c.Param("Id")
 	aToken := c.GetHeader("aToken")
 	var Uid_tmp string
 	if aToken == "" {
@@ -728,8 +719,9 @@ func ToPostDetails(Id string, c *gin.Context) {
 	})
 }
 
-func ToPostDetails_app(Id string, c *gin.Context) {
+func ToPostDetails_app(c *gin.Context) {
 	aToken := c.GetHeader("aToken")
+	Id := c.Param("Id")
 	var Uid_tmp string
 	if aToken == "" {
 		Uid_tmp = "-1"
