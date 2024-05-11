@@ -266,9 +266,7 @@ func DashboardW(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"dataWeek":  IncomeW
-	})
+	c.JSON(http.StatusOK, gin.H{"dataWeek":  IncomeW})
 }
 
 func DashboardM(c *gin.Context) {
@@ -277,9 +275,7 @@ func DashboardM(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"dataMonth": IncomeM,
-	})
+	c.JSON(http.StatusOK, gin.H{"dataMonth": IncomeM})
 }
 func DashboardY(c *gin.Context) {
 	IncomeY, err := IncomeEstYear()
