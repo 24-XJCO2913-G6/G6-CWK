@@ -91,29 +91,29 @@ func BlogPublish(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Blog publish Successfully"})
 }
 
-func GetFriendsBlogs(uid int64) ([]Blog, error) {
+func GetFriendsBlogs(uid int64) ([]Blog_display, error) {
 	var friends []Friend
-	var allBlogs []Blog
+	var blogs []Blog_display
 
 	// 获取指定用户的所有朋友
 	friends, err := GetFriends(uid)
 	if err != nil {
 		return nil, err
 	}
-
+	tmp_blogs, _ := BlogDisplay(uid)
 	// 遍历每个朋友，查询其发布的所有博客
 	if len(friends) != 0 {
-		for _, friend := range friends {
-			var blogs []Blog
-			err := Db.Where("uid = ?", friend.Uid).Find(&blogs)
-			if err != nil {
-				return nil, err
+
+		for _, blog := range tmp_blogs {
+			for _, friend := range friends {
+				if blog.Bid == friend.Uid {
+					blogs = append(blogs, blog)
+				}
 			}
-			allBlogs = append(allBlogs, blogs...)
 		}
 	}
 
-	return allBlogs, nil
+	return blogs, nil
 }
 
 func GetLikedMess(Uid int64) ([]LikedApp, error) {

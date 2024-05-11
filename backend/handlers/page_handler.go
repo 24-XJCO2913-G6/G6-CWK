@@ -515,8 +515,14 @@ func ToProfile_app(c *gin.Context) {
 	likelist, _ := GetLike(Uid)
 	journey, _ := GetTracks(Uid)
 	Info, _ := GetInfo(Uid)
-	blogs, _ := GetBlogs(Uid)
-	//
+	tmp_blogs, _ := BlogDisplay(Uid)
+	var blogs []Blog_display
+	for _, blog := range tmp_blogs {
+		if blog.Bid == Uid {
+			blogs = append(blogs, blog)
+		}
+	}
+
 	//fmt.Println("---------")
 	//fmt.Println(Info)
 	//fmt.Println("---------")
