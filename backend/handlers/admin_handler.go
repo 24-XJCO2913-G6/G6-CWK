@@ -64,12 +64,36 @@ func ToIndexAdmin(c *gin.Context) {
 	TotalUsers := len(users)
 	TotalBlogs := len(blogs)
 
+	var tracks []Track
+	err = Db.Find(&tracks)
+	if err != nil || len(tracks) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	drivingCount := 0
+	runningCount := 0
+	cyclingCount := 0
+
+	for _, track := range tracks {
+		if track.Mode == "driving" {
+			drivingCount += 1
+		} else if track.Mode == "cycling" {
+			cyclingCount += 1
+		} else {
+			runningCount += 1
+
+		}
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"totalIncome":   Income,
 		"todayNewUsers": TodayUsers,
 		"totalUsers":    TotalUsers,
 		"todayPosts":    TodayBlogs,
 		"totalPosts":    TotalBlogs,
+		"drivingCount":  drivingCount,
+		"runningCount":  runningCount,
+		"cyclingCount":  cyclingCount,
 	})
 }
 
@@ -137,7 +161,7 @@ func ToUsersInfo(c *gin.Context) {
 		}
 		userInfos = append(userInfos, userInfo)
 	}
-	c.JSON(http.StatusOK, gin.H{"data": userInfos})
+	c.JSON(http.StatusOK, gin.H{"users": userInfos})
 }
 
 func ToOrdersInfo(c *gin.Context) {
@@ -234,4 +258,25 @@ func ToDeleteVipBlog(c *gin.Context) {
 		state = 400
 	}
 	c.JSON(state, gin.H{"message": meg})
+}
+
+func Dashboard(c *gin.Context) {
+	IncomeW, err := IncomeEstWeek()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+	}
+	IncomeM, err := IncomeEstMonth()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+	}
+	IncomeY, err := IncomeEstYear()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"dataWeek":  IncomeW,
+		"dataMonth": IncomeM,
+		"dataYear":  IncomeY,
+	})
 }
