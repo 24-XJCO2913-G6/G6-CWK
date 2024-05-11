@@ -258,7 +258,7 @@ Header START -->
                                 class="bi bi-gear fa-fw me-2"></i>Settings & Privacy</a></li>
                       
                         <li class="dropdown-divider"></li>
-                        {{if eq .message 'user'}}
+                        {{if eq .message "user"}}
                         <li><a class="dropdown-item bg-danger-soft-hover" href="/web/logout"><i
                             class="bi bi-power fa-fw me-2"></i>Sign Out</a></li>
                     <li>
@@ -375,7 +375,7 @@ Header END -->
                                         >
                                             <!-- User stat item -->
                                             <div>
-                                                <h6 class="mb-0">256</h6>
+                                                <h6 class="mb-0">{{.BlogCount}}</h6>
                                                 <small>Post</small>
                                             </div>
                                             <!-- Divider -->
@@ -548,7 +548,7 @@ Header END -->
                                     class="card border border-2 border-dashed h-150px shadow-none d-flex align-items-center justify-content-center text-center"
                             >
                                 <div>
-                                    {{if eq .message 'visitor'}}
+                                    {{if eq .message "visitor"}}
                                     <a
                                     class="stretched-link btn btn-light rounded-circle icon-md"
                                     href="/web/login" 
@@ -1043,7 +1043,7 @@ Header END -->
                             </div>
                             <!-- Card header END -->
 
-                         {{if eq .message 'visitor'}}   
+                         {{if eq .message "visitor"}}
                             <!-- Card body START -->
                          <p style="margin-left: 1.25em; margin-top: 20px;">Please log in!</p>
                          {{else}}
