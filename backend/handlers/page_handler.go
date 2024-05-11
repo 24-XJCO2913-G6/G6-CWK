@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	. "main/backend/models"
 	"net/http"
@@ -140,6 +141,7 @@ func ToPublish_app(c *gin.Context) {
 		return
 	} else {
 		Claim, err := CheckToken(aToken)
+		fmt.Println(err)
 		if err != nil {
 			Uid_tmp = "-1"
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Blog upload unsuccessfully."})
@@ -149,25 +151,20 @@ func ToPublish_app(c *gin.Context) {
 		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
-	type BlogApp struct {
-		Title      string `json:"title"`
-		Visibility string `json:"visibility"`
-		Content    string `json:"content"`
-		Tid        string `json:"route_id"`
-		Picture    string `json:"imgs"`
-	}
+
+	Title := c.PostForm("title")
+	Visibility_tmp := c.PostForm("visibility")
+	Content := c.PostForm("content")
+	Tid_tmp := c.PostForm("route_id")
+	Picture := c.PostForm("imgs")
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
-	var blogApp BlogApp
-	w := c.Writer
-	r := c.Request
-	if err := json.NewDecoder(r.Body).Decode(&blogApp); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	Visibility, _ := strconv.ParseInt(blogApp.Visibility, 10, 64)
-	Tid, _ := strconv.ParseInt(blogApp.Tid, 10, 64)
-	Bid := AddBlog(Uid, timeString, Visibility, blogApp.Content, blogApp.Picture, blogApp.Title, Tid)
+
+	Visibility, _ := strconv.ParseInt(Visibility_tmp, 10, 64)
+	Tid, _ := strconv.ParseInt(Tid_tmp, 10, 64)
+
+	fmt.Println(Uid, timeString, Visibility, Content, Picture, Title, Tid)
+	Bid := AddBlog(Uid, timeString, Visibility, Content, Picture, Title, Tid)
 	clientIP := c.ClientIP()
 	userAgent := c.Request.UserAgent()
 	LoId := AddLog(Uid, "PostBlog", timeString, clientIP, userAgent)
@@ -180,8 +177,6 @@ func ToPublish_app(c *gin.Context) {
 
 func ToLike_app(c *gin.Context) {
 	// 根据请求携带的aToken判断添加路径的用户
-	var user User
-	var blog Blog
 	aToken := c.GetHeader("aToken")
 	var Uid_tmp string
 	if aToken == "" {
@@ -204,18 +199,25 @@ func ToLike_app(c *gin.Context) {
 	timeString := currentTime.Format("2006-01-02 15:04:05")
 	Bid, _ := strconv.ParseInt(likeBid, 10, 64)
 	Lid1 := AddLike(Uid, Bid, timeString)
-	err1 := Db.Where("uid = ?", Uid).Find(&user)
-	if err1 != nil {
-		return
+
+	user := &User{Uid: Uid}
+	blog := &Blog{Id: Bid}
+
+	has, err1 := Db.Get(user)
+	if !has || err1 != nil {
+		//return
 	}
 	username := user.Name
 	photo := user.ProfilePhot
 	blogTitle := blog.Title
-	err2 := Db.Where("bid = ?", Bid).Find(&blog)
-	if err2 != nil {
-		return
+	has, err2 := Db.Get(blog)
+	if !has || err2 != nil {
+		//return
 	}
 	authorId := blog.Uid
+
+	//fmt.Println(authorId, username, photo, blogTitle, timeString)
+
 	Lid2 := AddLikeApp(authorId, username, photo, blogTitle, timeString)
 	clientIP := c.ClientIP()
 	userAgent := c.Request.UserAgent()
@@ -228,8 +230,6 @@ func ToLike_app(c *gin.Context) {
 }
 
 func ToCollect_app(c *gin.Context) {
-	var user User
-	var blog Blog
 	aToken := c.GetHeader("aToken")
 	var Uid_tmp string
 	if aToken == "" {
@@ -253,18 +253,23 @@ func ToCollect_app(c *gin.Context) {
 	timeString := currentTime.Format("2006-01-02 15:04:05")
 	Bid, _ := strconv.ParseInt(collectBid, 10, 64)
 	Cid1 := AddCollect(Uid, Bid, timeString)
-	err1 := Db.Where("uid = ?", Uid).Find(&user)
-	if err1 != nil {
-		return
+
+	user := &User{Uid: Uid}
+	blog := &Blog{Id: Bid}
+
+	has, err1 := Db.Get(user)
+	if !has || err1 != nil {
+		//return
 	}
 	username := user.Name
 	photo := user.ProfilePhot
 	blogTitle := blog.Title
-	err2 := Db.Where("bid = ?", Bid).Find(&blog)
-	if err2 != nil {
-		return
+	has, err2 := Db.Get(blog)
+	if !has || err2 != nil {
+		//return
 	}
 	authorId := blog.Uid
+
 	Cid2 := AddCollectApp(authorId, username, photo, blogTitle, timeString)
 	clientIP := c.ClientIP()
 	userAgent := c.Request.UserAgent()
@@ -277,8 +282,6 @@ func ToCollect_app(c *gin.Context) {
 }
 
 func ToReview_app(c *gin.Context) {
-	var user User
-	var blog Blog
 	aToken := c.GetHeader("aToken")
 	var Uid_tmp string
 	if aToken == "" {
@@ -299,18 +302,23 @@ func ToReview_app(c *gin.Context) {
 	timeString := currentTime.Format("2006-01-02 15:04:05")
 	Bid, _ := strconv.ParseInt(reviewBid, 10, 64)
 	Rid1 := AddReview(Uid, Bid, timeString, content)
-	err1 := Db.Where("uid = ?", Uid).Find(&user)
-	if err1 != nil {
-		return
+
+	user := &User{Uid: Uid}
+	blog := &Blog{Id: Bid}
+
+	has, err1 := Db.Get(user)
+	if !has || err1 != nil {
+		//return
 	}
 	username := user.Name
 	photo := user.ProfilePhot
 	blogTitle := blog.Title
-	err2 := Db.Where("bid = ?", Bid).Find(&blog)
-	if err2 != nil {
-		return
+	has, err2 := Db.Get(blog)
+	if !has || err2 != nil {
+		//return
 	}
 	authorId := blog.Uid
+
 	Rid2 := AddReviewApp(authorId, username, photo, blogTitle, timeString)
 	clientIP := c.ClientIP()
 	userAgent := c.Request.UserAgent()
