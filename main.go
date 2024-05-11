@@ -83,10 +83,7 @@ func main() {
 		webGroup.GET("/notifications", ToNotifications)
 		webGroup.GET("/setting", ToSetting)
 		webGroup.GET("/ws", ToWs)
-		webGroup.GET("/post_detail/:Id", func(c *gin.Context) {
-			Id := c.Param("Id")
-			ToPostDetails(Id, c)
-		})
+		webGroup.GET("/post_detail/:Id", ToPostDetails)
 	}
 
 	appGroup := engine.Group("/app")
@@ -117,6 +114,10 @@ func main() {
 
 			// 收藏帖子
 			appGroup.POST("/collect/:Bid", ToCollect_app)
+			//添加vip
+			appGroup.POST("/Vip/:Uid", ToVip_app)
+			//取消vip
+			appGroup.POST("/cancelVip/:Uid", ToCancelVip_app)
 
 		}
 
@@ -153,10 +154,7 @@ func main() {
 		// 帖子相关
 		{
 			// 查看帖子详细信息
-			appGroup.GET("/post_detail/:Id", func(c *gin.Context) {
-				Id := c.Param("Id")
-				ToPostDetails_app(Id, c)
-			})
+			appGroup.GET("/post_detail/:Id", ToPostDetails_app)
 
 			// 首页对帖子标题或内容进行查询
 			appGroup.GET("/search/:text", ToSearchedBlogs)
@@ -178,7 +176,6 @@ func main() {
 		appGroup.GET("/blogPublishTrack", ToPublishTrack_app)
 
 		// 切换到VIP界面，并返回当前VIP的到期时间
-		appGroup.GET("/vip", ToVip_app)
 
 	}
 	backGroup := engine.Group("/admin")
