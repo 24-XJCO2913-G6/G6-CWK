@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	. "main/backend/models"
 	"sort"
 	"strconv"
@@ -158,7 +157,7 @@ func BlogDisplay(Uid int64) ([]Blog_display, error) {
 			photo := authors[0].ProfilePhot
 			blog_dis := Blog_display{Bid: blog.Id, Author: author, Photo: photo, Pub_time: blog.Pub_time, LikeCount: int64(len(likeCount)), CollectCount: int64(len(collectCount)), CommentCount: int64(len(commentCount)), Visibility: blog.Visibility,
 				Content: blog.Content, Picture: blog.Picture, Title: blog.Title, IsFollow: isFollow, Coordinates: track.Coordinates, AuthorId: Aid}
-			fmt.Println(blog_dis)
+			//fmt.Println(blog_dis)
 			blogs_dis = append(blogs_dis, blog_dis)
 			//fmt.Println("---------------")
 		}
