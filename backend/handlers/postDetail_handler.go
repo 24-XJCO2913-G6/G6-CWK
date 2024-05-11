@@ -87,7 +87,11 @@ func BlogPublish(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"error": "Need description"})
 		return
 	}
-	AddBlog(Uid, timeString, visibility, description, photos, title, Tid)
+	if visibility == 0 {
+		AddVipBlog(Uid, timeString, visibility, description, photos, title, Tid)
+	} else {
+		AddBlog(Uid, timeString, visibility, description, photos, title, Tid)
+	}
 	c.JSON(http.StatusOK, gin.H{"message": "Blog publish Successfully"})
 }
 
