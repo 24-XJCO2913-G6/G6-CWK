@@ -139,6 +139,15 @@ func BlogDisplay(Uid int64) ([]Blog_display, error) {
 					isFollow = 1
 				}
 			}
+
+			var likeCount []Like
+			var collectCount []Collect
+			var commentCount []Review
+
+			_ = Db.Where("bid = ?", blog.Id).Find(&likeCount)
+			_ = Db.Where("bid = ?", blog.Id).Find(&collectCount)
+			_ = Db.Where("bid = ?", blog.Id).Find(&commentCount)
+
 			has, err4 := Db.Where("tid = ?", blog.Tid).Get(&track)
 			if !has {
 				return []Blog_display{}, err4
@@ -147,7 +156,7 @@ func BlogDisplay(Uid int64) ([]Blog_display, error) {
 			//fmt.Println(track)
 			author := authors[0].Name
 			photo := authors[0].ProfilePhot
-			blog_dis := Blog_display{Author: author, Photo: photo, Pub_time: blog.Pub_time, Visibility: blog.Visibility,
+			blog_dis := Blog_display{Bid: blog.Id, Author: author, Photo: photo, Pub_time: blog.Pub_time, LikeCount: int64(len(likeCount)), CollectCount: int64(len(collectCount)), CommentCount: int64(len(commentCount)), Visibility: blog.Visibility,
 				Content: blog.Content, Picture: blog.Picture, Title: blog.Title, IsFollow: isFollow, Coordinates: track.Coordinates, AuthorId: Aid}
 			fmt.Println(blog_dis)
 			blogs_dis = append(blogs_dis, blog_dis)
