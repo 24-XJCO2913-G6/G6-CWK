@@ -25,8 +25,9 @@ func UpdateTrack(c *gin.Context) {
 	Duration := c.PostForm("Duration")
 	Distance := c.PostForm("Distance")
 	Coordinates := c.PostForm("Coordinates")
+	Mode := c.PostForm("Mode")
 
-	Tid := AddTrack(Uid, StrDate, StrTime, EndDate, EndTime, Duration, Distance, Coordinates)
+	Tid := AddTrack(Uid, StrDate, StrTime, EndDate, EndTime, Duration, Distance, Coordinates, Mode)
 	if Tid == -1 {
 		c.JSON(http.StatusOK, gin.H{"error": "Track update unsuccessfully."})
 	}
