@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="tsx" name="useProTable">
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { Delete, Download } from "@element-plus/icons-vue";
 import { User } from "@/api/interface";
 import { useHandleData } from "@/hooks/useHandleData";
@@ -43,81 +43,86 @@ import {
 
   // getUserGender
 } from "@/api/modules/user";
+// 导入 API 函数
+import { getOrderList } from "@/api/modules/order";
+// 响应式引用订单数据
+const orders = ref([]);
 
-const orders = [
-  {
-    id: 1,
-    name: "Alice",
-    order_time: "2024-04-02",
-    order_content: "VIP for a month",
-    order_price: 29.9,
-    order_state: "Paid"
-  },
-  {
-    id: 2,
-    name: "Bob",
-    order_time: "2024-04-12",
-    order_content: "VIP for a year",
-    order_price: 199.9,
-    order_state: "Refunded,"
-  },
-  {
-    id: 3,
-    name: "Charlie",
-    order_time: "2024-03-10",
-    order_content: "Permanent VIP",
-    order_price: 999,
-    order_state: "Paid"
-  },
-  {
-    id: 4,
-    name: "David",
-    order_time: "2024-05-01",
-    order_content: "VIP for a quarter",
-    order_price: 69.9,
-    order_state: "Paid"
-  },
-  {
-    id: 5,
-    name: "Eve",
-    order_time: "2024-03-25",
-    order_content: "VIP for a year",
-    order_price: 199.9,
-    order_state: "Paid"
-  },
-  {
-    id: 6,
-    name: "Frank",
-    order_time: "2024-04-20",
-    order_content: "Permanent VIP",
-    order_price: 999,
-    order_state: "Paid"
-  },
-  {
-    id: 7,
-    name: "Grace",
-    order_time: "2024-03-15",
-    order_content: "VIP for a month",
-    order_price: 29.9,
-    order_state: "Paid"
-  },
-  {
-    id: 8,
-    name: "Henry",
-    order_time: "2024-05-03",
-    order_content: "VIP for a year",
-    order_price: 199.9,
-    order_state: "Refunded"
-  },
-  {
-    id: 9,
-    name: "Ivy",
-    order_time: "2024-04-05",
-    order_content: "VIP for a quarter",
-    order_price: 69.9,
-    order_state: "Paid"
-  }
-];
+// const orders = [
+//   {
+//     id: 1,
+//     name: "Alice",
+//     order_time: "2024-04-02",
+//     order_content: "VIP for a month",
+//     order_price: 29.9,
+//     order_state: "Paid"
+//   },
+//   {
+//     id: 2,
+//     name: "Bob",
+//     order_time: "2024-04-12",
+//     order_content: "VIP for a year",
+//     order_price: 199.9,
+//     order_state: "Refunded,"
+//   },
+//   {
+//     id: 3,
+//     name: "Charlie",
+//     order_time: "2024-03-10",
+//     order_content: "Permanent VIP",
+//     order_price: 999,
+//     order_state: "Paid"
+//   },
+//   {
+//     id: 4,
+//     name: "David",
+//     order_time: "2024-05-01",
+//     order_content: "VIP for a quarter",
+//     order_price: 69.9,
+//     order_state: "Paid"
+//   },
+//   {
+//     id: 5,
+//     name: "Eve",
+//     order_time: "2024-03-25",
+//     order_content: "VIP for a year",
+//     order_price: 199.9,
+//     order_state: "Paid"
+//   },
+//   {
+//     id: 6,
+//     name: "Frank",
+//     order_time: "2024-04-20",
+//     order_content: "Permanent VIP",
+//     order_price: 999,
+//     order_state: "Paid"
+//   },
+//   {
+//     id: 7,
+//     name: "Grace",
+//     order_time: "2024-03-15",
+//     order_content: "VIP for a month",
+//     order_price: 29.9,
+//     order_state: "Paid"
+//   },
+//   {
+//     id: 8,
+//     name: "Henry",
+//     order_time: "2024-05-03",
+//     order_content: "VIP for a year",
+//     order_price: 199.9,
+//     order_state: "Refunded"
+//   },
+//   {
+//     id: 9,
+//     name: "Ivy",
+//     order_time: "2024-04-05",
+//     order_content: "VIP for a quarter",
+//     order_price: 69.9,
+//     order_state: "Paid"
+//   }
+// ];
+
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 
@@ -154,6 +159,19 @@ const columns = reactive<ColumnProps<User.ResUserList>[]>([
     label: "Order state"
   }
 ]);
+
+// 加载订单数据
+const loadOrders = async () => {
+  try {
+    const response = await getOrderList();
+    orders.value = response.data;
+  } catch (error) {
+    ElMessage.error("Failed to load orders");
+  }
+};
+
+// 组件挂载时调用
+onMounted(loadOrders);
 
 // 表格拖拽排序
 const sortTable = ({ newIndex, oldIndex }: { newIndex?: number; oldIndex?: number }) => {

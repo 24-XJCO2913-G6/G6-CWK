@@ -14,12 +14,12 @@ import axios from "axios";
 // };
 export const getUserList = () => {
   // 请替换成你的实际 API 地址
-  const url = "/api/users";
+  const url = "http://120.46.81.37:8080/admin/user";
   return axios.get(url);
 };
 
 export async function getUserDetailById(userId) {
-  const response = await axios.get(`/api/users/${userId}`);
+  const response = await axios.get(`http://120.46.81.37:8080/admin/users${userId}`);
   return response.data;
 }
 

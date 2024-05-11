@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="tsx" name="useProTable">
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { Delete, Search, Download } from "@element-plus/icons-vue";
 import { User } from "@/api/interface";
 import { useHandleData } from "@/hooks/useHandleData";
@@ -42,7 +42,7 @@ import PostDetailDialog from "@/components/ImportExcel/index.vue";
 // import PostDetailDialog from "@/views/proTable/components/PostDetailDialog.vue";
 // import UserDrawer from "@/views/proTable/components/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-
+import axios from "axios";
 import {
   deleteUser,
   exportUserInfo
@@ -50,10 +50,10 @@ import {
   // getUserGender
 } from "@/api/modules/user";
 
-// 定义 selectedPost 响应式引用
-const selectedPost = ref(null);
+// const postsApiEndpoint = '/api/posts';
 
-const posts = [
+// 使用 ref 创建响应式引用
+const posts = ref([
   {
     id: 1,
     name: "Yodo",
@@ -81,7 +81,42 @@ const posts = [
     post_state: "checked",
     track_id: "3"
   }
-];
+]);
+const selectedPost = ref(null);
+const postDialogVisible = ref(false);
+
+// // 定义 selectedPost 响应式引用
+// const selectedPost = ref(null);
+
+// const posts = [
+//   {
+//     id: 1,
+//     name: "Yodo",
+//     post_time: "2024-04-02",
+//     post_mode: "VIP only",
+//     post_title: "Nice day to have a walk",
+//     post_state: "checked",
+//     track_id: "1"
+//   },
+//   {
+//     id: 2,
+//     name: "Veroooo",
+//     post_time: "2024-04-13",
+//     post_mode: "VIP only",
+//     post_title: "Running on the playground",
+//     post_state: "checked",
+//     track_id: "2"
+//   },
+//   {
+//     id: 3,
+//     name: "Peace of summer",
+//     post_time: "2024-04-06",
+//     post_mode: "VIP only",
+//     post_title: "I like lovely swan",
+//     post_state: "checked",
+//     track_id: "3"
+//   }
+// ];
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 
@@ -124,6 +159,42 @@ const columns = reactive<ColumnProps<User.ResUserList>[]>([
   { prop: "operation", label: "Operations", fixed: "right", width: 200 }
 ]);
 
+// 从后端获取帖子数据的函数
+const fetchPosts = async () => {
+  try {
+    const response = await axios.get("http://120.46.81.37:8080/admin/pending");
+    posts.value = response.data; // 假设返回的数据是帖子列表
+  } catch (error) {
+    console.error("Error fetching posts: ", error);
+  }
+};
+
+// 获取帖子详情的函数
+const getPostDetail = async postId => {
+  try {
+    const response = await axios.get(`http://120.46.81.37:8080/admin/pendingDetail/${postId}`);
+    return response.data; // 假设返回的数据包含帖子的详细信息
+  } catch (error) {
+    console.error("Error fetching post detail: ", error);
+    throw error;
+  }
+};
+
+// 显示帖子详情对话框的方法
+const showPostDetail = async post => {
+  try {
+    const detail = await getPostDetail(post.id); // 假设帖子的 ID 是 post.id
+    selectedPost.value = detail;
+    postDialogVisible.value = true;
+  } catch (error) {
+    // 处理错误，例如显示错误消息
+    ElMessage.error("Failed to load post detail");
+  }
+};
+
+// 组件挂载时调用 fetchPosts 函数
+onMounted(fetchPosts);
+
 // 表格拖拽排序
 const sortTable = ({ newIndex, oldIndex }: { newIndex?: number; oldIndex?: number }) => {
   console.log(newIndex, oldIndex);
@@ -151,16 +222,16 @@ const downloadFile = async () => {
   );
 };
 
-// 控制 PostDetailDialog 显示的引用
-const postDialogVisible = ref(false);
+// // 控制 PostDetailDialog 显示的引用
+// const postDialogVisible = ref(false);
 
-// 显示帖子详情对话框的方法
-const showPostDetail = post => {
-  // 更新当前选中的帖子
-  selectedPost.value = post;
-  // 显示对话框
-  postDialogVisible.value = true;
-};
+// // 显示帖子详情对话框的方法
+// const showPostDetail = post => {
+//   // 更新当前选中的帖子
+//   selectedPost.value = post;
+//   // 显示对话框
+//   postDialogVisible.value = true;
+// };
 
 const closeDialog = () => {
   // 隐藏对话框

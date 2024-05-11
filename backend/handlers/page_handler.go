@@ -167,7 +167,10 @@ func ToPublish_app(c *gin.Context) {
 	Visibility, _ := strconv.ParseInt(blogApp.Visibility, 10, 64)
 	Tid, _ := strconv.ParseInt(blogApp.Tid, 10, 64)
 	Bid := AddBlog(Uid, timeString, Visibility, blogApp.Content, blogApp.Picture, blogApp.Title, Tid)
-	if Bid == -1 {
+	clientIP := c.ClientIP()
+	userAgent := c.Request.UserAgent()
+	LoId := AddLog(Uid, "PostBlog", timeString, clientIP, userAgent)
+	if Bid == -1 || LoId == -1 {
 		c.JSON(http.StatusOK, gin.H{"error": "Blog upload unsuccessfully."})
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Blog upload successfully."})
@@ -210,7 +213,10 @@ func ToLike_app(c *gin.Context) {
 	}
 	authorId := blog.Uid
 	Lid2 := AddLikeApp(authorId, username, photo, blogTitle, timeString)
-	if Lid1 == -1 || Lid2 == -1 {
+	clientIP := c.ClientIP()
+	userAgent := c.Request.UserAgent()
+	LoId := AddLog(Uid, "Like", timeString, clientIP, userAgent)
+	if Lid1 == -1 || Lid2 == -1 || LoId == -1 {
 		c.JSON(http.StatusOK, gin.H{"error": "Like unsuccessfully."})
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Like successfully."})
@@ -253,7 +259,10 @@ func ToCollect_app(c *gin.Context) {
 	}
 	authorId := blog.Uid
 	Cid2 := AddCollectApp(authorId, username, photo, blogTitle, timeString)
-	if Cid1 == -1 || Cid2 == -1 {
+	clientIP := c.ClientIP()
+	userAgent := c.Request.UserAgent()
+	LoId := AddLog(Uid, "Collect", timeString, clientIP, userAgent)
+	if Cid1 == -1 || Cid2 == -1 || LoId == -1 {
 		c.JSON(http.StatusOK, gin.H{"error": "Collect unsuccessfully."})
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Collect successfully."})
@@ -295,7 +304,10 @@ func ToReview_app(c *gin.Context) {
 	}
 	authorId := blog.Uid
 	Rid2 := AddReviewApp(authorId, username, photo, blogTitle, timeString)
-	if Rid1 == -1 || Rid2 == -1 {
+	clientIP := c.ClientIP()
+	userAgent := c.Request.UserAgent()
+	LoId := AddLog(Uid, "Review", timeString, clientIP, userAgent)
+	if Rid1 == -1 || Rid2 == -1 || LoId == -1 {
 		c.JSON(http.StatusOK, gin.H{"error": "Review unsuccessfully."})
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Review successfully."})
@@ -323,7 +335,10 @@ func ToFollow_app(c *gin.Context) {
 	followUid := c.Param("Uid")
 	FollowUid, _ := strconv.ParseInt(followUid, 10, 64)
 	Fid := AddFollow(FollowUid, Uid, timeString)
-	if Fid == -1 {
+	clientIP := c.ClientIP()
+	userAgent := c.Request.UserAgent()
+	LoId := AddLog(Uid, "Follow", timeString, clientIP, userAgent)
+	if Fid == -1 || LoId == -1 {
 		c.JSON(http.StatusOK, gin.H{"error": "Follow unsuccessfully."})
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Follow successfully."})
@@ -429,7 +444,12 @@ func TouploadInfo_app(c *gin.Context) {
 		return
 	}
 	Did := AddUserInfo(Uid, userInfoData.Born, userInfoData.Status, userInfoData.Job, userInfoData.LivesIn, userInfoData.JoinedOn, userInfoData.Email)
-	if Did == -1 {
+	clientIP := c.ClientIP()
+	userAgent := c.Request.UserAgent()
+	currentTime := time.Now()
+	timeString := currentTime.Format("2006-01-02 15:04:05")
+	LoId := AddLog(Uid, "UploadUserInfo", timeString, clientIP, userAgent)
+	if Did == -1 || LoId == -1 {
 		c.JSON(http.StatusOK, gin.H{"error": "User Info update unsuccessfully."})
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "User Info update successfully."})

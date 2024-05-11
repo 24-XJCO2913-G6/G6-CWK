@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="tsx" name="useProTable">
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { Delete, Download } from "@element-plus/icons-vue";
 import { User } from "@/api/interface";
 import { useHandleData } from "@/hooks/useHandleData";
@@ -38,7 +38,7 @@ import ProTable from "@/components/ProTable/index.vue";
 // import ImportExcel from "@/components/ImportExcel/index.vue";
 // import UserDrawer from "@/views/proTable/components/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-
+import axios from "axios";
 import {
   deleteUser,
   exportUserInfo
@@ -46,7 +46,7 @@ import {
   // getUserGender
 } from "@/api/modules/user";
 
-const users = [
+const users = ref([
   {
     date: "2024-04-22 13:34:07",
     ip_address: " 192.168.245.1",
@@ -124,7 +124,7 @@ const users = [
     user_id: 1,
     function: "delete account"
   }
-];
+]);
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 // 如果你想在请求之前对当前请求参数做一些操作，可以自定义如下函数：params 为当前所有的请求参数（包括分页），最后返回请求列表接口
@@ -174,6 +174,19 @@ const columns = reactive<ColumnProps<User.ResUserList>[]>([
 
   { prop: "operation", label: "Operations", fixed: "right", width: 200 }
 ]);
+
+const fetchLogs = async () => {
+  try {
+    const response = await axios.get("http://120.46.81.37:8080/admin/index");
+    users.value = response.data; // 假设返回的数据是日志列表
+  } catch (error) {
+    console.error("Error fetching logs: ", error);
+    ElMessage.error("Failed to load logs");
+  }
+};
+
+// 组件挂载时调用 fetchLogs 函数
+onMounted(fetchLogs);
 
 // 表格拖拽排序
 const sortTable = ({ newIndex, oldIndex }: { newIndex?: number; oldIndex?: number }) => {

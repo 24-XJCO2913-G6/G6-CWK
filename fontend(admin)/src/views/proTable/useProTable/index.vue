@@ -104,8 +104,11 @@ const columns = reactive<ColumnProps<User.ResUserList>[]>([
 // ProTable 实例
 const proTable = ref<ProTableInstance>();
 
+// // 使用 ref 创建用户数据的响应式引用
+// const users = ref([]);
+
 // 用户数据
-const users = [
+const users = ref([
   {
     id: 1,
     name: "Alice",
@@ -115,13 +118,14 @@ const users = [
     email: "123456789@qq.com",
     vip_expiry_date: "2024-04-02"
   }
-];
+]);
+
 // const users = ref([]);
 
 // 加载用户数据的函数
 const loadUsers = async () => {
   try {
-    const response = await getUserList(); // 假设这是获取用户列表的 API 调用
+    const response = await getUserList();
     users.value = response.data; // 假设返回的数据格式为 { data: [] }
     // proTable.value?.setTableData(response.data); // 假设 ProTable 组件有方法可以设置表格数据
   } catch (error) {

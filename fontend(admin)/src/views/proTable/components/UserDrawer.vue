@@ -134,7 +134,7 @@ const acceptParams = (params: DrawerProps) => {
 // 获取用户详情的方法
 const fetchUserDetail = async (userId: number) => {
   try {
-    const response = await getUserDetailById(userId); // 替换为实际的 API 调用
+    const response = await getUserDetailById(userId);
     // 更新 drawerProps.row 以显示用户详情
     drawerProps.value.row = response.data;
   } catch (error) {
