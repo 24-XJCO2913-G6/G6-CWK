@@ -1,25 +1,17 @@
 package handlers
 
 import (
-	"github.com/gin-gonic/gin"
-	"strings"
+	. "main/backend/models"
 )
 
-func GetBrowser(c *gin.Context) string {
-	userAgent := c.Request.UserAgent()
-
-	if strings.Contains(userAgent, "Firefox") {
-		return "Firefox"
-	} else if strings.Contains(userAgent, "Chrome") {
-		return "Chrome"
-	} else if strings.Contains(userAgent, "Safari") {
-		return "Safari"
-	} else if strings.Contains(userAgent, "Edge") {
-		return "Edge"
-	} else if strings.Contains(userAgent, "Opera") {
-		return "Opera"
+func GetLogs() ([]Log, error) {
+	var logs []Log
+	err := Db.Find(&logs)
+	if err != nil {
+		return []Log{}, nil
 	}
-
-	// 其他未知浏览器
-	return "Unknown/"
+	if len(logs) == 0 {
+		return []Log{}, nil
+	}
+	return logs, nil
 }
