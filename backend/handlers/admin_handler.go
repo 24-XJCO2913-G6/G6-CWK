@@ -154,14 +154,53 @@ func ToOrdersInfo(c *gin.Context) {
 }
 
 func ToPendingsInfo(c *gin.Context) {
-	//var pendingBlogs []Vip_Blog
-	//
-	//
-	//
-	//err := Db.Find(&pendingBlogs)
-	//if err!=nil || len(pendingBlogs) {
-	//	c.JSON(http.StatusOK, gin.H{"pendings": []Vip_Blog{}})
-	//}
+	var blogs []Vip_Blog
+
+	type PendingBlog struct {
+		id         int64
+		name       string
+		post_time  string
+		post_title string
+		title      string
+		content    string
+		track_id   int64
+		pathData   string
+	}
+	var pendingBlogs []PendingBlog
+
+	err := Db.Find(&blogs)
+	if err != nil || len(blogs) == 0 {
+		c.JSON(http.StatusOK, gin.H{"pendings": []PendingBlog{}})
+	}
+
+	for _, blog := range blogs {
+		var pending_blog = PendingBlog{
+			id:         blog.Vid,
+			name:       "",
+			post_time:  blog.Pub_time,
+			post_title: blog.Title,
+			title:      blog.Title,
+			content:    blog.Content,
+			track_id:   blog.Tid,
+			pathData:   "",
+		}
+
+		user := &User{Uid: blog.Uid}
+		track := &Track{Tid: blog.Tid}
+		has, err := Db.Get(user)
+		if has && err == nil {
+			pending_blog.name = user.Name
+		}
+
+		has, err = Db.Get(track)
+		if has && err == nil {
+			pending_blog.pathData = track.Coordinates
+		}
+
+		pendingBlogs = append(pendingBlogs, pending_blog)
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": pendingBlogs})
 }
 
 func ToLogsInfo(c *gin.Context) {
