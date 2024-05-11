@@ -118,7 +118,7 @@ func main() {
 			// 收藏帖子
 			appGroup.POST("/collect/:Bid", ToCollect_app)
 			//添加vip
-			appGroup.POST("/cancelVip/:Uid", ToVip_app)
+			appGroup.POST("/Vip/:Uid", ToVip_app)
 			//取消vip
 			appGroup.POST("/cancelVip/:Uid", ToCancelVip_app)
 
