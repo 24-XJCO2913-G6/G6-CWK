@@ -107,33 +107,33 @@ func RankCheck(Uid int64) ([]Records, error) {
 
 func BlogDisplay(Uid int64) ([]Blog_display, error) {
 	var blogs []Blog
-	var authors []User
 	var blogs_dis []Blog_display
-	var track Track
-	var followed Follow
-	var isFollow int64
 	err2 := Db.Find(&blogs)
 	if err2 != nil {
 		return []Blog_display{}, err2
 	}
+	//fmt.Println(blogs)
+	//fmt.Println("-----------")
 	if len(blogs) != 0 {
 		for _, blog := range blogs {
-			fmt.Println("blog:")
-			fmt.Println(blog)
+			var track Track
+			var authors []User
+			var followed Follow
+			var isFollow int64
+			//fmt.Println("blog:")
+			//fmt.Println(blog)
 			Aid := blog.Uid
 			err1 := Db.Where("uid = ?", Aid).Find(&authors)
 			if err1 != nil {
 				return []Blog_display{}, err1
 			}
-			fmt.Println("authors:")
-			fmt.Println(authors)
+			//fmt.Println("authors:")
+			//fmt.Println(authors)
 			if Uid != -1 {
-				has, err := Db.Where("follow_by_id = ? AND follow_id = ?", Uid, Aid).Get(&followed)
-				fmt.Println("followed:")
-				fmt.Println(has)
-				if err != nil {
-					return []Blog_display{}, err
-				} else if !has {
+				has, _ := Db.Where("follow_by_id = ? AND follow_id = ?", Uid, Aid).Get(&followed)
+				//fmt.Println("followed:")
+				//fmt.Println(has)
+				if !has {
 					isFollow = 0
 				} else {
 					isFollow = 1
@@ -143,16 +143,17 @@ func BlogDisplay(Uid int64) ([]Blog_display, error) {
 			if !has {
 				return []Blog_display{}, err4
 			}
-			fmt.Println("track:")
-			fmt.Println(track)
+			//fmt.Println("track:")
+			//fmt.Println(track)
 			author := authors[0].Name
 			photo := authors[0].ProfilePhot
 			blog_dis := Blog_display{Author: author, Photo: photo, Pub_time: blog.Pub_time, Visibility: blog.Visibility,
 				Content: blog.Content, Picture: blog.Picture, Title: blog.Title, IsFollow: isFollow, Coordinates: track.Coordinates, AuthorId: Aid}
 			fmt.Println(blog_dis)
 			blogs_dis = append(blogs_dis, blog_dis)
-			fmt.Println("---------------")
+			//fmt.Println("---------------")
 		}
+		//fmt.Println("blog_dis:")
 		fmt.Println(blogs_dis)
 		return blogs_dis, nil
 	} else {

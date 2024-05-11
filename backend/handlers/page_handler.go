@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	. "main/backend/models"
 	"net/http"
@@ -59,8 +58,8 @@ func ToIndex_app(c *gin.Context) {
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 
-	fmt.Println(Uid)
-	fmt.Println(aToken)
+	//fmt.Println(Uid)
+	//fmt.Println(aToken)
 
 	isVip, _ := IsVip(Uid)
 	blogcount, _ := BlogCount(Uid)
@@ -70,7 +69,7 @@ func ToIndex_app(c *gin.Context) {
 	rank, _ := RankCheck(Uid)
 	blogs, _ := BlogDisplay(Uid)
 
-	fmt.Println(blogs)
+	//fmt.Println(blogs)
 	c.JSON(http.StatusOK, gin.H{
 		"message":     c.GetString("message"),
 		"aToken":      c.GetHeader("aToken"),
