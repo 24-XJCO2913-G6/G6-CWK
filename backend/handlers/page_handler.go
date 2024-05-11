@@ -137,12 +137,14 @@ func ToPublish_app(c *gin.Context) {
 	var Uid_tmp string
 	if aToken == "" {
 		Uid_tmp = "-1"
-		c.JSON(http.StatusOK, gin.H{"error": "Blog upload unsuccessfully."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Blog upload unsuccessfully."})
+		return
 	} else {
 		Claim, err := CheckToken(aToken)
 		if err != nil {
 			Uid_tmp = "-1"
-			c.JSON(http.StatusOK, gin.H{"error": "Blog upload unsuccessfully."})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Blog upload unsuccessfully."})
+			return
 		} else {
 			Uid_tmp = Claim.Uid
 		}
@@ -171,7 +173,8 @@ func ToPublish_app(c *gin.Context) {
 	userAgent := c.Request.UserAgent()
 	LoId := AddLog(Uid, "PostBlog", timeString, clientIP, userAgent)
 	if Bid == -1 || LoId == -1 {
-		c.JSON(http.StatusOK, gin.H{"error": "Blog upload unsuccessfully."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Blog upload unsuccessfully."})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Blog upload successfully."})
 }
@@ -184,12 +187,14 @@ func ToLike_app(c *gin.Context) {
 	var Uid_tmp string
 	if aToken == "" {
 		Uid_tmp = "-1"
-		c.JSON(http.StatusOK, gin.H{"error": "Like unsuccessfully."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Like unsuccessfully."})
+		return
 	} else {
 		Claim, err := CheckToken(aToken)
 		if err != nil {
 			Uid_tmp = "-1"
 			c.JSON(http.StatusOK, gin.H{"error": "Like unsuccessfully."})
+			return
 		} else {
 			Uid_tmp = Claim.Uid
 		}
@@ -217,7 +222,8 @@ func ToLike_app(c *gin.Context) {
 	userAgent := c.Request.UserAgent()
 	LoId := AddLog(Uid, "Like", timeString, clientIP, userAgent)
 	if Lid1 == -1 || Lid2 == -1 || LoId == -1 {
-		c.JSON(http.StatusOK, gin.H{"error": "Like unsuccessfully."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Like unsuccessfully."})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Like successfully."})
 }
@@ -229,12 +235,14 @@ func ToCollect_app(c *gin.Context) {
 	var Uid_tmp string
 	if aToken == "" {
 		Uid_tmp = "-1"
-		c.JSON(http.StatusOK, gin.H{"error": "Collect unsuccessfully."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Collect unsuccessfully."})
+		return
 	} else {
 		Claim, err := CheckToken(aToken)
 		if err != nil {
 			Uid_tmp = "-1"
 			c.JSON(http.StatusOK, gin.H{"error": "Collect unsuccessfully."})
+			return
 		} else {
 			Uid_tmp = Claim.Uid
 		}
@@ -263,7 +271,8 @@ func ToCollect_app(c *gin.Context) {
 	userAgent := c.Request.UserAgent()
 	LoId := AddLog(Uid, "Collect", timeString, clientIP, userAgent)
 	if Cid1 == -1 || Cid2 == -1 || LoId == -1 {
-		c.JSON(http.StatusOK, gin.H{"error": "Collect unsuccessfully."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Collect unsuccessfully."})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Collect successfully."})
 }
@@ -308,7 +317,8 @@ func ToReview_app(c *gin.Context) {
 	userAgent := c.Request.UserAgent()
 	LoId := AddLog(Uid, "Review", timeString, clientIP, userAgent)
 	if Rid1 == -1 || Rid2 == -1 || LoId == -1 {
-		c.JSON(http.StatusOK, gin.H{"error": "Review unsuccessfully."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Review unsuccessfully."})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Review successfully."})
 }
@@ -319,12 +329,14 @@ func ToFollow_app(c *gin.Context) {
 	var Uid_tmp string
 	if aToken == "" {
 		Uid_tmp = "-1"
-		c.JSON(http.StatusOK, gin.H{"error": "Follow unsuccessfully."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Follow unsuccessfully."})
+		return
 	} else {
 		Claim, err := CheckToken(aToken)
 		if err != nil {
 			Uid_tmp = "-1"
-			c.JSON(http.StatusOK, gin.H{"error": "Follow unsuccessfully."})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Follow unsuccessfully."})
+			return
 		} else {
 			Uid_tmp = Claim.Uid
 		}
@@ -339,7 +351,8 @@ func ToFollow_app(c *gin.Context) {
 	userAgent := c.Request.UserAgent()
 	LoId := AddLog(Uid, "Follow", timeString, clientIP, userAgent)
 	if Fid == -1 || LoId == -1 {
-		c.JSON(http.StatusOK, gin.H{"error": "Follow unsuccessfully."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Follow unsuccessfully."})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Follow successfully."})
 }
@@ -450,7 +463,8 @@ func TouploadInfo_app(c *gin.Context) {
 	timeString := currentTime.Format("2006-01-02 15:04:05")
 	LoId := AddLog(Uid, "UploadUserInfo", timeString, clientIP, userAgent)
 	if Did == -1 || LoId == -1 {
-		c.JSON(http.StatusOK, gin.H{"error": "User Info update unsuccessfully."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User Info update unsuccessfully."})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "User Info update successfully."})
 }
