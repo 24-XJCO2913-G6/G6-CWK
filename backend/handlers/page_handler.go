@@ -176,6 +176,8 @@ func ToPublish_app(c *gin.Context) {
 }
 
 func ToLike_app(c *gin.Context) {
+	var islike Like
+	var Lid1 int64
 	// 根据请求携带的aToken判断添加路径的用户
 	aToken := c.GetHeader("aToken")
 	var Uid_tmp string
@@ -198,7 +200,19 @@ func ToLike_app(c *gin.Context) {
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
 	Bid, _ := strconv.ParseInt(likeBid, 10, 64)
-	Lid1 := AddLike(Uid, Bid, timeString)
+	has, _ := Db.Where("uid = ? AND bid = ?", Uid, Bid).Get(&islike)
+	if !has {
+		Lid1 = AddLike(Uid, Bid, timeString)
+	} else {
+		affected, err := Db.Where("uid = ? AND bid = ?", Uid, Bid).Delete(&Like{})
+		if err != nil {
+			panic(err)
+		}
+		if affected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "unlike unsuccessfully."})
+			return
+		}
+	}
 
 	user := &User{Uid: Uid}
 	blog := &Blog{Id: Bid}
@@ -230,6 +244,8 @@ func ToLike_app(c *gin.Context) {
 }
 
 func ToCollect_app(c *gin.Context) {
+	var iscollect Collect
+	var Cid1 int64
 	aToken := c.GetHeader("aToken")
 	var Uid_tmp string
 	if aToken == "" {
@@ -252,7 +268,19 @@ func ToCollect_app(c *gin.Context) {
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
 	Bid, _ := strconv.ParseInt(collectBid, 10, 64)
-	Cid1 := AddCollect(Uid, Bid, timeString)
+	has, _ := Db.Where("uid = ? AND bid = ?", Uid, Bid).Get(&iscollect)
+	if !has {
+		Cid1 = AddCollect(Uid, Bid, timeString)
+	} else {
+		affected, err := Db.Where("uid = ? AND bid = ?", Uid, Bid).Delete(&Collect{})
+		if err != nil {
+			panic(err)
+		}
+		if affected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "uncollect unsuccessfully."})
+			return
+		}
+	}
 
 	user := &User{Uid: Uid}
 	blog := &Blog{Id: Bid}
@@ -332,6 +360,8 @@ func ToReview_app(c *gin.Context) {
 
 func ToFollow_app(c *gin.Context) {
 	// 根据请求携带的aToken判断添加路径的用户
+	var isfollow Follow
+	var Fid int64
 	aToken := c.GetHeader("aToken")
 	var Uid_tmp string
 	if aToken == "" {
@@ -353,7 +383,20 @@ func ToFollow_app(c *gin.Context) {
 	timeString := currentTime.Format("2006-01-02 15:04:05")
 	followUid := c.Param("Uid")
 	FollowUid, _ := strconv.ParseInt(followUid, 10, 64)
-	Fid := AddFollow(FollowUid, Uid, timeString)
+	has, _ := Db.Where("follow_by_id = ? AND follow_id = ?", Uid, FollowUid).Get(&isfollow)
+	if !has {
+		Fid = AddFollow(FollowUid, Uid, timeString)
+	} else {
+		affected, err := Db.Where("follow_by_id = ? AND follow_id = ?", Uid, FollowUid).Delete(&Follow{})
+		if err != nil {
+			panic(err)
+		}
+		if affected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "unfollow unsuccessfully."})
+			return
+		}
+	}
+
 	clientIP := c.ClientIP()
 	userAgent := c.Request.UserAgent()
 	LoId := AddLog(Uid, "Follow", timeString, clientIP, userAgent)
@@ -363,7 +406,20 @@ func ToFollow_app(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Follow successfully."})
 }
-
+func ToCancelVip_app(c *gin.Context) {
+	// 根据请求携带的aToken判断添加路径的用户
+	Uid_tmp := c.Param("Uid")
+	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
+	affected, err := Db.Where("uid = ?", Uid).Delete(&Vip{})
+	if err != nil {
+		panic(err)
+	}
+	if affected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Follow unsuccessfully."})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Follow successfully."})
+}
 func ToLikeList_app(c *gin.Context) {
 	aToken := c.GetHeader("aToken")
 	var Uid_tmp string
@@ -673,28 +729,6 @@ func ToPostDetails(Id string, c *gin.Context) {
 		"blog":    blog,
 		"track":   track,
 		"reviews": reviews, //评论者.Reviewer 评论者头像.Reviewer_photo 时间.Time 内容.Content
-	})
-}
-func ToLog(c *gin.Context) {
-	aToken := c.GetHeader("aToken")
-	var Uid_tmp string
-	if aToken == "" {
-		Uid_tmp = "-1"
-	} else {
-		Claim, err := CheckToken(aToken)
-		if err != nil {
-			Uid_tmp = "-1"
-		} else {
-			Uid_tmp = Claim.Uid
-		}
-	}
-	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
-	photo, _ := GetPhoto(Uid)
-	c.JSON(http.StatusOK, gin.H{
-		"aToken":  c.GetHeader("aToken"),
-		"rToken":  c.GetHeader("rToken"),
-		"photo":   photo,
-		"browser": GetBrowser(c),
 	})
 }
 

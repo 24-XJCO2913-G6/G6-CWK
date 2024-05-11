@@ -19,7 +19,7 @@ func main() {
 	{
 		engine.Static("/web/static", "frontend(web)/static")
 		engine.Static("/app/static", "frontend(app)/static")
-		//		engine.LoadHTMLGlob("frontend(web)/*.html")
+		engine.LoadHTMLGlob("frontend(web)/*.html")
 	}
 
 	{
@@ -60,6 +60,7 @@ func main() {
 
 	webGroup := engine.Group("/web")
 	{
+
 		webGroup.GET("/", ToIndex)
 		webGroup.GET("/index", ToIndex)
 
@@ -116,6 +117,8 @@ func main() {
 
 			// 收藏帖子
 			appGroup.POST("/collect/:Bid", ToCollect_app)
+			//取消vip
+			appGroup.POST("/cancelVip/:Uid", ToCancelVip_app)
 
 		}
 
@@ -141,6 +144,7 @@ func main() {
 
 			// 返回用户排名 (个人)
 			appGroup.GET("/rank", ToRank_app)
+
 		}
 
 		// 帖子相关
