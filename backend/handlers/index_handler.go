@@ -163,7 +163,7 @@ func BlogDisplay(Uid int64) ([]Blog_display, error) {
 			//fmt.Println("---------------")
 		}
 		//fmt.Println("blog_dis:")
-		fmt.Println(blogs_dis)
+		//fmt.Println(blogs_dis)
 		return blogs_dis, nil
 	} else {
 		return []Blog_display{}, nil
