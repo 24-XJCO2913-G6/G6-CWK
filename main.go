@@ -98,21 +98,25 @@ func main() {
 			// 上传帖子
 			appGroup.POST("/upload_post", ToPublish_app)
 
-			// TODO 改成参数形式
-			// 关注
-			appGroup.POST("/follow", ToFollow_app)
-
-			// 喜欢帖子
-			appGroup.POST("/like", ToLike_app)
-
-			//评论帖子
-			appGroup.POST("/review", ToReview_app)
-
-			// 收藏帖子
-			appGroup.POST("/collect", ToCollect_app)
+			// 上传帖子
+			appGroup.POST("/upload_track", UpdateTrack)
 
 			// 修改个人信息
 			appGroup.POST("/upload_info", TouploadInfo_app)
+
+			// TODO 改成参数形式
+			// 关注
+			appGroup.POST("/follow/:Uid", ToFollow_app)
+
+			// 喜欢帖子
+			appGroup.POST("/like/:Bid", ToLike_app)
+
+			//评论帖子
+			appGroup.POST("/review/:Bid", ToReview_app)
+
+			// 收藏帖子
+			appGroup.POST("/collect/:Bid", ToCollect_app)
+
 		}
 
 		// 用户相关
