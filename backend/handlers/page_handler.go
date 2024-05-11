@@ -522,6 +522,9 @@ func ToProfile_app(c *gin.Context) {
 			blogs = append(blogs, blog)
 		}
 	}
+	fansList, _ := GetFans(Uid)
+	followingsList, _ := GetFollowings(Uid)
+	friendsList, _ := GetFriends(Uid)
 
 	//fmt.Println("---------")
 	//fmt.Println(Info)
@@ -532,18 +535,21 @@ func ToProfile_app(c *gin.Context) {
 	//fmt.Println("---------")
 
 	c.JSON(http.StatusOK, gin.H{
-		"message":  c.GetString("message"),
-		"uid":      Uid,
-		"aToken":   c.GetHeader("aToken"),
-		"rToken":   c.GetHeader("rToken"),
-		"username": name,
-		"email":    email,
-		"photo":    photo,
-		"motto":    motto,
-		"likeList": likelist,
-		"journey":  journey,
-		"info":     Info,
-		"blogs":    blogs,
+		"message":        c.GetString("message"),
+		"uid":            Uid,
+		"aToken":         c.GetHeader("aToken"),
+		"rToken":         c.GetHeader("rToken"),
+		"username":       name,
+		"email":          email,
+		"photo":          photo,
+		"motto":          motto,
+		"likeList":       likelist,
+		"journey":        journey,
+		"info":           Info,
+		"blogs":          blogs,
+		"fansCount":      len(fansList),
+		"followingCount": len(followingsList),
+		"friendsCount":   len(friendsList),
 	})
 }
 func ToVip(c *gin.Context) {
