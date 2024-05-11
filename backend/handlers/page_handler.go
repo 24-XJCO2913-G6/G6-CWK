@@ -468,10 +468,22 @@ func ToCollectList_app(c *gin.Context) {
 }
 
 func ToVip_app(c *gin.Context) {
-	Uid := c.Param("Uid")
-	c.JSON(http.StatusOK, gin.H{
-		"vip": vip, // .StrTime .EndTime
-	})
+	Uid_tmp := c.Param("Uid")
+	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
+	dates_tmp := c.PostForm("dates")
+	clientIP := c.ClientIP()
+	userAgent := c.Request.UserAgent()
+	currentTime := time.Now()
+	dates, _ := strconv.ParseInt(dates_tmp, 10, 64)
+	endTime := currentTime.AddDate(0, 0, int(dates))
+	endtime := endTime.Format("2006-01-02 15:04:05")
+	timeString := currentTime.Format("2006-01-02 15:04:05")
+	LoId := AddLog(Uid, "Vip", timeString, clientIP, userAgent)
+	Vid := AddVip(Uid, timeString, endtime)
+	if Vid == -1 || LoId == -1 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Vip update unsuccessfully."})
+		return
+	}
 }
 
 func TouploadInfo_app(c *gin.Context) {
