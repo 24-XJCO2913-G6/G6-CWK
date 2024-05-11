@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"strconv"
 )
 
@@ -15,7 +14,8 @@ type Track struct {
 	Duration    string
 	Speed       string
 	Distance    string // 轨迹的距离
-	Coordinates string `xorm:"varchar(10000)"` // 轨迹的坐标信息
+	Coordinates string // 轨迹的坐标信息
+	Mode        string
 	// 如[x,y],[x,y]
 }
 type Records struct {
@@ -33,7 +33,7 @@ func BuildModelTrack() {
 	}
 }
 
-func AddTrack(Uid int64, StrDate string, StrTime string, EndDate string, EndTime string, Duration string, Distance string, Coordinates string) int64 {
+func AddTrack(Uid int64, StrDate string, StrTime string, EndDate string, EndTime string, Duration string, Distance string, Coordinates string, Mode string) int64 {
 	// 将 Duration 和 Distance 转换为 float64
 	durationFloat, err := strconv.ParseFloat(Duration, 64)
 	if err != nil {
@@ -61,10 +61,11 @@ func AddTrack(Uid int64, StrDate string, StrTime string, EndDate string, EndTime
 		Distance:    Distance,
 		Speed:       speedString,
 		Coordinates: Coordinates,
+		Mode:        Mode,
 	}
 
-	fmt.Println("Data:")
-	fmt.Println(track)
+	//fmt.Println("Data:")
+	//fmt.Println(track)
 
 	Tid, err := Db.Insert(track)
 	if err != nil {

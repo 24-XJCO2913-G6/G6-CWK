@@ -99,40 +99,28 @@ func GetLike(Uid int64) ([]Liked, error) {
 	return likedBlogs, nil
 
 }
-func GetCollect(Uid int64) ([]Collected, error) {
-	var collectedBlogs []Collected
+
+func GetCollect(Uid int64) ([]Blog_display, error) {
 	var collectList []Collect
-	var blogCollect []Blog
-	var reviews []Review
-	var collectCount []Collect
-	var reviewAmount int64 = 0
-	var collectAmount int64 = 0
+	var blogs []Blog_display
 	if Uid == -1 {
 		return nil, nil
 	}
+	blogCollect, _ := BlogDisplay(Uid)
+	_ = Db.Where("uid = ?", Uid).Find(&collectList)
 	for _, liked := range collectList {
-		Id := liked.Bid
-		err2 := Db.Where("id = ?", Id).Find(&blogCollect)
-		if err2 != nil {
-			return nil, err2
+		for _, blog := range blogCollect {
+			if blog.Bid == liked.Bid {
+				blogs = append(blogs, blog)
+			}
 		}
-		err3 := Db.Where("bid = ?", Id).Find(&reviews)
-		if err3 != nil {
-			return nil, err3
-		}
-		reviewAmount = int64(len(reviews))
-		err4 := Db.Where("bid = ?", Id).Find(&collectCount)
-		if err4 != nil {
-			return []Collected{}, err4
-		}
-		collectAmount = int64(len(collectCount))
-		if len(blogCollect) != 0 {
-			collectedBlog := Collected{Bid: (blogCollect)[0].Id, Content: (blogCollect)[0].Content, Picture: (blogCollect)[0].Picture, Title: (blogCollect)[0].Title, Visibility: (blogCollect)[0].Visibility, Time: (blogCollect)[0].Pub_time, Review: (reviews), ReviewCount: reviewAmount, CollectCount: collectAmount}
-			collectedBlogs = append(collectedBlogs, collectedBlog)
-		}
-
 	}
-	return collectedBlogs, nil
+
+	//fmt.Println("------------collection--------------")
+	//fmt.Println(blogs)
+	//fmt.Println("------------collection--------------")
+
+	return blogs, nil
 }
 
 //func GetJourney(c *gin.Context) (string, error) {

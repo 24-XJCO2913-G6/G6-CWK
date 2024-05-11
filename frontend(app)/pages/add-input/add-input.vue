@@ -7,40 +7,83 @@
 		<!-- #endif -->
         <view class="page-body">
 			<view class="page-section page-section-gap">
-			    <map style="width: 100%; height: 675px;" :path="path" :latitude="latitude" :longitude="longitude" :markers="covers" :polyline="polyline">
+			    <map style="width: 100%; height: 525px;" :path="path" :latitude="latitude" :longitude="longitude" :markers="covers" :polyline="polyline">
 			    </map>
 			</view> 
 		</view>
 		
 
 		<!-- Fixed框 -->
-		<view style="position: fixed; bottom: -50px; width: 100%; height: 100px; background-color: #eaeff5; padding: 12px;">
+		<view style="margin-top: 10px;"v-if="!isRecording" class="flex justify-between align-center">
+		    <view style="flex: 1;">
+		    	<text style="color: #555;">里程: {{distance.toFixed(2)}} m</text>
+		    </view>
+		    <view style="flex: 1;">
+		    	<text style="color: #555;">时间: {{formattedTime}} </text>
+		    </view>
+		</view>
+		
+		<view style="position: fixed; bottom: 0px; width: 100%; height: 125px; background-color: #eaeff5; padding: 12px;">
 			<view v-if="!isRecording" class="flex justify-between align-center">
-				<!-- Options for cycling, running, and driving -->
-				<view class="option" @click="selectMode('cycling')">Cycling</view>
-				<view class="option" @click="selectMode('running')">Running</view>
-				<view class="option" @click="selectMode('driving')">Driving</view>
-				<!-- 开始行程按钮 -->
-				
-				<button @click="startRecording" style="background-color: #4ba3c7; color: #fff;">Start</button>
-
-				<button @click="resetMap" style="background-color: #4ba3c7; color: #fff;">Reset</button>
-
+			<view style="flex: 1;">
+				<text style="color: #555;">里程: {{distance.toFixed(2)}} m</text>
 			</view>
-			<view v-else class="flex justify-between align-center">
-				<view style="flex: 1;">
-					<text style="color: #555;">里程: {{distance}} km</text>
-				</view>
-				<view style="flex: 1;">
-					<text style="color: #555;">时间: {{formattedTime}} </text>
-				</view>
-				
-
-				<view style="flex: 1;">
-					<button @click="stopRecording" style="background-color: #4ba3c7; color: #fff;">End</button>
-				</view>
-
+			<view style="flex: 1;">
+				<text style="color: #555;">时间: {{formattedTime}} </text>
 			</view>
+			</view>
+
+			<view v-if="!isRecording" class="flex justify-between align-center">
+			    <!-- Options for cycling, running, and driving -->
+			    <view style="flex: 1;" class="option" @click="selectMode('cycling')">Cycling</view>
+			    <view style="flex: 1;" class="option" @click="selectMode('running')">Running</view>
+			    <view style="flex: 1;" class="option" @click="selectMode('driving')">Driving</view>
+			</view>
+			
+			<!-- 将三个按钮移到新的 <view> 元素中 -->
+			<view style="margin-top: 10px;"v-if="!isRecording" class="flex justify-between align-center">
+			    <view style="flex: 1; margin-left:5px; margin-right:5px;">
+			        <button @click="startRecording" style="background-color: #4ba3c7; color: #fff;">Start</button>
+			    </view>
+			    <view style="flex: 1; margin-left:5px; margin-right:5px;">
+			        <button @click="resetMap" style="background-color: #4ba3c7; color: #fff;">Reset</button>
+			    </view>
+			    <view style="flex: 1; margin-left:5px; margin-right:5px;">
+			        <button @click="submitTrack" style="background-color: #4ba3c7; color: #fff;">Submit</button>
+			    </view>
+			</view>
+
+			<view v-if="isRecording" class="flex justify-between align-center">
+				
+			    <view style="flex: 1;">
+			        <text style="color: #555;">里程: {{distance.toFixed(2)}} m</text>
+			    </view>
+			    <view style="flex: 1;">
+			        <text style="color: #555;">时间: {{formattedTime}} </text>
+			    </view>
+			
+			
+			</view>
+			
+
+            <view v-if="isRecording" class="flex justify-between align-center">
+
+				    <view style="flex: 1; margin-left: 20px; margin-right: 20px;margin-top:20px;">
+				        <button @click="restart" style="background-color: #4ba3c7; color: #fff;">Restart</button>
+				    </view>
+				    <view style="flex: 1; margin-left: 20px; margin-right: 20px;margin-top:20px;">
+				        <button @click="stopRecording" style="background-color: #4ba3c7; color: #fff;">End</button>
+				    </view>
+
+
+            </view>
+			
+
+
+
+
+
+
 			<view>
 				<!-- Countdown display -->
 				<div class='mybox'>
@@ -70,6 +113,7 @@
 			return {
 				isOpenArray :['Public', 'Only VIP'],
 				showflag: false,
+				modeflag: false,
 				currentCountdown: 3,
 				isRecording: false,
 				distance: 0,
@@ -122,12 +166,17 @@
 
 		computed: {
 			formattedTime() {
-				const hours = Math.floor(this.time / 3600);
-				const minutes = Math.floor((this.time % 3600) / 60);
-				const seconds = this.time % 60;
-
-				return `${hours}:${minutes}:${seconds}`;
-			},
+			        const hours = Math.floor(this.time / 3600);
+			        const minutes = Math.floor((this.time % 3600) / 60);
+			        const seconds = this.time % 60;
+			
+			        // 使用 padStart 方法确保每个数字至少显示两位数，并用 0 填充不足的部分
+			        const formattedHours = String(hours).padStart(2, '0');
+			        const formattedMinutes = String(minutes).padStart(2, '0');
+			        const formattedSeconds = String(seconds).padStart(2, '0');
+			
+			        return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+			    },
 			show() {
 				return this.imageList.length > 0
 			},
@@ -192,8 +241,11 @@
 			    success: (res) => {
 			        console.log('当前位置的经度：' + res.longitude);
 			        console.log('当前位置的纬度：' + res.latitude);
-					this.covers[1].latitude = res.latitude - 0.0022;
-					this.covers[1].longitude = res.longitude + 0.0022;
+					
+                    var deltaLon = 0.002106 - (103.979765 - 103.979958);
+                    var deltaLat = - 0.002707 - (30.760965 - 30.761063); 
+					this.covers[1].latitude = res.latitude + deltaLat;
+					this.covers[1].longitude = res.longitude + deltaLon;
 					 
 			    },
 			    fail: (err) => {
@@ -228,21 +280,54 @@
 		    this.updatePath();
 		},
 		methods: {    	
-				updatePath() {
+            calculateDistance(lat1, lng1, lat2, lng2) {
+                // 将经纬度转换为弧度
+                const radLat1 = lat1 * Math.PI / 180.0;
+                const radLat2 = lat2 * Math.PI / 180.0;
+                const radLng1 = lng1 * Math.PI / 180.0;
+                const radLng2 = lng2 * Math.PI / 180.0;
+            
+                // 计算经纬度差值
+                const a = radLat1 - radLat2;
+                const b = radLng1 - radLng2;
+            
+                // 使用haversine公式计算距离.
+                var distance = 2 * Math.asin(
+                    Math.sqrt(
+                        Math.pow(Math.sin(a / 2), 2) +
+                        Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)
+                    )
+                ) * 6378137; // 地球半径，单位：米
+            
+                // 四舍五入到小数点后两位
+                return distance;
+            },
+
+			updatePath() {
 					        uni.getLocation({
 					            type: 'wgs84',
 					            success: (res) => {
 									console.log('当前位置的经度：' + res.longitude);
-									console.log('当前位置的纬度：' + res.latitude);
+									console.log('当前位置的纬度：' + res.latitude); 
+                                    var deltaLon = 0.002106 - (103.979765 - 103.979958);
+                                    var deltaLat = - 0.002707 - (30.760965 - 30.761063);  
 									// 更新经纬度信息 
-									this.longitude = res.longitude + 0.001916;
-									this.latitude = res.latitude - 0.00246;
+									this.longitude = res.longitude + deltaLon;
+									this.latitude = res.latitude + deltaLat;
 					                // 更新当前位置坐标
-					                this.covers[0].latitude = res.latitude - 0.00246;
-					                this.covers[0].longitude = res.longitude + 0.001916;
+					                this.covers[0].latitude = res.latitude + deltaLat;
+					                this.covers[0].longitude = res.longitude + deltaLon;
 								
 					                // 添加当前位置坐标到路径
-					                this.polyline[0].points.push({latitude: res.latitude - 0.00246, longitude: res.longitude + 0.001916});
+					                this.polyline[0].points.push({latitude: res.latitude + deltaLat, longitude: res.longitude + deltaLon});
+								    
+									const lastIndex = this.polyline[0].points.length - 2;
+									            if (lastIndex >= 0) {
+									                const lastPoint = this.polyline[0].points[lastIndex];
+									                const currentPoint = this.polyline[0].points[lastIndex + 1];
+									                const distance = this.calculateDistance(lastPoint.latitude, lastPoint.longitude, currentPoint.latitude, currentPoint.longitude);
+									                this.distance += distance;
+												}
 								},
 					            fail: (err) => {
 					                console.error('获取位置信息失败：', err);
@@ -251,21 +336,25 @@
 					},
 				
 
-
-			
 			selectMode(mode) {
 			    switch (mode) {
 			        case 'cycling':
 			            // 设置更新路径的间隔时间
-			            this.intervalTime = 5000;
+			            this.intervalTime = 3000;
+						this.mode = 'cycling';
+						this.modeflag = true;
 			            break;
 			        case 'running':
 			            // 设置更新路径的间隔时间
-			            this.intervalTime = 8000;
+			            this.intervalTime = 5000;
+						this.mode = 'running';
+						this.modeflag = true;
 			            break;
 			        case 'driving':
 			            // 设置更新路径的间隔时间
-			            this.intervalTime = 3000;
+			            this.intervalTime = 1000;
+						this.mode = 'driving';
+						this.modeflag = true;
 			            break;
 			        default:
 			            break;
@@ -274,10 +363,8 @@
 			},
 			
 			
-			
-			
 			startRecording() {
-			    if (!this.selectedMode) {
+			    if (!this.modeflag) {
 			        uni.showToast({
 			            title: 'Please select a mode first',
 			            icon: 'none'
@@ -289,9 +376,22 @@
 			        // 如果未选择模式，则不执行任何操作
 			        return;
 			    }
+
+                const currentDate = new Date();
+                    // 格式化日期为 YYYY-MM-DD
+                this.startDate = currentDate.toISOString().split('T')[0];
+                    // 获取当前时间并格式化为 HH:MM:SS
+                const currentTime = currentDate.toTimeString().split(' ')[0];
+                this.startTime = currentTime;
+				console.log(this.startTime); 
+				console.log(this.startDate); 
+
 			
 			    this.startTimer(); // 启动倒计时
 			    this.isRecording = true; // 开始记录状态
+				var startTime = Date.parse(new Date());
+				console.log(startTime); 
+
 			
 			    // 启动定时器，每秒递增 time 并更新路径
 			    this.timer = setInterval(() => {
@@ -320,17 +420,96 @@
 			},
 
 			
-			stopRecording() {
+			stopRecording() { 
+
 				this.isRecording = false;
-				this.time = 0;
+				
+				// 获取当前日期
+				const currentDate = new Date();
+				    // 格式化日期为 YYYY-MM-DD
+				this.endDate = currentDate.toISOString().split('T')[0];
+				    // 获取当前时间并格式化为 HH:MM:SS
+				const currentTime = currentDate.toTimeString().split(' ')[0];
+				this.endTime = currentTime;
+                
+				console.log(this.endDate); 
+				console.log(this.endTime); 
+
+				
 				clearInterval(this.timer);
 				// You can add logic to stop recording distance and time here
-				// Once stopped, you can update the distance and time values accordingly
 			}, 
 			
-
-
+			submitTrack() {
+			    // 提示用户确认提交
+			    uni.showModal({
+			        title: 'Confirm Submission',
+			        content: 'Are you sure you want to submit the track?',
+			        success: (res) => {
+			            if (res.confirm) {
+			                // 用户点击了确定按钮，执行提交操作
+			                this.submit(); // 提交数据
+			            }
+			        }
+			    });
+			},
+			
+			submit() {
+				const pathString = JSON.stringify(this.polyline[0].points);
+			    // 发送数据
+			    uni.request({
+			        url: 'http://120.46.81.37:8080/app/upload_track',
+			        method: 'POST',
+			        data: {
+			            'Coordinates': pathString,
+			            'Distance': this.distance,
+			            'Duration': this.time,
+			            'StrTime':this.startTime,
+			            'EndTime': this.endTime,
+			            'StrDate':this.startDate,
+			            'EndDate': this.endDate,
+						'Mode': this.mode,
+			        },
+			        header: {
+			            'content-type': 'application/x-www-form-urlencoded',
+			            'aToken': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNTUxIiwicGFzc3dvcmQiOiIkMmEkMTAkYkNleGl0NFRTQ3EvVzZQZDlSYVIwT0dhZ0U0V295S2liWDRVZWVqcURndE43Qko5L1N0b0MiLCJhdWQiOiI1NTEiLCJleHAiOjE3MTU0NDk5OTYsImlhdCI6MTcxNTQzNTU5NiwibmJmIjoxNzE1NDM1NTk2LCJzdWIiOiJ0b2tlbiJ9.2clzd-z0-aqN1hkdcvuiNbDax94CcZPnqMe-qamsxgA",
+			            'rToken': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTU0Njc5OTZ9.9NOPVu9wyhTWxBu5BCBnlvdiTb1R4WopndpcBDpZVvM",
+			        },
+			        success: (res) => {
+			            console.log('Data sent successfully', res.data);
+			            // 提交成功后提示用户提交成功
+			            uni.showToast({
+			                title: 'Track submitted successfully!',
+			                icon: 'success'
+			            });
+			            // 提交成功后重置地图
+			            this.resetMap();
+						
+			        },
+			        fail: (err) => {
+			            console.error('Failed to fetch posts:', err);
+			        }
+			    });
+			
+			},
+			
 			resetMap() {
+			    // 清空路径
+			    this.path = [];
+			    // 清空折线
+			    this.polyline = [{
+			        arrowLine: true,
+			        color: '#1E90FF',
+			        width: 20,
+			        points: [],
+			    }];
+			    // 重置距离
+			    this.distance = 0;
+			    // 重置时间
+			    this.time = 0;
+				this.modeflag = false;
+			},
+			restart() {
 			    // 清空路径
 			    this.path = [];
 			    // 清空折线
@@ -347,34 +526,6 @@
 			},
 
 
-			// 发布
-			submit() {
-				uni.showLoading({
-					title: 'Submitting...',
-					mask: false
-				});
-				this.$H.post('/post/create', {
-					imglist: JSON.stringify(this.imgListIds),
-					text: this.content,
-					isopen: this.isopen,
-					post_class_id: this.post_class_id
-				}, {
-					token: true
-				}).then(res => {
-					uni.hideLoading()
-					uni.$emit('updateIndex')
-					uni.showToast({
-						title: 'Submit successfully!',
-						icon: "none"
-					});
-					this.showBack = true
-					uni.navigateBack({
-						delta: 1
-					});
-				}).catch(err => {
-					uni.hideLoading()
-				})
-			},
 			// 获取所有文章分类
 			getPostClass() {
 				this.$H.get('/postclass').then(res => {

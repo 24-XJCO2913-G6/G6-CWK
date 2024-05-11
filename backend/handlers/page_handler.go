@@ -136,10 +136,14 @@ func ToPublish_app(c *gin.Context) {
 	var Uid_tmp string
 	if aToken == "" {
 		Uid_tmp = "-1"
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Blog upload unsuccessfully."})
+		return
 	} else {
 		Claim, err := CheckToken(aToken)
 		if err != nil {
 			Uid_tmp = "-1"
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Blog upload unsuccessfully."})
+			return
 		} else {
 			Uid_tmp = Claim.Uid
 		}
@@ -168,7 +172,8 @@ func ToPublish_app(c *gin.Context) {
 	userAgent := c.Request.UserAgent()
 	LoId := AddLog(Uid, "PostBlog", timeString, clientIP, userAgent)
 	if Bid == -1 || LoId == -1 {
-		c.JSON(http.StatusOK, gin.H{"error": "Blog upload unsuccessfully."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Blog upload unsuccessfully."})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Blog upload successfully."})
 }
@@ -181,28 +186,23 @@ func ToLike_app(c *gin.Context) {
 	var Uid_tmp string
 	if aToken == "" {
 		Uid_tmp = "-1"
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Like unsuccessfully."})
+		return
 	} else {
 		Claim, err := CheckToken(aToken)
 		if err != nil {
 			Uid_tmp = "-1"
+			c.JSON(http.StatusOK, gin.H{"error": "Like unsuccessfully."})
+			return
 		} else {
 			Uid_tmp = Claim.Uid
 		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
-	type LikeData struct {
-		Bid string `json:"post_id"`
-	}
-	var likeData LikeData
-	w := c.Writer
-	r := c.Request
-	if err := json.NewDecoder(r.Body).Decode(&likeData); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+	likeBid := c.Param("Bid")
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
-	Bid, _ := strconv.ParseInt(likeData.Bid, 10, 64)
+	Bid, _ := strconv.ParseInt(likeBid, 10, 64)
 	Lid1 := AddLike(Uid, Bid, timeString)
 	err1 := Db.Where("uid = ?", Uid).Find(&user)
 	if err1 != nil {
@@ -221,7 +221,8 @@ func ToLike_app(c *gin.Context) {
 	userAgent := c.Request.UserAgent()
 	LoId := AddLog(Uid, "Like", timeString, clientIP, userAgent)
 	if Lid1 == -1 || Lid2 == -1 || LoId == -1 {
-		c.JSON(http.StatusOK, gin.H{"error": "Like unsuccessfully."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Like unsuccessfully."})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Like successfully."})
 }
@@ -233,28 +234,24 @@ func ToCollect_app(c *gin.Context) {
 	var Uid_tmp string
 	if aToken == "" {
 		Uid_tmp = "-1"
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Collect unsuccessfully."})
+		return
 	} else {
 		Claim, err := CheckToken(aToken)
 		if err != nil {
 			Uid_tmp = "-1"
+			c.JSON(http.StatusOK, gin.H{"error": "Collect unsuccessfully."})
+			return
 		} else {
 			Uid_tmp = Claim.Uid
 		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
+	collectBid := c.Param("Bid")
+
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
-	type CollectData struct {
-		Bid string `json:"post_id"`
-	}
-	var collectData CollectData
-	w := c.Writer
-	r := c.Request
-	if err := json.NewDecoder(r.Body).Decode(&collectData); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	Bid, _ := strconv.ParseInt(collectData.Bid, 10, 64)
+	Bid, _ := strconv.ParseInt(collectBid, 10, 64)
 	Cid1 := AddCollect(Uid, Bid, timeString)
 	err1 := Db.Where("uid = ?", Uid).Find(&user)
 	if err1 != nil {
@@ -273,7 +270,8 @@ func ToCollect_app(c *gin.Context) {
 	userAgent := c.Request.UserAgent()
 	LoId := AddLog(Uid, "Collect", timeString, clientIP, userAgent)
 	if Cid1 == -1 || Cid2 == -1 || LoId == -1 {
-		c.JSON(http.StatusOK, gin.H{"error": "Collect unsuccessfully."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Collect unsuccessfully."})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Collect successfully."})
 }
@@ -294,21 +292,13 @@ func ToReview_app(c *gin.Context) {
 		}
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
-	type ReviewData struct {
-		Bid     string `json:"post_id"`
-		Content string `json:"commentContent"`
-	}
-	var reviewData ReviewData
-	w := c.Writer
-	r := c.Request
-	if err := json.NewDecoder(r.Body).Decode(&reviewData); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+	reviewBid := c.Param("Bid")
+	content := c.PostForm("commentContent")
+
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
-	Bid, _ := strconv.ParseInt(reviewData.Bid, 10, 64)
-	Rid1 := AddReview(Uid, Bid, timeString, reviewData.Content)
+	Bid, _ := strconv.ParseInt(reviewBid, 10, 64)
+	Rid1 := AddReview(Uid, Bid, timeString, content)
 	err1 := Db.Where("uid = ?", Uid).Find(&user)
 	if err1 != nil {
 		return
@@ -326,7 +316,8 @@ func ToReview_app(c *gin.Context) {
 	userAgent := c.Request.UserAgent()
 	LoId := AddLog(Uid, "Review", timeString, clientIP, userAgent)
 	if Rid1 == -1 || Rid2 == -1 || LoId == -1 {
-		c.JSON(http.StatusOK, gin.H{"error": "Review unsuccessfully."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Review unsuccessfully."})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Review successfully."})
 }
@@ -337,10 +328,14 @@ func ToFollow_app(c *gin.Context) {
 	var Uid_tmp string
 	if aToken == "" {
 		Uid_tmp = "-1"
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Follow unsuccessfully."})
+		return
 	} else {
 		Claim, err := CheckToken(aToken)
 		if err != nil {
 			Uid_tmp = "-1"
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Follow unsuccessfully."})
+			return
 		} else {
 			Uid_tmp = Claim.Uid
 		}
@@ -348,23 +343,15 @@ func ToFollow_app(c *gin.Context) {
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
-	type FollowData struct {
-		Uid string `json:"post_id"`
-	}
-	var followData FollowData
-	w := c.Writer
-	r := c.Request
-	if err := json.NewDecoder(r.Body).Decode(&followData); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	FollowUid, _ := strconv.ParseInt(followData.Uid, 10, 64)
+	followUid := c.Param("Uid")
+	FollowUid, _ := strconv.ParseInt(followUid, 10, 64)
 	Fid := AddFollow(FollowUid, Uid, timeString)
 	clientIP := c.ClientIP()
 	userAgent := c.Request.UserAgent()
 	LoId := AddLog(Uid, "Follow", timeString, clientIP, userAgent)
 	if Fid == -1 || LoId == -1 {
-		c.JSON(http.StatusOK, gin.H{"error": "Follow unsuccessfully."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Follow unsuccessfully."})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Follow successfully."})
 }
@@ -475,7 +462,8 @@ func TouploadInfo_app(c *gin.Context) {
 	timeString := currentTime.Format("2006-01-02 15:04:05")
 	LoId := AddLog(Uid, "UploadUserInfo", timeString, clientIP, userAgent)
 	if Did == -1 || LoId == -1 {
-		c.JSON(http.StatusOK, gin.H{"error": "User Info update unsuccessfully."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User Info update unsuccessfully."})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "User Info update successfully."})
 }
@@ -540,8 +528,17 @@ func ToProfile_app(c *gin.Context) {
 	likelist, _ := GetLike(Uid)
 	journey, _ := GetTracks(Uid)
 	Info, _ := GetInfo(Uid)
-	blogs, _ := GetBlogs(Uid)
-	//
+	tmp_blogs, _ := BlogDisplay(Uid)
+	var blogs []Blog_display
+	for _, blog := range tmp_blogs {
+		if blog.AuthorId == Uid {
+			blogs = append(blogs, blog)
+		}
+	}
+	fansList, _ := GetFans(Uid)
+	followingsList, _ := GetFollowings(Uid)
+	friendsList, _ := GetFriends(Uid)
+
 	//fmt.Println("---------")
 	//fmt.Println(Info)
 	//fmt.Println("---------")
@@ -551,18 +548,21 @@ func ToProfile_app(c *gin.Context) {
 	//fmt.Println("---------")
 
 	c.JSON(http.StatusOK, gin.H{
-		"message":  c.GetString("message"),
-		"uid":      Uid,
-		"aToken":   c.GetHeader("aToken"),
-		"rToken":   c.GetHeader("rToken"),
-		"username": name,
-		"email":    email,
-		"photo":    photo,
-		"motto":    motto,
-		"likeList": likelist,
-		"journey":  journey,
-		"info":     Info,
-		"blogs":    blogs,
+		"message":        c.GetString("message"),
+		"uid":            Uid,
+		"aToken":         c.GetHeader("aToken"),
+		"rToken":         c.GetHeader("rToken"),
+		"username":       name,
+		"email":          email,
+		"photo":          photo,
+		"motto":          motto,
+		"likeList":       likelist,
+		"journey":        journey,
+		"info":           Info,
+		"blogs":          blogs,
+		"fansCount":      len(fansList),
+		"followingCount": len(followingsList),
+		"friendsCount":   len(friendsList),
 	})
 }
 func ToVip(c *gin.Context) {

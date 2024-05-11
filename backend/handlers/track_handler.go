@@ -5,7 +5,6 @@ import (
 	. "main/backend/models"
 	"net/http"
 	"strconv"
-	"time"
 )
 
 // UpdateTrack Get
@@ -26,14 +25,10 @@ func UpdateTrack(c *gin.Context) {
 	Duration := c.PostForm("Duration")
 	Distance := c.PostForm("Distance")
 	Coordinates := c.PostForm("Coordinates")
+	Mode := c.PostForm("Mode")
 
-	Tid := AddTrack(Uid, StrDate, StrTime, EndDate, EndTime, Duration, Distance, Coordinates)
-	clientIP := c.ClientIP()
-	userAgent := c.Request.UserAgent()
-	currentTime := time.Now()
-	timeString := currentTime.Format("2006-01-02 15:04:05")
-	LoId := AddLog(Uid, "UploadTrack", timeString, clientIP, userAgent)
-	if Tid == -1 || LoId == -1 {
+	Tid := AddTrack(Uid, StrDate, StrTime, EndDate, EndTime, Duration, Distance, Coordinates, Mode)
+	if Tid == -1 {
 		c.JSON(http.StatusOK, gin.H{"error": "Track update unsuccessfully."})
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Track update successfully."})
