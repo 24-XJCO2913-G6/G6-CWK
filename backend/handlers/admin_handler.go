@@ -118,7 +118,7 @@ func ToUsersInfo(c *gin.Context) {
 			JoinedOn: "",
 			Email:    "",
 		}
-		if err != nil || len(userDetail) == 0 {
+		if err == nil && len(userDetail) != 0 {
 			tmpUserDetail = userDetail[0]
 		}
 		userInfo := UserInfo{
@@ -155,10 +155,12 @@ func ToOrdersInfo(c *gin.Context) {
 
 func ToPendingsInfo(c *gin.Context) {
 	//var pendingBlogs []Vip_Blog
-
+	//
+	//
+	//
 	//err := Db.Find(&pendingBlogs)
 	//if err!=nil || len(pendingBlogs) {
-	//	c.JSON(http.StatusOK, gin.H{"pendings": })
+	//	c.JSON(http.StatusOK, gin.H{"pendings": []Vip_Blog{}})
 	//}
 }
 
