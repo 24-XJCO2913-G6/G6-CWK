@@ -691,10 +691,9 @@ func ToLog(c *gin.Context) {
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	photo, _ := GetPhoto(Uid)
 	c.JSON(http.StatusOK, gin.H{
-		"aToken":  c.GetHeader("aToken"),
-		"rToken":  c.GetHeader("rToken"),
-		"photo":   photo,
-		"browser": GetBrowser(c),
+		"aToken": c.GetHeader("aToken"),
+		"rToken": c.GetHeader("rToken"),
+		"photo":  photo,
 	})
 }
 
