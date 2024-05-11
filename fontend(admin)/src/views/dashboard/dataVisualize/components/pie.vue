@@ -7,16 +7,34 @@
 <script setup lang="ts" name="pie">
 import { ECOption } from "@/components/ECharts/config";
 import ECharts from "@/components/ECharts/index.vue";
+import { ref, onMounted } from "vue";
+import axios from "axios";
 
-const pieData = [
-  { value: 5000, name: "Gitee 访问量" },
-  { value: 5000, name: "GitHub 访问量" }
-];
+// 使用 ref 创建一个响应式引用
+const pieData = ref([
+  { value: 0, name: "Running" },
+  { value: 0, name: "Driving" },
+  { value: 0, name: "Cycling" }
+]);
+
+// 定义获取数据的函数
+const fetchData = async () => {
+  try {
+    const response = await axios.get("http://120.46.81.37:8080/admin/index");
+    // 返回的数据格式为 [{ value: 20, name: "Running" }, ...]
+    pieData.value = response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
+// 当组件挂载后，获取数据
+onMounted(fetchData);
 
 const option: ECOption = {
   title: {
-    text: "Gitee / GitHub",
-    subtext: "访问占比",
+    text: "Track mode",
+    subtext: "percentage",
     left: "56%",
     top: "45%",
     textAlign: "center",
@@ -46,12 +64,12 @@ const option: ECOption = {
     },
     formatter: function (name: string) {
       let dataCopy = "";
-      for (let i = 0; i < pieData.length; i++) {
-        if (pieData[i].name == name && pieData[i].value >= 10000) {
-          dataCopy = (pieData[i].value / 10000).toFixed(2);
+      for (let i = 0; i < pieData.value.length; i++) {
+        if (pieData.value[i].name == name && pieData.value[i].value >= 10000) {
+          dataCopy = (pieData.value[i].value / 10000).toFixed(2);
           return name + "      " + dataCopy + "w";
-        } else if (pieData[i].name == name) {
-          dataCopy = pieData[i].value + "";
+        } else if (pieData.value[i].name == name) {
+          dataCopy = pieData.value[i].value + "";
           return name + "      " + dataCopy;
         }
       }
@@ -66,7 +84,7 @@ const option: ECOption = {
       silent: true,
       clockwise: true,
       startAngle: 150,
-      data: pieData,
+      data: pieData.value,
       labelLine: {
         length: 80,
         length2: 30,
@@ -97,6 +115,23 @@ const option: ECOption = {
             {
               offset: 1,
               color: "#fe8b4c" // 100% 处的颜色
+            }
+          ]
+        },
+        {
+          type: "linear",
+          x: 0,
+          y: 0,
+          x2: 0.5,
+          y2: 1,
+          colorStops: [
+            {
+              offset: 0,
+              color: "#77DDFF" // 0% 处的颜色
+            },
+            {
+              offset: 1,
+              color: "#0066FF" // 100% 处的颜色
             }
           ]
         },

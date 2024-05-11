@@ -1,7 +1,7 @@
 package models
 
 type Review struct {
-	Rid     int64 `xorm:"pk"`
+	Rid     int64 `xorm:"pk autoincr"`
 	Uid     int64
 	Bid     int64
 	Time    string

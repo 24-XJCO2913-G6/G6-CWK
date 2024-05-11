@@ -11,7 +11,7 @@ import (
 
 func GetBlog(Id int64) (Blog, error) {
 	var blog Blog
-	err := Db.Where("Id = ?", Id).Find(&blog)
+	err := Db.Where("id = ?", Id).Find(&blog)
 	if err != nil {
 		return Blog{}, err
 	}
@@ -22,40 +22,48 @@ func GetReviews(Id int64) ([]ReviewInBlog, error) {
 	var reviews []Review
 	var reviews_in_blog []ReviewInBlog
 
-	err := Db.Where("Bid = ?", Id).Find(&reviews)
+	err := Db.Where("bid = ?", Id).Find(&reviews)
 	if err != nil {
 		return []ReviewInBlog{}, err
 	}
-	for _, review := range reviews {
-		var reviewers []User
-		err := Db.Where("Uid = ?", review.Uid).Find(&reviewers)
-		if err != nil {
-			return []ReviewInBlog{}, err
+	if len(reviews) != 0 {
+		for _, review := range reviews {
+			var reviewers []User
+			err := Db.Where("uid = ?", review.Uid).Find(&reviewers)
+			if err != nil {
+				return []ReviewInBlog{}, err
+			}
+			reviewInBlog := ReviewInBlog{Time: review.Time, Content: review.Content, Reviewer: reviewers[0].Name, Reviewer_photo: reviewers[0].ProfilePhot}
+			reviews_in_blog = append(reviews_in_blog, reviewInBlog)
 		}
-		reviewInBlog := ReviewInBlog{Time: review.Time, Content: review.Content, Reviewer: reviewers[0].Name, Reviewer_photo: reviewers[0].ProfilePhot}
-		reviews_in_blog = append(reviews_in_blog, reviewInBlog)
 	}
+
 	return reviews_in_blog, nil
 }
 
 var track_tmp []Track
 
 func BlogPublish(c *gin.Context) {
-	err := c.Request.ParseForm()
-	if err != nil {
-		return
+	aToken := c.GetHeader("aToken")
+	var Uid_tmp string
+	if aToken == "" {
+		Uid_tmp = "-1"
+	} else {
+		Claim, _ := CheckToken(aToken)
+		Uid_tmp = Claim.Uid
 	}
-	Claim, _ := CheckToken(c.GetString("aToken"))
-	Uid_tmp := Claim.Uid
+	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
+
 	visibility_tmp := c.PostForm("visibility")
 	currentTime := time.Now()
-	Uid, err := strconv.ParseInt(Uid_tmp, 10, 64)
 	timeString := currentTime.Format("2006-01-02 15:04:05")
 	title := c.PostForm("title")
 	description := c.PostForm("content")
 	photos := c.PostForm("imgs")
 	Tid_tmp := c.PostForm("route_id")
 	Tid, err := strconv.ParseInt(Tid_tmp, 10, 64)
+
+	fmt.Println(visibility_tmp, timeString, title, description, photos, Tid)
 	if err != nil {
 		fmt.Println("Tid transfer fail:", err)
 		return
@@ -65,7 +73,7 @@ func BlogPublish(c *gin.Context) {
 		fmt.Println("Visibility transfer fail:", err)
 		return
 	}
-	err2 := Db.Where("Tid = ?", Tid).Find(&track_tmp)
+	err2 := Db.Where("tid = ?", Tid).Find(&track_tmp)
 	if err2 != nil {
 		c.JSON(http.StatusOK, gin.H{"error": "Invalid Tid, not exists"})
 		return
@@ -78,7 +86,66 @@ func BlogPublish(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"error": "Need description"})
 		return
 	}
-	AddBlog(Uid, timeString, visibility, description, photos, title, Tid)
-	//TODO visibility 没传
+	if visibility == 0 {
+		AddVipBlog(Uid, timeString, visibility, description, photos, title, Tid)
+	} else {
+		AddBlog(Uid, timeString, visibility, description, photos, title, Tid)
+	}
 	c.JSON(http.StatusOK, gin.H{"message": "Blog publish Successfully"})
+}
+
+func GetFriendsBlogs(uid int64) ([]Blog_display, error) {
+	var friends []Friend
+	var blogs []Blog_display
+
+	// 获取指定用户的所有朋友
+	friends, err := GetFriends(uid)
+	if err != nil {
+		return nil, err
+	}
+	tmp_blogs, _ := BlogDisplay(uid)
+	// 遍历每个朋友，查询其发布的所有博客
+	if len(friends) != 0 {
+
+		for _, blog := range tmp_blogs {
+			for _, friend := range friends {
+				if blog.AuthorId == friend.Uid {
+					blogs = append(blogs, blog)
+				}
+			}
+		}
+	}
+
+	return blogs, nil
+}
+
+func GetLikedMess(Uid int64) ([]LikedApp, error) {
+
+	var likeMess []LikedApp
+	err := Db.Where("uid = ?", Uid).Find(&likeMess)
+	if err != nil {
+		return nil, err
+	}
+
+	return likeMess, nil
+}
+func GetCollectedMess(Uid int64) ([]CollectedApp, error) {
+
+	var collectMess []CollectedApp
+	err := Db.Where("uid = ?", Uid).Find(&collectMess)
+	if err != nil {
+		return nil, err
+	}
+
+	return collectMess, nil
+}
+func GetReviewedMess(Uid int64) ([]ReviewedApp, error) {
+
+	var reviewMess []ReviewedApp
+	err := Db.Where("uid = ?", Uid).Find(&reviewMess)
+	if err != nil {
+		return nil, err
+	}
+
+	return reviewMess, nil
 }

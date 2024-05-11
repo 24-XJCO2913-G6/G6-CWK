@@ -6,38 +6,44 @@ import (
 	"github.com/gorilla/websocket"
 	. "main/backend/handlers"
 	. "main/backend/models"
+	"net/http"
 )
 
 func main() {
 
 	engine := gin.Default()
 
-	// 中间件
-
 	// 数据库
 	InitDB()
 
-	engine.Static("/web/static", "frontend(web)/static")
-	engine.Static("/app/static", "frontend(app)/static")
-	engine.LoadHTMLGlob("frontend(web)/*.html")
+	// 中间件
+	{
+		engine.Static("/web/static", "frontend(web)/static")
+		engine.Static("/app/static", "frontend(app)/static")
+		//		engine.LoadHTMLGlob("frontend(web)/*.html")
+	}
 
-	engine.Use(Cors())
-	engine.Use(JwtToken())
+	{
+		engine.Use(Cors())
+		engine.Use(JwtToken())
+	}
 
-	engine.POST("/login", Login)
-	engine.POST("/register", Register)
-	engine.POST("/blog_publish", BlogPublish)
+	// POST请求
+	{
+		// 登录 提交登录表单
+		engine.POST("/login", Login)
+
+		// 注册 提交登录表单
+		engine.POST("/register", Register)
+
+		// 上传帖子 (WEB)
+		engine.POST("/blog_publish", BlogPublish)
+
+	}
+
 	go func() {
 		for {
 			msg := <-MsgChan // 改为 Message 类型
-
-			// 将消息存储到数据库中
-			//insertQuery := "INSERT INTO messages (sender, recipient, message) VALUES (?, ?, ?)"
-			//_, err := Db.Exec(insertQuery, msg.Sender, msg.Recipient, msg.Content)
-			//if err != nil {
-			//	fmt.Printf("Failed to insert message to database: %v", err)
-			//	continue
-			//}
 
 			// 根据接收人发送消息
 			Conns.RLock()
@@ -77,32 +83,131 @@ func main() {
 		webGroup.GET("/notifications", ToNotifications)
 		webGroup.GET("/setting", ToSetting)
 		webGroup.GET("/ws", ToWs)
-		webGroup.GET("/post_detail/:Id", func(c *gin.Context) {
-			Id := c.Param("Id")
-			ToPostDetails(Id, c)
-		})
+		webGroup.GET("/post_detail/:Id", ToPostDetails)
 	}
 
 	appGroup := engine.Group("/app")
 	{
 		appGroup.GET("/")
-		appGroup.GET("/index", ToIndex_app)
-		appGroup.GET("/post_detail/:Id", func(c *gin.Context) {
-			Id := c.Param("Id")
-			ToPostDetails_app(Id, c)
-		})
-		appGroup.GET("/profile", ToProfile_app)
-		appGroup.GET("/profile_detail")
-		appGroup.GET("/rank", ToRank_app)
-		appGroup.POST("/like", ToLike_app)
-		appGroup.POST("/collect", ToCollect_app)
-		appGroup.POST("/follow", ToFollow_app)
-		appGroup.GET("/likeList", ToLikeList_app)
-		appGroup.GET("/collectList", ToCollectList_app)
-		appGroup.GET("/vip/:uid", func(c *gin.Context) {
-			//TODO check whether the user is vip by uid.
-			c.JSON(200, gin.H{"isVip": true})
-		})
+		appGroup.GET("/index", ToIndex_app) //blog 中返回了AuthorId
+
+		// POST请求
+		{
+			// 上传帖子
+			appGroup.POST("/upload_post", ToPublish_app)
+
+			// 上传行程
+			appGroup.POST("/upload_track", UpdateTrack)
+
+			// 修改个人信息
+			appGroup.POST("/upload_info", TouploadInfo_app)
+
+			// TODO 改成参数形式
+			// 关注
+			appGroup.POST("/follow/:Uid", ToFollow_app)
+
+			// 喜欢帖子
+			appGroup.POST("/like/:Bid", ToLike_app)
+
+			//评论帖子
+			appGroup.POST("/review/:Bid", ToReview_app)
+
+			// 收藏帖子
+			appGroup.POST("/collect/:Bid", ToCollect_app)
+			//添加vip
+			appGroup.POST("/Vip/:Uid", ToVip_app)
+			//取消vip
+			appGroup.POST("/cancelVip/:Uid", ToCancelVip_app)
+
+		}
+
+		// 用户相关
+		{
+			// 返回所有用户
+			appGroup.GET("/users", func(c *gin.Context) {
+				users := AllUsers()
+				c.JSON(http.StatusBadRequest, gin.H{"users": users})
+			})
+
+			// 获取用户主页
+			appGroup.GET("/profile/:uid", ToProfile_app)
+
+			// 个人喜欢列表
+			appGroup.GET("/likeList", ToLikeList_app)
+
+			// 个人收藏列表
+			appGroup.GET("/collectList", ToCollectList_app)
+
+			// 返回所有朋友
+			appGroup.GET("/friends/:uid", ToFriends)
+
+			// 返回所有关注
+			appGroup.GET("/follows/:uid", ToFollowing)
+
+			// 返回所有粉丝
+			appGroup.GET("/fans/:uid", ToFans)
+
+			// 返回用户排名 (个人)
+			appGroup.GET("/rank", ToRank_app)
+		}
+
+		// 帖子相关
+		{
+			// 查看帖子详细信息
+			appGroup.GET("/post_detail/:Id", ToPostDetails_app)
+
+			// 首页对帖子标题或内容进行查询
+			appGroup.GET("/search/:text", ToSearchedBlogs)
+
+			// 返回朋友帖子
+			appGroup.GET("/friend_blog", ToFriendsBlogs)
+
+			// 所有个人喜爱
+			//appGroup.GET("/profile_detail")
+			appGroup.GET("/show_liked", ToShowLiked_app)
+
+			// 所有个人收藏
+			appGroup.GET("/show_collected", ToShowCollected_app)
+
+			// 返回帖子所有评论
+			appGroup.GET("/show_reviewed", ToShowReviewed_app)
+		}
+		// 获取路径信息
+		appGroup.GET("/blogPublishTrack", ToPublishTrack_app)
+
+		// 切换到VIP界面，并返回当前VIP的到期时间
+
+	}
+	backGroup := engine.Group("/admin")
+	{
+		// 审核通过帖子
+		backGroup.POST("/pass/:Vid", ToPassVipBlog)
+
+		// 删除帖子
+		backGroup.POST("/delete/:Vid", ToDeleteVipBlog)
+
+		// 主页
+		backGroup.GET("/index", ToIndexAdmin)
+
+		// 收入预测
+		backGroup.GET("/week", DashboardW)
+		// 收入预测
+		backGroup.GET("/month", DashboardM)
+		// 收入预测
+		backGroup.GET("/year", DashboardY)
+		//backGroup.POST("/blogCheck", ToPostCheck)
+
+		// 获取用户信息
+		backGroup.GET("/users", ToUsersInfo)
+
+		// 获取订单信息
+		backGroup.GET("/orders", ToOrdersInfo)
+
+		// 获取待审核帖子信息
+		backGroup.GET("/pendings", ToPendingsInfo)
+
+		// 获取logs信息
+		backGroup.GET("/logs", ToLogsInfo)
 	}
 	err := engine.Run()
 	if err != nil {

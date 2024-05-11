@@ -12,6 +12,7 @@
 </template>
 
 <script>
+	import { mapState } from 'vuex'
 	import uniListItem from '@/components/uni-ui/uni-list-item/uni-list-item.vue';
 	export default {
 		components: {

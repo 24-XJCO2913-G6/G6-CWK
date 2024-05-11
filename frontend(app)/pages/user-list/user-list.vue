@@ -1,17 +1,6 @@
 <template>
 	<view>
-		<!-- #ifdef MP -->
-		<uni-nav-bar :shadow="false" :border="false" @click-right="goBack">
-			<!-- 中间搜索框 -->
-			<view class="flex justify-center align-center rounded text-muted bg-light flex-1 mt-1" style="margin-left: -46upx;height: 60upx;" @tap="openSearch">
-				<view class="iconfont icon-sousuo mr-1"></view>搜索帖子
-			</view>
-			<!-- 右边图标 -->
-			<block slot="right">
-				<view class="text-dark font">取消</view>
-			</block>
-		</uni-nav-bar>
-		<!-- #endif -->
+
 		<!-- tab -->
 		<view class="flex align-center" style="height: 100rpx;">
 			<view class="flex-1 flex align-center justify-center"
@@ -67,6 +56,9 @@
 		data() {
 			return {
 				// 列表高度
+				friends_list:[],
+				fan_list:[],
+				follow_list:[],
 				scrollH:600,
 				tabIndex:0,
 				tabBars:[{
@@ -96,16 +88,58 @@
 			});
 		},
 		onLoad() {
-			uni.getSystemInfo({
-				success:res=>{
-					this.scrollH = res.windowHeight - uni.upx2px(100)
-					// #ifdef MP
-					this.scrollH -= 44
-					// #endif
-				}
-			})
-			// 根据选项生成列表
-			this.getData()
+			uni.request({
+							url: 'http://120.46.81.37:8080/app/friends/1',
+							method: 'GET',
+							data: {
+								'aToken': this.aToken,
+								'rToken': this.rToken,
+							},
+header: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
+				},
+							success: (res) => {
+								console.log('获取的朋友',res.data)
+								this.friends_list=res.data
+							},
+							fail: (error) => {
+								
+							}
+						});
+						uni.request({
+							url: 'http://120.46.81.37:8080/app/follows/1',
+							method: 'GET',
+header: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
+				},
+							success: (res) => {
+								console.log('获取的朋友',res.data)
+								this.follow_list=res.data
+							},
+							fail: (error) => {
+								
+							}
+						});
+						uni.request({
+							url: 'http://120.46.81.37:8080/app/fans/1',
+							method: 'GET',
+header: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
+				},
+							success: (res) => {
+								console.log('获取的朋友',res.data)
+								this.fan_list=res.data
+							},
+							fail: (error) => {
+								
+							}
+						});
 		},
 		filters: {
 			formatNum(value) {

@@ -33,12 +33,7 @@
 		},
 		methods: {
 			__init(){
-				let list = [{
-					name:"Phone number",
-					data:this.user.phone ? this.user.phone : "未绑定",
-					type:"navigateTo",
-					url:"/pages/user-phone/user-phone"
-				},{ 
+				let list = [{ 
 					name:"Password",
 					data:this.user.password ? "Modify password" : "Not set",
 					type:"navigateTo",

@@ -65,8 +65,10 @@ func keyFunc(*jwt.Token) (interface{}, error) {
 
 // CheckToken 解析 access_token
 func CheckToken(aToken string) (claims *MyClaims, err error) {
-	token, err := jwt.ParseWithClaims(aToken, &MyClaims{}, keyFunc)
+	var token *jwt.Token
+	claims = new(MyClaims)
 
+	token, err = jwt.ParseWithClaims(aToken, claims, keyFunc)
 	if err != nil {
 		return nil, err
 	}
@@ -83,8 +85,8 @@ func RefreshToken(aToken, rToken string) (newToken, newrToken string, err error)
 	}
 
 	// 第二步：从旧的 aToken 中解析出 claims 数据
-	var claims MyClaims
-	_, err = jwt.ParseWithClaims(aToken, &claims, keyFunc)
+	var claims = new(MyClaims)
+	_, err = jwt.ParseWithClaims(aToken, claims, keyFunc)
 	var v *jwt.ValidationError
 	_ = errors.As(err, &v)
 
@@ -105,11 +107,16 @@ func JwtToken() gin.HandlerFunc {
 			return
 		}
 		// 读取请求体中的 aToken 和 rToken
-		aToken := c.PostForm("aToken")
-		rToken := c.PostForm("rToken")
-
+		aToken := c.GetHeader("aToken")
+		rToken := c.GetHeader("rToken")
+		//request := c.Request
+		//fmt.Println(request)
 		//c.JSON(200, gin.H{"header": origin, "rToken": rToken})
-
+		//fmt.Println("---------------")
+		//fmt.Println(aToken)
+		//fmt.Println("---------------")
+		//fmt.Println(rToken)
+		//fmt.Println("---------------")
 		if aToken == "" || rToken == "" {
 			//c.JSON(200, gin.H{
 			//	"message": "visitor",

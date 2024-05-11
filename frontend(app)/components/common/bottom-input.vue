@@ -10,6 +10,7 @@
 </template>
 
 <script>
+	import { mapState } from 'vuex'
 	export default {
 		props: {
 			focus: {
@@ -21,6 +22,14 @@
 			return {
 				content: ""
 			}
+		},
+		computed:{
+			...mapState({
+				loginStatus:state=>state.loginStatus,
+				aToken: state => state.aToken,
+				rToken: state=>state.rToken
+				
+			}),
 		},
 		methods: {
 			submit() {

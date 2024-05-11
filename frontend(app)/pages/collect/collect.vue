@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
@@ -22,25 +23,30 @@ export default {
 			    { post_id:1,username: 'Verooo', title: 'School walk', date: '04-20', avatar: '../../static/user_pic/2.jpg' },
 				{ post_id:12,username: 'Yodo', title: 'School walk', date: '04-13', avatar: '../../static/user_pic/1.jpg' },
 			    {post_id:13, username: 'Jelly cat', title: 'School walk', date: '04-13', avatar: '../../static/user_pic/5.jpg' },
-		  // ...更多点赞消息对象
-		  // ...更多点赞消息对象
-          // ...更多点赞消息对象
+
         ]
     };
   },
+computed:{
+			...mapState({
+				loginStatus:state=>state.loginStatus,
+				aToken: state => state.aToken,
+				rToken: state=>state.rToken
+				
+			}),
+		},
   onLoad(options) {
    uni.request({
-			   url: 'http://120.46.81.37:8080/app/get_collects',
+			   url: 'http://120.46.81.37:8080/app/collectList',
 			   method: 'GET',
-			   data: {	 
-					  'aToken': aToken,
-					  'rToken':rToken,
-			   },
-				header: {
-					'Content-Type': 'application/x-www-form-urlencoded',
+			header: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
 				},
      success: (res) => {
-   	this.collects= res.data;
+		 console.log('获取收藏',res)
+   	// this.collects= res.data;
      },
      fail: (err) => {
    	console.error('Failed to fetch posts:', err);

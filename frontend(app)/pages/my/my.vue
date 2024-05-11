@@ -1,19 +1,19 @@
 <template>
 	<view>
 		<!-- 未登录 -->
-		<template v-if="!loginStatus">
-			<view class="flex align-center justify-center py-2 font">
+		<template v-if="loginStatus">
+			<view class="flex align-center justify-center py-2 font" style="margin-top: 30px; height: 5%; margin-bottom: -22px;">
 				Log in to enjoy more functionalities!
 			</view>
 			<other-login></other-login>
-			<view class="flex align-center justify-center py-2 font text-secondary" @click="openLogin">
+			<view class="flex align-center justify-center py-2 font text-secondary" @click="openLogin" style="font-weight: bold; color: black;">
 				Use email to log in <text class="ml-1 iconfont icon-jinru"></text>
 			</view>
 		</template>
 
 		<!-- 已登录 -->
 		<view v-else class="flex align-center p-2" hover-class="bg-light" @click='openSpace'>
-			<image src="../../static/user_pic/4.jpg"
+			<image src="http://120.46.81.37:8080/app/static/user_pic/4.jpg"
 			style="width: 100rpx;height: 100rpx;"
 			class="rounded-circle"></image>
 			<view class="flex flex-column flex-1 px-2">
@@ -25,7 +25,7 @@
 		
 		
 		<view class="px-3 py-2">
-			<image src="../../static/images/banner.png" mode="aspectFill"
+			<image src="http://120.46.81.37:8080/app/static/images/banner.png" mode="aspectFill"
 			style="height: 220rpx;width: 100%;" class="rounded"></image>
 		</view>
 		
@@ -66,7 +66,7 @@
 		data() {
 			return {
 				myuser:{
-					userpic:'../../static/user_pic/4.jpg',
+					userpic:'http://120.46.81.37:8080/app/static/user_pic/4.jpg',
 					username:'Super girl'
 				},
 				post_num:0,
@@ -82,7 +82,9 @@
 		computed: {
 			...mapState({
 				loginStatus:state=>state.loginStatus,
-				user:state=>state.user
+				aToken: state => state.aToken,
+				rToken: state=>state.rToken
+				
 			}),
 			// 用户头像
 			avatar(){

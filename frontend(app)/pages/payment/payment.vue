@@ -24,12 +24,21 @@
 </template>  
   
 <script>  
+import { mapState } from 'vuex'
     export default {  
         data() {  
             return {  
                 password: ''  
             }  
         },  
+	computed:{
+		...mapState({
+			loginStatus:state=>state.loginStatus,
+			aToken: state => state.aToken,
+			rToken: state=>state.rToken
+			
+		}),
+	},
         methods: {  
             showToast2() {  
                 uni.showToast({  

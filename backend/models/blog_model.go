@@ -1,7 +1,18 @@
 package models
 
 type Blog struct {
-	Id         int64 `xorm:"pk"` // 轨迹的唯一标识符，被标记为主键
+	Id         int64 `xorm:"pk autoincr"` // 轨迹的唯一标识符，被标记为主键
+	Uid        int64 // 用户的唯一标识符
+	Pub_time   string
+	Visibility int64 //
+	Content    string
+	Picture    string //
+	Title      string //
+	Tid        int64
+}
+
+type Vip_Blog struct {
+	Vid        int64 `xorm:"pk autoincr"` // 轨迹的唯一标识符，被标记为主键
 	Uid        int64 // 用户的唯一标识符
 	Pub_time   string
 	Visibility int64 //
@@ -12,13 +23,37 @@ type Blog struct {
 }
 
 type Blog_display struct {
-	Author     string
-	Photo      string
-	Pub_time   string
-	Visibility int64 //
-	Content    string
-	Picture    string //
-	Title      string //
+	Bid          int64
+	Author       string
+	Photo        string
+	Pub_time     string
+	LikeCount    int64
+	CollectCount int64
+	CommentCount int64
+	Visibility   int64 //
+	Content      string
+	Picture      string //
+	Title        string //
+	IsFollow     int64
+	Coordinates  string
+	AuthorId     int64
+}
+
+type Vip_Blog_display struct {
+	Vid          int64
+	Author       string
+	Photo        string
+	Pub_time     string
+	LikeCount    int64
+	CollectCount int64
+	CommentCount int64
+	Visibility   int64 //
+	Content      string
+	Picture      string //
+	Title        string //
+	IsFollow     int64
+	Coordinates  string
+	AuthorId     int64
 }
 
 func BuildModelBlog() {
@@ -44,4 +79,48 @@ func AddBlog(Uid int64, Pub_time string, Visibility int64, Content string, Pictu
 		return -1
 	}
 	return Id
+}
+
+func AddVipBlog(Uid int64, Pub_time string, Visibility int64, Content string, Picture string, Title string, Tid int64) int64 {
+	blog := &Vip_Blog{
+		Uid:        Uid,
+		Pub_time:   Pub_time,
+		Visibility: Visibility,
+		Content:    Content,
+		Picture:    Picture,
+		Title:      Title,
+		Tid:        Tid,
+	}
+
+	Id, err := Db.Insert(blog)
+	if err != nil {
+		return -1
+	}
+	return Id
+}
+
+func DeleteVipBlog(Vid int64) string {
+	VipBlog := &Vip_Blog{Vid: Vid}
+	has, err := Db.Get(VipBlog)
+	if !has || err != nil {
+		return "Delete failed"
+	}
+	_, err = Db.Delete(VipBlog)
+	if err != nil {
+		return "Delete failed"
+	}
+	return "Delete successfully"
+}
+
+func PassVipBlog(Vid int64) string {
+	VipBlog := &Vip_Blog{Vid: Vid}
+	has, err := Db.Get(VipBlog)
+	if !has || err != nil {
+		return "Pass failed"
+	}
+	AddBlog(VipBlog.Uid, VipBlog.Pub_time, VipBlog.Visibility, VipBlog.Content, VipBlog.Picture, VipBlog.Title, VipBlog.Tid)
+	if err != nil {
+		return "Pass failed"
+	}
+	return "Pass successfully"
 }

@@ -15,15 +15,16 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
       comments:  [
-        {post_id:1, username: 'Verooo', comment: 'Wow', date: '04-20', avatar: '../../static/user_pic/2.jpg' },
-		{ post_id:1, username: 'Yaoyao', comment: "It's cool", date: '04-13', avatar: '../../static/user_pic/6.jpg' },
-	    { post_id:1, username: 'Yodo', comment: 'hahahha', date: '04-13', avatar: '../../static/user_pic/1.jpg' },
-		{ post_id:1, username: 'Peace of summer', comment: 'haha', date: '04-13', avatar: '../../static/user_pic/3.jpg' },
-		{post_id:1,  username: 'Jelly cat', comment: 'Go with me next time!', date: '04-13', avatar: '../../static/user_pic/5.jpg' },
+        {post_id:1, username: 'Verooo', comment: 'Wow', date: '04-20', avatar: 'http://120.46.81.37:8080/app/static/user_pic/2.jpg' },
+		{ post_id:1, username: 'Yaoyao', comment: "It's cool", date: '04-13', avatar: 'http://120.46.81.37:8080/app/static/user_pic/6.jpg' },
+	    { post_id:1, username: 'Yodo', comment: 'hahahha', date: '04-13', avatar: 'http://120.46.81.37:8080/app/static/user_pic/1.jpg' },
+		{ post_id:1, username: 'Peace of summer', comment: 'haha', date: '04-13', avatar: 'http://120.46.81.37:8080/app/static/user_pic/3.jpg' },
+		{post_id:1,  username: 'Jelly cat', comment: 'Go with me next time!', date: '04-13', avatar: 'http://120.46.81.37:8080/app/static/user_pic/5.jpg' },
 
         ]
     };
@@ -32,13 +33,11 @@ export default {
 	  uni.request({
 	  url: 'http://120.46.81.37:8080/app/get_comments',
 	  	method: 'GET',
-	  	data: {	 
-			  'aToken': aToken,
-			  'rToken':rToken,
-	  	},
 		header: {
-			'Content-Type': 'application/x-www-form-urlencoded',
-		},
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
+				},
 	    success: (res) => {
 	  	this.comments= res.data;
 	    },

@@ -148,6 +148,14 @@
 			// 在组件加载时检查会员状态
 			this.checkVipStatus();
 		},
+computed:{
+			...mapState({
+				loginStatus:state=>state.loginStatus,
+				aToken: state => state.aToken,
+				rToken: state=>state.rToken
+				
+			}),
+		},
 		methods: {
 			handleClick(option) {
 				this.activeOption = option;
@@ -155,36 +163,15 @@
 			selectPayment(option) {
 				this.selectedPayment = option;
 			},
-			// checkVipStatus() {
-			// 	uni.request({
-			// 		url: 'http://120.46.81.37:8080/app/vip', // 替换为实际的URL和用户标识符
-			// 		method: 'GET',
-			// 		success: (res) => {
-			// 			if (res.statusCode === 200) {
-			// 				const data = res.data;
-			// 				if (data && data.isVip) {
-			// 					this.isVip = true; // 如果返回isVip为true，则将isVip设置为true
-			// 				} else {
-			// 					this.isVip = false; // 否则，设置为false
-			// 				}
-			// 			}
-			// 		},
-			// 		fail: (error) => {
-			// 			console.error('检查会员状态失败', error);
-			// 		}
-			// 	});
-			// },
 			checkVipStatus() {
 				uni.request({
 					url: 'http://120.46.81.37:8080/app/isvip',
 					method: 'GET',
-					data: {
-						'aToken': this.aToken, // 替换为实际的aToken
-						'rToken': this.rToken, // 替换为实际的rToken
-					},
-					header: {
-						'Content-Type': 'application/x-www-form-urlencoded', // 根据后端要求设置请求头
-					},
+			header: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
+				},
 					success: (res) => {
 						if (res.statusCode === 200) {
 							const data = res.data;
@@ -242,7 +229,7 @@
 			//     },
 			//   });
 			// },
-			// 添加后端请求，取消vip会员
+		
 			cancelVip() {
 				uni.showModal({
 					title: 'Cancel Membership',
@@ -255,13 +242,11 @@
 							uni.request({
 								url: 'http://120.46.81.37:8080/cancelVip', // API URL
 								method: 'POST',
-								data: {
-									'aToken': aToken,
-									'rToken': rToken,
-								},
 								header: {
-									'Content-Type': 'application/x-www-form-urlencoded',
-								},
+													'Content-Type': 'application/x-www-form-urlencoded',
+													'aToken': this.aToken,
+													'rToken':this.rToken,
+												},
 								success: (res) => {
 									uni.hideLoading();
 									if (res.statusCode === 200) {
@@ -296,15 +281,13 @@
 			},
 			getExpireDate() {
 				uni.request({
-					url: 'http://120.46.81.37:8080/app/getVipExpireDate',
+					url: 'http://120.46.81.37:8080/app/vip',
 					method: 'GET',
-					data: {
-						'aToken': aToken,
-						'rToken': rToken,
-					},
-					header: {
-						'Content-Type': 'application/x-www-form-urlencoded',
-					},
+				header: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
+				},
 					success: (res) => {
 						if (res.statusCode === 200) {
 							// 假设返回的到期时间在res.data.expireDate

@@ -2,7 +2,7 @@
 	<view>
 		<uni-list-item title="Avatar" @click="changeUserpic">
 			<view class="flex align-center" slot="right">
-				<image :src="user.userpic ? user.userpic : '/static/default.jpg'"
+				<image :src="user.userpic ? user.userpic : 'http://120.46.81.37:8080/app/static/default.jpg'"
 				style="width: 100rpx;height: 100rpx;"
 				class="rounded-circle"></image>
 				<text class="iconfont icon-bianji1 ml-2"></text>
@@ -85,6 +85,14 @@
 				
 			}
 		},
+		computed: {
+			...mapState({
+				aToken:state=>state.aToken,
+				rToken:state=>state.rToken,
+				
+			}),
+		
+		},
 		// 监听返回
 		onBackPress() {
 		  if (this.$refs.mpvueCityPicker.showPicker) {
@@ -99,18 +107,20 @@
 			}
 		},
 		onLoad() {
-			console.log('aa')
+			console.log('aa');
+			console.log('token', this.aToken, this.rToken)
 			uni.request({
-				  url: 'http://localhost:8080/app/profile_detail',
+				  url: 'http://localhost:8080/app/profile/149',
 				  method: 'GET',
 				  data:{
-					  'aToken': aToken,
-					  'rToken':rToken,
+					  'aToken': this.aToken,
+					  'rToken':this.rToken,
 				  },
 				  header: {
 				      'Content-Type': 'application/x-www-form-urlencoded',
 				  },
 				  success: (res) => {
+					  console.log('获取的个人信息',res)
 						this.user_pic=res.user_pic
 						this.username = res.username
 						this.sex =  res.sex
@@ -125,12 +135,7 @@
 				  }
 			})
 		},
-		computed: {
-			...mapState({
-				user:state=>state.user
-			}),
-		
-		},
+
 		methods: {
 			showCityPicker(){
 				this.$refs.mpvueCityPicker.show()
@@ -203,13 +208,11 @@
 				uni.request({
 				url: 'http://120.46.81.37:8080/app/edit_profile',
 				method: 'POST',
-				data: {
-				    'profile':obj,
-					'aToken': aToken,
-					'rToken':rToken,
-				},
+				data: obj,
 				header: {
 				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
 				},
 				      success: (res) => {
 					   this.user_pic=res.user_pic

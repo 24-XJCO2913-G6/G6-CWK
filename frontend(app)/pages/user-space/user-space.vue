@@ -14,21 +14,7 @@
 						<text class="font-lg font-weight-bold">{{item.num|formatNum}}</text>
 						<text class="font text-muted">{{item.name}}</text>
 					</view>
-				</view>
-				<view class="flex justify-center align-center">
-
-					<button v-if="user_id == user.id" type="default" size="mini" style="width: 400rpx;"
-						@click="openUserInfo">
-						Edit Profile
-					</button>
-
-					<button v-else type="default" size="mini"
-						:class="userinfo.isFollow ? 'bg-light text-dark' : 'bg-main'" style="width: 400rpx;"
-						@click="doFollow">
-						{{userinfo.isFollow ? '' : 'Follow'}}
-					</button>
-
-				</view>
+				</view>	
 			</view>
 		</view>
 
@@ -108,7 +94,7 @@
 					like: 19,
 					islike:1,
 					iscollect:0,
-					userpic: '../../static/user_pic/1.jpg',
+					userpic: 'http://120.46.81.37:8080/app/static/user_pic/1.jpg',
 					title: 'Nice day to have a walk',
 					collect: 13,
 					content: '44444444444444444',
@@ -117,152 +103,55 @@
 						103.981051,
 						30.765612
 					],
-					path: [
-						[
-							103.977527,
-							30.767054
-						],
-						[
-							103.977643,
-							30.766825
-						],
-						[
-							103.977727,
-							30.766768
-						],
-						[
-							103.977826,
-							30.766625
-						],
-						[
-							103.977926,
-							30.766525
-						],
-						[
-							103.978076,
-							30.766325
-						],
-						[
-							103.978375,
-							30.765926
-						],
-						[
-							103.978558,
-							30.76574
-						],
-						[
-							103.978741,
-							30.765526
-						],
-						[
-							103.978874,
-							30.765297
-						],
-						[
-							103.978973,
-							30.765269
-						],
-						[
-							103.97904,
-							30.765255
-						],
-						[
-							103.979106,
-							30.765312
-						],
-						[
-							103.979273,
-							30.765355
-						],
-						[
-							103.979406,
-							30.765483
-						],
-						[
-							103.979672,
-							30.765583
-						],
-						[
-							103.979788,
-							30.765669
-						],
-						[
-							103.979938,
-							30.765769
-						],
-						[
-							103.980154,
-							30.765869
-						],
-						[
-							103.980337,
-							30.766012
-						],
-						[
-							103.980486,
-							30.766097
-						],
-						[
-							103.980619,
-							30.766169
-						],
-						[
-							103.980669,
-							30.766169
-						],
-						[
-							103.980736,
-							30.766026
-						],
-						[
-							103.980785,
-							30.76584
-						],
-						[
-							103.980835,
-							30.765697
-						],
-						[
-							103.981051,
-							30.765612
-						],
-						[
-							103.981168,
-							30.765569
-						],
-						[
-							103.981317,
-							30.765555
-						],
-						[
-							103.981517,
-							30.765555
-						],
-						[
-							103.98175,
-							30.765497
-						],
-						[
-							103.981999,
-							30.76534
-						],
-						[
-							103.982165,
-							30.765155
-						],
-						[
-							103.982282,
-							30.764969
-						],
-						[
-							103.982365,
-							30.764812
-						],
-
-					],
+					path:[
+					{points:[
+					  {"longitude": 103.977527, "latitude": 30.767054},
+					  {"longitude": 103.977643, "latitude": 30.766825},
+					  {"longitude": 103.977727, "latitude": 30.766768},
+					  {"longitude": 103.977826, "latitude": 30.766625},
+					  {"longitude": 103.977926, "latitude": 30.766525},
+					  {"longitude": 103.978076, "latitude": 30.766325},
+					  {"longitude": 103.978375, "latitude": 30.765926},
+					  {"longitude": 103.978558, "latitude": 30.76574},
+					  {"longitude": 103.978741, "latitude": 30.765526},
+					  {"longitude": 103.978874, "latitude": 30.765297},
+					  {"longitude": 103.978973, "latitude": 30.765269},
+					  {"longitude": 103.97904, "latitude": 30.765255},
+					  {"longitude": 103.979106, "latitude": 30.765312},
+					  {"longitude": 103.979273, "latitude": 30.765355},
+					  {"longitude": 103.979406, "latitude": 30.765483},
+					  {"longitude": 103.979672, "latitude": 30.765583},
+					  {"longitude": 103.979788, "latitude": 30.765669},
+					  {"longitude": 103.979938, "latitude": 30.765769},
+					  {"longitude": 103.980154, "latitude": 30.765869},
+					  {"longitude": 103.980337, "latitude": 30.766012},
+					  {"longitude": 103.980486, "latitude": 30.766097},
+					  {"longitude": 103.980619, "latitude": 30.766169},
+					  {"longitude": 103.980669, "latitude": 30.766169},
+					  {"longitude": 103.980736, "latitude": 30.766026},
+					  {"longitude": 103.980785, "latitude": 30.76584},
+					  {"longitude": 103.980835, "latitude": 30.765697},
+					  {"longitude": 103.981051, "latitude": 30.765612},
+					  {"longitude": 103.981168, "latitude": 30.765569},
+					  {"longitude": 103.981317, "latitude": 30.765555},
+					  {"longitude": 103.981517, "latitude": 30.765555},
+					  {"longitude": 103.98175, "latitude": 30.765497},
+					  {"longitude": 103.981999, "latitude": 30.76534},
+					  {"longitude": 103.982165, "latitude": 30.765155},
+					  {"longitude": 103.982282, "latitude": 30.764969},
+					  {"longitude": 103.982365, "latitude": 30.764812}
+					],color: "#2e7efd",
+										width: 10,
+										dottedLine: true,
+										arrowLine: true,
+										colorList: true,}
+					 
+					],markers:[
+											    {"longitude": 103.982365, "latitude": 30.764812, iconPath:'../../static/images/marker.png', width: 10,
+					          height: 10} ] ,
 					comments: [
 						{
-							userpic: '../../static/user_pic/2.jpg',
+							userpic: 'http://120.46.81.37:8080/app/static/user_pic/2.jpg',
 							username: 'Vero',
 							data: 'Good!',
 							time: '2024-4-7'
@@ -271,7 +160,7 @@
 					],
 				}],
 				userinfo: {
-					userpic: "/static/user_pic/1.jpg",
+					userpic: "http://120.46.81.37:8080/app/static/user_pic/1.jpg",
 					username: "Abby",
 					sex: 'female',
 					birthday: "2003-08-17",
@@ -326,13 +215,11 @@
 		uni.request({
 			  url: 'http://120.46.81.37:8080/app/profile_detail',
 			  method: 'POST',
-			  data:{
-				  'aToken': aToken,
-				  'rToken':rToken,
-			  },
-			  header: {
-			      'Content-Type': 'application/x-www-form-urlencoded',
-			  },
+header: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
+				},
 			  success: (res) => {
 					this.user_info.user_pic=res.user_pic
 					this.user_info.username = res.username
@@ -351,13 +238,11 @@
 					  //获取某个用户发过的所有帖子
 						url: 'http://120.46.81.37:8080/app/get_posts',
 			           method: 'GET',
-			           data: {
-						'aToken': aToken,
-						'rToken': rToken,
-						},
-			           header: {
-			               'Content-Type': 'application/x-www-form-urlencoded',				
-			           },
+header: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
+				},
 			           success: (res) => {
 						   this.counts[0].num=res.data.length;
 						   this.posts=res.data;
@@ -371,13 +256,11 @@
 						//获取某个用户所有关注的人
 						url: 'http://120.46.81.37:8080/app/get_follow',
 			           method: 'GET',
-			           data: {
-						'aToken': aToken,
-						'rToken': rToken,
-						},
-			           header: {
-			               'Content-Type': 'application/x-www-form-urlencoded',				
-			           },
+header: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
+				},
 			           success: (res) => {
 						   this.counts[1].num=res.data.length;
 			               console.log('Post data uploaded successfully:', res);
@@ -390,13 +273,11 @@
 						//获取某个用户所有的粉丝
 						url: 'http://120.46.81.37:8080/app/get_fan',
 			           method: 'GET',
-			           data: {
-						'aToken': aToken,
-						'rToken': rToken,
-						},
-			           header: {
-			               'Content-Type': 'application/x-www-form-urlencoded',				
-			           },
+header: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
+				},
 			           success: (res) => {
 						   this.counts[2].num=res.data.length;
 			               console.log('Post data uploaded successfully:', res);
@@ -417,13 +298,12 @@
 				    method: 'POST',
 				  data: {
 				      'user_id': user_id,
-					  'aToken': aToken,
-					  'rToken':rToken,
 				  },
-					header: {
-					    'Content-Type': 'application/x-www-form-urlencoded',
-						
-					},
+header: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
+				},
 				    success: function (res) {
 				        console.log('Post request successful:', res.data);
 				        // 可以在这里处理返回的数据

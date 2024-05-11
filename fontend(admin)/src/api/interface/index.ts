@@ -67,7 +67,9 @@ export namespace User {
     status: number;
     avatar: string;
     photo: any[];
+    is_vip:string;
     children?: ResUserList[];
+    order_state:string
   }
   export interface ResStatus {
     userLabel: string;

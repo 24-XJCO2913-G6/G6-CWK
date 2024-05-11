@@ -85,7 +85,7 @@
 	import uniNavBar from '@/components/uni-ui/uni-nav-bar/uni-nav-bar.vue';
 	import uploadImage from '@/components/common/upload-image.vue';
 	import mymap3 from '../../components/map/mymap3.vue';
-
+import { mapState } from 'vuex'
 
 	export default {
 		components: {
@@ -799,8 +799,8 @@
 			uni.request({
 			    url: 'http://120.46.81.37:8080/app/get_routes',
 				header: {
-					'aToken': aToken,
-					'rToken':rToken,
+					'aToken': this.aToken,
+					'rToken':this.rToken,
 				},
 			  success: (res) => {
 				this.routes = res.data;
@@ -853,13 +853,12 @@
 				            method: 'POST',
 				            data: {
 								post:dict,
-								'aToken': aToken,
-								'rToken':rToken,
 							},
-				            header: {
-				                'Content-Type': 'application/x-www-form-urlencoded',
-								
-				            },
+						header: {
+								'Content-Type': 'application/x-www-form-urlencoded',
+								'aToken': this.aToken,
+								'rToken':this.rToken,
+							},
 				            success: (res) => {
 				                console.log('Post data uploaded successfully:', res);
 				            },

@@ -39,6 +39,7 @@
 	import commonList from '@/components/common/common-list.vue';
 	import loadMore from '@/components/common/load-more.vue';
 	import uniNavBar from '@/components/uni-ui/uni-nav-bar/uni-nav-bar.vue';
+	import { mapState } from 'vuex'
 	export default {
 		components: {
 			commonList,

@@ -41,7 +41,7 @@
 						</view>
 					</view>
 					<view class="rideBox">
-						<text class="ride-mileage">Cycling mileage/</text>
+						<text class="ride-mileage">  Cycling mileage</text>
 						<view class="ride-text">
 							<text class="ride-textA">{{ currentMileage }}</text> <!-- 绑定当前里程数 -->
 							<text class="ride-textB">km</text>
@@ -82,6 +82,7 @@
 	</template>
 
 	<script>
+		import { mapState } from 'vuex'
 		export default {
 			components: {},
 			data() {
@@ -128,7 +129,7 @@
 						polylineId: 1,
 						longitude: 103.977527,
 						latitude: 30.767054,
-						iconPath: "/static/img/icon/green.png",
+						iconPath: "http://120.46.81.37:8080/app/static/img/icon/green.png",
 						width: 38,
 						height: 38,
 						stationName: '1',
@@ -142,7 +143,7 @@
 						polylineId: 1,
 						longitude: 103.977527,
 						latitude: 30.767054,
-						iconPath: "/static/img/icon/red.png",
+						iconPath: "http://120.46.81.37:8080/app/static/img/icon/red.png",
 						width: 38,
 						height: 38,
 						stationName: '1',
@@ -156,7 +157,7 @@
 						polylineId: 2,
 						longitude: 103.977527,
 						latitude: 30.767054,
-						iconPath: "/static/img/icon/green.png",
+						iconPath: "http://120.46.81.37:8080/app/static/img/icon/green.png",
 						width: 38,
 						height: 38,
 						stationName: '2',
@@ -170,7 +171,7 @@
 						polylineId: 2,
 						longitude: 103.997555,
 						latitude: 30.767054,
-						iconPath: "/static/img/icon/red.png",
+						iconPath: "http://120.46.81.37:8080/app/static/img/icon/red.png",
 						width: 38,
 						height: 38,
 						stationName: '终',
@@ -963,7 +964,7 @@
 		}
 
 		.ride-numbox {
-			width: 27%;
+			width: 43%;
 			height: 120rpx;
 			margin-top: 14rpx;
 			padding: 5rpx 20rpx;

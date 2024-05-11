@@ -24,6 +24,13 @@
 			<view v-if="!forget && status" class="mb-2 flex align-stretch">
 				<input type="password" v-model="password" placeholder="Password" class="border-bottom p-2 flex-1" />
 			</view>
+			<view v-if="!forget && status" class="mb-2 flex align-stretch">
+				<input type="text" v-model="code" placeholder="Verification Code" class="border-bottom p-2 flex-1" />
+				<view v-if="!forget && status" class="border-bottom flex align-center justify-center font-sm text-white"
+					:class="codeTime > 0 ? 'bg-main-disabled' : 'bg-main'" style="width: 180rpx;" @click="getCode">
+					{{codeTime > 0 ? codeTime + ' s' : 'Get Code'}}
+				</view>
+			</view>
 
 			<view v-if="forget" class="mb-2 flex align-stretch">
 				<input type="text" v-model="email" placeholder="Email" class="border-bottom p-2 flex-1" />
@@ -149,9 +156,11 @@
 					data: {
 						email: this.email,
 					},
-					header: {
-						'Content-Type': 'application/x-www-form-urlencoded',
-					},
+			header: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+					'aToken': this.aToken,
+					'rToken':this.rToken,
+				},
 					success: (res) => {
 						// 倒计时60秒
 						this.codeTime = 60;
@@ -225,8 +234,8 @@
 					// 登录或注册
 					this.loading = true;
 					uni.request({
-						url: this.status ? 'http://120.46.81.37:8080/app/register' :
-							'http://120.46.81.37:8080/app/login',
+						url: this.status ? 'http://120.46.81.37:8080/register' :
+							'http://120.46.81.37:8080/login',
 						method: 'POST',
 						data: {
 							email: this.email,
@@ -241,7 +250,8 @@
 							let data = res.data;
 							let aToken = data.aToken;
 							let rToken = data.rToken;
-							console.log(aToken, rToken);
+							this.$store.commit('setTokens', { aToken, rToken });
+							
 							// 根据实际情况进行后续操作，例如跳转到另一个页面
 						},
 						fail: (err) => {

@@ -10,18 +10,26 @@ import (
 // UpdateTrack Get
 func UpdateTrack(c *gin.Context) {
 	// 根据请求携带的aToken判断添加路径的用户
-	aToken := c.GetString("aToken")
+	aToken := c.GetHeader("aToken")
+	if aToken == "" {
+		c.JSON(http.StatusOK, gin.H{"error": "Track update unsuccessfully."})
+		return
+	}
 	Claims, _ := CheckToken(aToken)
+
 	Uid, _ := strconv.ParseInt(Claims.Uid, 10, 64)
 
-	StrDate := c.PostForm("#")
-	StrTime := c.PostForm("#")
-	EndDate := c.PostForm("#")
-	EndTime := c.PostForm("#")
-	Distance := c.PostForm("#")
-	Coordinates := c.PostForm("#")
+	StrDate := c.PostForm("StrDate")
+	StrTime := c.PostForm("StrTime")
+	EndDate := c.PostForm("EndDate")
+	EndTime := c.PostForm("EndTime")
 
-	Tid := AddTrack(Uid, StrDate, StrTime, EndDate, EndTime, Distance, Coordinates)
+	Duration := c.PostForm("Duration")
+	Distance := c.PostForm("Distance")
+	Coordinates := c.PostForm("Coordinates")
+	Mode := c.PostForm("Mode")
+
+	Tid := AddTrack(Uid, StrDate, StrTime, EndDate, EndTime, Duration, Distance, Coordinates, Mode)
 	if Tid == -1 {
 		c.JSON(http.StatusOK, gin.H{"error": "Track update unsuccessfully."})
 	}
@@ -45,7 +53,7 @@ func DeliverUserTracks(c *gin.Context) {
 func GetTracks(Uid int64) ([]Track, error) {
 	var tracksList []Track
 	err := Db.Where("uid = ?", Uid).Find(&tracksList)
-	if err != nil {
+	if len(tracksList) == 0 || err != nil {
 		return nil, err
 	}
 	return tracksList, nil

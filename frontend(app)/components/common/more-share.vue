@@ -28,6 +28,12 @@
 			}
 		},
 		computed:{
+			...mapState({
+				loginStatus:state=>state.loginStatus,
+				aToken: state => state.aToken,
+				rToken: state=>state.rToken
+				
+			}),
 			isDisableButton() {
 				return function(item) {
 					if(this.shareType === 0 && item.id === 'qq'){

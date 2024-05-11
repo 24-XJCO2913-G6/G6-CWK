@@ -60,7 +60,7 @@
                     <!-- Title -->
                     <h1 class="mb-2">Sign in</h1>
                     <p class="mb-0">
-                        Don't have an account?<a href="sign-up.html">
+                        Don't have an account?<a href="/web/register">
                         Click here to sign up</a
                     >
                     </p>
@@ -181,28 +181,28 @@ JS libraries, plugins and custom scripts -->
         };
         console.log(formDataObject);
 
-        // axios({
-        //     method: 'POST',
-        //     url: "http://localhost:8080/login",
-        //     data: formDataObject,
-        //     headers: {
-        //         "Content-Type": "application/x-www-form-urlencoded"
-        //     },
-        // })
-        //     .then(function (response) {
-        //         var data = response.data;
-        //         console.log(data);
-        //         if (data.error) {
-        //             //TODO 登录问题报错
-        //         } else {
-        //             localStorage.aToken = data.aToken;
-        //             localStorage.rToken = data.rToken;
-        //             console.log(localStorage.aToken);
-        //         }
-        //     })
-        //     .catch(function (error) {
-        //         errormsg.innerHTML = error.data.error;
-        //     });
+        axios({
+            method: 'POST',
+            url: "http://localhost:8080/login",
+            data: formDataObject,
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+        })
+            .then(function (response) {
+                var data = response.data;
+                console.log(data);
+                if (data.error) {
+                    //TODO 登录问题报错
+                } else {
+                    localStorage.aToken = data.aToken;
+                    localStorage.rToken = data.rToken;
+                    console.log(localStorage.aToken);
+                }
+            })
+            .catch(function (error) {
+                errormsg.innerHTML = error.data.error;
+            });
 
         axios({
             method: 'GET',
@@ -217,7 +217,7 @@ JS libraries, plugins and custom scripts -->
         }).then(function (response) {
             // 请求成功后的处理逻辑
             console.log('Request to second route successful:', response);
-            //window.location.href = 'http://localhost:8080/web/index';
+            window.location.href = 'http://localhost:8080/web/index';
         })
             .catch(function (error) {
                 // 请求失败的处理逻辑

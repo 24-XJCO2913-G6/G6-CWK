@@ -1,7 +1,7 @@
 package models
 
 type Log struct {
-	Lid     int64 `xorm:"pk"`
+	Lid     int64 `xorm:"pk autoincr"`
 	Uid     int64
 	Ope     string
 	Time    string
@@ -16,11 +16,13 @@ func BuildModelLog() {
 	}
 }
 
-func AddLog(Uid int64, Ope string, Time string) int64 {
+func AddLog(Uid int64, Ope string, Time string, IP string, Browser string) int64 {
 	log := &Log{
-		Uid:  Uid,
-		Ope:  Ope,
-		Time: Time,
+		Uid:     Uid,
+		Ope:     Ope,
+		Time:    Time,
+		IP:      IP,
+		Browser: Browser,
 	}
 
 	Lid, err := Db.Insert(log)
