@@ -260,23 +260,34 @@ func ToDeleteVipBlog(c *gin.Context) {
 	c.JSON(state, gin.H{"message": meg})
 }
 
-func Dashboard(c *gin.Context) {
+func DashboardW(c *gin.Context) {
 	IncomeW, err := IncomeEstWeek()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"dataWeek":  IncomeW
+	})
+}
+
+func DashboardM(c *gin.Context) {
 	IncomeM, err := IncomeEstMonth()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"dataMonth": IncomeM,
+	})
+}
+func DashboardY(c *gin.Context) {
 	IncomeY, err := IncomeEstYear()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"dataWeek":  IncomeW,
-		"dataMonth": IncomeM,
 		"dataYear":  IncomeY,
 	})
 }
