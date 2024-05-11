@@ -95,9 +95,9 @@ const baseOption = {
 };
 
 // 设置初始的 xAxis 数据
-const xAxisDataWeekly = ["This Week", "The Second Week", "The Third Week", "The Fourth Week"];
-const xAxisDataMonthly = ["This Month", "The Second Month", "The Third Month", "The Fourth Month"];
-const xAxisDataYearly = ["This Year", "The Second Year", "The Third Year"];
+const xAxisDataWeekly = ["Current Week", "The Second Week", "The Third Week", "The Fourth Week"];
+const xAxisDataMonthly = ["Current Month", "The Second Month", "The Third Month", "The Fourth Month"];
+const xAxisDataYearly = ["Current Year", "The Second Year", "The Third Year"];
 
 // 初始化卡片的 ECharts 配置项
 onMounted(() => {
