@@ -19,7 +19,7 @@ func main() {
 	{
 		engine.Static("/web/static", "frontend(web)/static")
 		engine.Static("/app/static", "frontend(app)/static")
-		engine.LoadHTMLGlob("frontend(web)/*.html")
+		//		engine.LoadHTMLGlob("frontend(web)/*.html")
 	}
 
 	{

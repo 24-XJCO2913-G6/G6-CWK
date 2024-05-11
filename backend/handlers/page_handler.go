@@ -70,7 +70,7 @@ func ToIndex_app(c *gin.Context) {
 	rank, _ := RankCheck(Uid)
 	blogs, _ := BlogDisplay(Uid)
 
-	//fmt.Println(blogs)
+	fmt.Println(blogs)
 	c.JSON(http.StatusOK, gin.H{
 		"message":     c.GetString("message"),
 		"aToken":      c.GetHeader("aToken"),
