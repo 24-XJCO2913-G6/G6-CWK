@@ -167,13 +167,17 @@ func main() {
 			// 返回帖子所有评论
 			appGroup.GET("/show_reviewed", ToShowReviewed_app)
 		}
-
 		// 获取路径信息
 		appGroup.GET("/blogPublishTrack", ToPublishTrack_app)
 
 		// 切换到VIP界面，并返回当前VIP的到期时间
 		appGroup.GET("/vip", ToVip_app)
 
+	}
+	backGroup := engine.Group("/background")
+	{
+		backGroup.GET("/dashboard", ToDashboard)
+		//backGroup.POST("/blogCheck", ToPostCheck)
 	}
 	err := engine.Run()
 	if err != nil {
