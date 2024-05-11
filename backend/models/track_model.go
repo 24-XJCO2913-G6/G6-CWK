@@ -15,7 +15,7 @@ type Track struct {
 	Duration    string
 	Speed       string
 	Distance    string // 轨迹的距离
-	Coordinates string // 轨迹的坐标信息
+	Coordinates string `xorm:"varchar(10000)"` // 轨迹的坐标信息
 	// 如[x,y],[x,y]
 }
 type Records struct {
