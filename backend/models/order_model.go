@@ -1,10 +1,12 @@
 package models
 
+import "time"
+
 type Order struct {
 	Oid     int64 `xorm:"pk autoincr"`
 	Uid     int64
 	Content string
-	Time    string
+	Time    time.Time
 	Price   string
 	State   string
 }
@@ -19,7 +21,7 @@ func BuildModelOrder() {
 func AddOrder(Oid int64,
 	Uid int64,
 	Content string,
-	Time string,
+	Time time.Time,
 	Price string,
 	State string) int64 {
 	order := &Order{
