@@ -468,25 +468,9 @@ func ToCollectList_app(c *gin.Context) {
 }
 
 func ToVip_app(c *gin.Context) {
-	aToken := c.GetHeader("aToken")
-	var Uid_tmp string
-	if aToken == "" {
-		Uid_tmp = "-1"
-	} else {
-		Claim, err := CheckToken(aToken)
-		if err != nil {
-			Uid_tmp = "-1"
-		} else {
-			Uid_tmp = Claim.Uid
-		}
-	}
-	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
-	vip, _ := GetVip(Uid)
+	Uid := c.Param("Uid")
 	c.JSON(http.StatusOK, gin.H{
-		"message": c.GetString("message"),
-		"aToken":  c.GetHeader("aToken"),
-		"rToken":  c.GetHeader("rToken"),
-		"vip":     vip, // .StrTime .EndTime
+		"vip": vip, // .StrTime .EndTime
 	})
 }
 
