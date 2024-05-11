@@ -74,39 +74,70 @@ func ToIndexAdmin(c *gin.Context) {
 }
 
 func ToUsersInfo(c *gin.Context) {
-	//users := AllUsers()
-	//
-	//type UserInfo struct {
-	//	id              string
-	//	name            string
-	//	created_time    string
-	//	is_vip          string
-	//	password        string
-	//	email           string
-	//	vip_expiry_date string
-	//	photo           string
-	//	gender          string
-	//	birthday        string
-	//	status          string
-	//	job             string
-	//	hometown        string
-	//}
-	//
-	//for _, user := range users {
-	//	var vip_expiry_date string
-	//	if user.IsVip {
-	//		var vipInfo []Vip
-	//		err := Db.Where("uid = ?", user.Uid).Find(&vipInfo)
-	//		if err != nil || len(vipInfo) == 0 {
-	//			vip_expiry_date = ""
-	//		} else {
-	//			vip_expiry_date = vipInfo[0].EndTime
-	//		}
-	//	} else {
-	//		vip_expiry_date = ""
-	//	}
-	//
-	//}
+	users := AllUsers()
+
+	type UserInfo struct {
+		id              int64
+		name            string
+		created_time    string
+		is_vip          bool
+		password        string
+		email           string
+		vip_expiry_date string
+		photo           string
+		birthday        string
+		status          string
+		job             string
+		hometown        string
+	}
+	var userInfos []UserInfo
+
+	for _, user := range users {
+		var vip_expiry_date string
+		if user.IsVip {
+			var vipInfo []Vip
+			err := Db.Where("uid = ?", user.Uid).Find(&vipInfo)
+			if err != nil || len(vipInfo) == 0 {
+				vip_expiry_date = ""
+			} else {
+				vip_expiry_date = vipInfo[0].EndTime
+			}
+		} else {
+			vip_expiry_date = ""
+		}
+
+		var userDetail []User_detail
+		err := Db.Where("uid = ?", user.Uid).Find(&userDetail)
+		var tmpUserDetail = User_detail{
+			Did:      0,
+			Uid:      0,
+			Born:     "",
+			Status:   "",
+			Job:      "",
+			LivesIn:  "",
+			JoinedOn: "",
+			Email:    "",
+		}
+		if err != nil || len(userDetail) == 0 {
+			tmpUserDetail = userDetail[0]
+		}
+		userInfo := UserInfo{
+			id:              user.Uid,
+			name:            user.Name,
+			created_time:    user.CreatedTime,
+			is_vip:          user.IsVip,
+			password:        user.Passwd,
+			email:           user.Email,
+			vip_expiry_date: vip_expiry_date,
+			photo:           user.ProfilePhot,
+			birthday:        tmpUserDetail.Born,
+			status:          tmpUserDetail.Status,
+			job:             tmpUserDetail.Job,
+			hometown:        tmpUserDetail.LivesIn,
+		}
+		userInfos = append(userInfos, userInfo)
+	}
+	c.JSON(http.StatusOK, gin.H{"data": userInfos})
 }
 
 func ToOrdersInfo(c *gin.Context) {
@@ -123,11 +154,21 @@ func ToOrdersInfo(c *gin.Context) {
 }
 
 func ToPendingsInfo(c *gin.Context) {
+	//var pendingBlogs []Vip_Blog
 
+	//err := Db.Find(&pendingBlogs)
+	//if err!=nil || len(pendingBlogs) {
+	//	c.JSON(http.StatusOK, gin.H{"pendings": })
+	//}
 }
 
 func ToLogsInfo(c *gin.Context) {
-
+	logs, err := GetLogs()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"logs": logs})
+	}
 }
 
 func ToPassVipBlog(c *gin.Context) {

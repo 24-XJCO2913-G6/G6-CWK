@@ -18,12 +18,7 @@ func BuildModelOrder() {
 	}
 }
 
-func AddOrder(Oid int64,
-	Uid int64,
-	Content string,
-	Time time.Time,
-	Price string,
-	State string) int64 {
+func AddOrder(Oid int64, Uid int64, Content string, Time time.Time, Price string, State string) int64 {
 	order := &Order{
 		Uid:     Uid,
 		Content: Content,
