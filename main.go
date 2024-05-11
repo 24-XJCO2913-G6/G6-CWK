@@ -117,6 +117,10 @@ func main() {
 
 			// 收藏帖子
 			appGroup.POST("/collect/:Bid", ToCollect_app)
+			//添加vip
+			appGroup.POST("/cancelVip/:Uid", ToVip_app)
+			//取消vip
+			appGroup.POST("/cancelVip/:Uid", ToCancelVip_app)
 
 		}
 
@@ -178,7 +182,6 @@ func main() {
 		appGroup.GET("/blogPublishTrack", ToPublishTrack_app)
 
 		// 切换到VIP界面，并返回当前VIP的到期时间
-		appGroup.GET("/vip", ToVip_app)
 
 	}
 	backGroup := engine.Group("/admin")
