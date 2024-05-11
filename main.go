@@ -190,12 +190,7 @@ func main() {
 		backGroup.GET("/index", ToIndexAdmin)
 
 		// 收入预测
-		backGroup.GET("/week", DashboardW)
-		// 收入预测
-		backGroup.GET("/month", DashboardM)
-		// 收入预测
-		backGroup.GET("/year", DashboardY)
-		//backGroup.POST("/blogCheck", ToPostCheck)
+		backGroup.GET("/dashboard", Dashboard)
 
 		// 获取用户信息
 		backGroup.GET("/users", ToUsersInfo)
