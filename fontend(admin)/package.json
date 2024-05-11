@@ -19,7 +19,7 @@
     "url": "https://github.com/HalseySpicy/Geeker-Admin/issues"
   },
   "scripts": {
-    "dev": "vite --no-open",
+    "dev": "vite",
     "serve": "vite",
     "build:dev": "vue-tsc && vite build --mode development",
     "build:test": "vue-tsc && vite build --mode test",
