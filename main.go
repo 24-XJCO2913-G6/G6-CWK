@@ -98,7 +98,7 @@ func main() {
 			// 上传帖子
 			appGroup.POST("/upload_post", ToPublish_app)
 
-			// 上传帖子
+			// 上传行程
 			appGroup.POST("/upload_track", UpdateTrack)
 
 			// 修改个人信息
@@ -174,10 +174,24 @@ func main() {
 		appGroup.GET("/vip", ToVip_app)
 
 	}
-	backGroup := engine.Group("/background")
+	backGroup := engine.Group("/admin")
 	{
-		backGroup.GET("/dashboard", ToDashboard)
+		// 审核帖子
+		backGroup.POST("/pass/:Vid")
+
+		// 删除帖子
+		backGroup.DELETE("/delete/:Vid")
+
+		// 主页
+		backGroup.GET("/index")
+
+		// 收入预测
+		backGroup.GET("/dashboard")
 		//backGroup.POST("/blogCheck", ToPostCheck)
+
+		// 获取用户信息
+		backGroup.GET("user")
+
 	}
 	err := engine.Run()
 	if err != nil {

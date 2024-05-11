@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"errors"
-	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"os"
@@ -113,11 +112,11 @@ func JwtToken() gin.HandlerFunc {
 		//request := c.Request
 		//fmt.Println(request)
 		//c.JSON(200, gin.H{"header": origin, "rToken": rToken})
-		fmt.Println("---------------")
-		fmt.Println(aToken)
-		fmt.Println("---------------")
-		fmt.Println(rToken)
-		fmt.Println("---------------")
+		//fmt.Println("---------------")
+		//fmt.Println(aToken)
+		//fmt.Println("---------------")
+		//fmt.Println(rToken)
+		//fmt.Println("---------------")
 		if aToken == "" || rToken == "" {
 			//c.JSON(200, gin.H{
 			//	"message": "visitor",
