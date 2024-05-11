@@ -470,16 +470,32 @@ func ToVip_app(c *gin.Context) {
 	Uid_tmp := c.Param("Uid")
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
 	dates_tmp := c.PostForm("dates")
+	var content string
+	var price string
 	clientIP := c.ClientIP()
 	userAgent := c.Request.UserAgent()
 	currentTime := time.Now()
 	dates, _ := strconv.ParseInt(dates_tmp, 10, 64)
+	if dates == 30 {
+		content = "30 days vip"
+		price = "$29.9"
+	} else if dates == 90 {
+		content = "90 days vip"
+		price = "$69.9"
+	} else if dates == 365 {
+		content = "365 days vip"
+		price = "$199.9"
+	} else {
+		content = "permanent vip"
+		price = "$999.9"
+	}
 	endTime := currentTime.AddDate(0, 0, int(dates))
 	endtime := endTime.Format("2006-01-02 15:04:05")
 	timeString := currentTime.Format("2006-01-02 15:04:05")
 	LoId := AddLog(Uid, "Vip", timeString, clientIP, userAgent)
 	Vid := AddVip(Uid, timeString, endtime)
-	if Vid == -1 || LoId == -1 {
+	Oid := AddOrder(Uid, content, currentTime, price, "checking")
+	if Vid == -1 || LoId == -1 || Oid == -1 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Vip update unsuccessfully."})
 		return
 	}
