@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/websocket"
 	. "main/backend/handlers"
 	. "main/backend/models"
+	"net/http"
 )
 
 func main() {
@@ -82,10 +83,7 @@ func main() {
 		webGroup.GET("/notifications", ToNotifications)
 		webGroup.GET("/setting", ToSetting)
 		webGroup.GET("/ws", ToWs)
-		webGroup.GET("/post_detail/:Id", func(c *gin.Context) {
-			Id := c.Param("Id")
-			ToPostDetails(Id, c)
-		})
+		webGroup.GET("/post_detail/:Id", ToPostDetails)
 	}
 
 	appGroup := engine.Group("/app")
@@ -98,7 +96,7 @@ func main() {
 			// 上传帖子
 			appGroup.POST("/upload_post", ToPublish_app)
 
-			// 上传帖子
+			// 上传行程
 			appGroup.POST("/upload_track", UpdateTrack)
 
 			// 修改个人信息
@@ -116,11 +114,21 @@ func main() {
 
 			// 收藏帖子
 			appGroup.POST("/collect/:Bid", ToCollect_app)
+			//添加vip
+			appGroup.POST("/Vip/:Uid", ToVip_app)
+			//取消vip
+			appGroup.POST("/cancelVip/:Uid", ToCancelVip_app)
 
 		}
 
 		// 用户相关
 		{
+			// 返回所有用户
+			appGroup.GET("/users", func(c *gin.Context) {
+				users := AllUsers()
+				c.JSON(http.StatusBadRequest, gin.H{"users": users})
+			})
+
 			// 获取用户主页
 			appGroup.GET("/profile/:uid", ToProfile_app)
 
@@ -146,10 +154,7 @@ func main() {
 		// 帖子相关
 		{
 			// 查看帖子详细信息
-			appGroup.GET("/post_detail/:Id", func(c *gin.Context) {
-				Id := c.Param("Id")
-				ToPostDetails_app(Id, c)
-			})
+			appGroup.GET("/post_detail/:Id", ToPostDetails_app)
 
 			// 首页对帖子标题或内容进行查询
 			appGroup.GET("/search/:text", ToSearchedBlogs)
@@ -167,13 +172,37 @@ func main() {
 			// 返回帖子所有评论
 			appGroup.GET("/show_reviewed", ToShowReviewed_app)
 		}
-
 		// 获取路径信息
 		appGroup.GET("/blogPublishTrack", ToPublishTrack_app)
 
 		// 切换到VIP界面，并返回当前VIP的到期时间
-		appGroup.GET("/vip", ToVip_app)
 
+	}
+	backGroup := engine.Group("/admin")
+	{
+		// 审核通过帖子
+		backGroup.POST("/pass/:Vid", ToPassVipBlog)
+
+		// 删除帖子
+		backGroup.POST("/delete/:Vid", ToDeleteVipBlog)
+
+		// 主页
+		backGroup.GET("/index", ToIndexAdmin)
+
+		// 收入预测
+		backGroup.GET("/dashboard", Dashboard)
+
+		// 获取用户信息
+		backGroup.GET("/users", ToUsersInfo)
+
+		// 获取订单信息
+		backGroup.GET("/orders", ToOrdersInfo)
+
+		// 获取待审核帖子信息
+		backGroup.GET("/pendings", ToPendingsInfo)
+
+		// 获取logs信息
+		backGroup.GET("/logs", ToLogsInfo)
 	}
 	err := engine.Run()
 	if err != nil {

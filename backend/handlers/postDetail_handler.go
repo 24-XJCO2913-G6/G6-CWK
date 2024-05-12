@@ -53,10 +53,7 @@ func BlogPublish(c *gin.Context) {
 		Uid_tmp = Claim.Uid
 	}
 	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
-	err := c.Request.ParseForm()
-	if err != nil {
-		return
-	}
+
 	visibility_tmp := c.PostForm("visibility")
 	currentTime := time.Now()
 	timeString := currentTime.Format("2006-01-02 15:04:05")
@@ -65,6 +62,8 @@ func BlogPublish(c *gin.Context) {
 	photos := c.PostForm("imgs")
 	Tid_tmp := c.PostForm("route_id")
 	Tid, err := strconv.ParseInt(Tid_tmp, 10, 64)
+
+	fmt.Println(visibility_tmp, timeString, title, description, photos, Tid)
 	if err != nil {
 		fmt.Println("Tid transfer fail:", err)
 		return
@@ -87,33 +86,37 @@ func BlogPublish(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"error": "Need description"})
 		return
 	}
-	AddBlog(Uid, timeString, visibility, description, photos, title, Tid)
+	if visibility == 0 {
+		AddVipBlog(Uid, timeString, visibility, description, photos, title, Tid)
+	} else {
+		AddBlog(Uid, timeString, visibility, description, photos, title, Tid)
+	}
 	c.JSON(http.StatusOK, gin.H{"message": "Blog publish Successfully"})
 }
 
-func GetFriendsBlogs(uid int64) ([]Blog, error) {
+func GetFriendsBlogs(uid int64) ([]Blog_display, error) {
 	var friends []Friend
-	var allBlogs []Blog
+	var blogs []Blog_display
 
 	// 获取指定用户的所有朋友
 	friends, err := GetFriends(uid)
 	if err != nil {
 		return nil, err
 	}
-
+	tmp_blogs, _ := BlogDisplay(uid)
 	// 遍历每个朋友，查询其发布的所有博客
 	if len(friends) != 0 {
-		for _, friend := range friends {
-			var blogs []Blog
-			err := Db.Where("uid = ?", friend.Uid).Find(&blogs)
-			if err != nil {
-				return nil, err
+
+		for _, blog := range tmp_blogs {
+			for _, friend := range friends {
+				if blog.AuthorId == friend.Uid {
+					blogs = append(blogs, blog)
+				}
 			}
-			allBlogs = append(allBlogs, blogs...)
 		}
 	}
 
-	return allBlogs, nil
+	return blogs, nil
 }
 
 func GetLikedMess(Uid int64) ([]LikedApp, error) {
