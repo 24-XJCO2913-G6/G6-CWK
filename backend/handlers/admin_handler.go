@@ -226,7 +226,7 @@ func ToPendingsInfo(c *gin.Context) {
 		pendingBlogs = append(pendingBlogs, pending_blog)
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": pendingBlogs})
+	c.JSON(http.StatusOK, pendingBlogs)
 }
 
 func ToLogsInfo(c *gin.Context) {
