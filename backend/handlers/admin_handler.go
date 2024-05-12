@@ -8,6 +8,32 @@ import (
 	"time"
 )
 
+type UserInfo struct {
+	ID            int64  `json:"id"`
+	Name          string `json:"name"`
+	CreatedTime   string `json:"created_time"`
+	IsVIP         bool   `json:"is_vip"`
+	Password      string `json:"password"`
+	Email         string `json:"email"`
+	VipExpiryDate string `json:"vip_expiry_date"`
+	Photo         string `json:"photo"`
+	Birthday      string `json:"birthday"`
+	Status        string `json:"status"`
+	Job           string `json:"job"`
+	Hometown      string `json:"hometown"`
+}
+
+type PendingBlog struct {
+	ID        int64  `json:"id"`
+	Name      string `json:"name"`
+	PostTime  string `json:"post_time"`
+	PostTitle string `json:"post_title"`
+	Title     string `json:"title"`
+	Content   string `json:"content"`
+	TrackID   int64  `json:"track_id"`
+	PathData  string `json:"path_data"`
+}
+
 func commonPrefix(str1, str2 string) string {
 	// 找到两个字符串中较短的那个字符串的长度
 	minLength := len(str1)
@@ -100,20 +126,6 @@ func ToIndexAdmin(c *gin.Context) {
 func ToUsersInfo(c *gin.Context) {
 	users := AllUsers()
 
-	type UserInfo struct {
-		id              int64
-		name            string
-		created_time    string
-		is_vip          bool
-		password        string
-		email           string
-		vip_expiry_date string
-		photo           string
-		birthday        string
-		status          string
-		job             string
-		hometown        string
-	}
 	var userInfos []UserInfo
 
 	for _, user := range users {
@@ -146,22 +158,23 @@ func ToUsersInfo(c *gin.Context) {
 			tmpUserDetail = userDetail[0]
 		}
 		userInfo := UserInfo{
-			id:              user.Uid,
-			name:            user.Name,
-			created_time:    user.CreatedTime,
-			is_vip:          user.IsVip,
-			password:        user.Passwd,
-			email:           user.Email,
-			vip_expiry_date: vip_expiry_date,
-			photo:           user.ProfilePhot,
-			birthday:        tmpUserDetail.Born,
-			status:          tmpUserDetail.Status,
-			job:             tmpUserDetail.Job,
-			hometown:        tmpUserDetail.LivesIn,
+			ID:            user.Uid,
+			Name:          user.Name,
+			CreatedTime:   user.CreatedTime,
+			IsVIP:         user.IsVip,
+			Password:      user.Passwd,
+			Email:         user.Email,
+			VipExpiryDate: vip_expiry_date,
+			Photo:         user.ProfilePhot,
+			Birthday:      tmpUserDetail.Born,
+			Status:        tmpUserDetail.Status,
+			Job:           tmpUserDetail.Job,
+			Hometown:      tmpUserDetail.LivesIn,
 		}
+
 		userInfos = append(userInfos, userInfo)
 	}
-	c.JSON(http.StatusOK, gin.H{"users": userInfos})
+	c.JSON(http.StatusOK, userInfos)
 }
 
 func ToOrdersInfo(c *gin.Context) {
@@ -179,17 +192,6 @@ func ToOrdersInfo(c *gin.Context) {
 
 func ToPendingsInfo(c *gin.Context) {
 	var blogs []Vip_Blog
-
-	type PendingBlog struct {
-		id         int64
-		name       string
-		post_time  string
-		post_title string
-		title      string
-		content    string
-		track_id   int64
-		pathData   string
-	}
 	var pendingBlogs []PendingBlog
 
 	err := Db.Find(&blogs)
@@ -199,26 +201,26 @@ func ToPendingsInfo(c *gin.Context) {
 
 	for _, blog := range blogs {
 		var pending_blog = PendingBlog{
-			id:         blog.Vid,
-			name:       "",
-			post_time:  blog.Pub_time,
-			post_title: blog.Title,
-			title:      blog.Title,
-			content:    blog.Content,
-			track_id:   blog.Tid,
-			pathData:   "",
+			ID:        blog.Vid,
+			Name:      "",
+			PostTime:  blog.Pub_time,
+			PostTitle: blog.Title,
+			Title:     blog.Title,
+			Content:   blog.Content,
+			TrackID:   blog.Tid,
+			PathData:  "",
 		}
 
 		user := &User{Uid: blog.Uid}
 		track := &Track{Tid: blog.Tid}
 		has, err := Db.Get(user)
 		if has && err == nil {
-			pending_blog.name = user.Name
+			pending_blog.Name = user.Name
 		}
 
 		has, err = Db.Get(track)
 		if has && err == nil {
-			pending_blog.pathData = track.Coordinates
+			pending_blog.PathData = track.Coordinates
 		}
 
 		pendingBlogs = append(pendingBlogs, pending_blog)
