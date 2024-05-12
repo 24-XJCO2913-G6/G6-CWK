@@ -195,6 +195,7 @@ func ToPendingsInfo(c *gin.Context) {
 	var pendingBlogs []PendingBlog
 
 	err := Db.Find(&blogs)
+
 	if err != nil || len(blogs) == 0 {
 		c.JSON(http.StatusOK, gin.H{"pendings": []PendingBlog{}})
 	}
