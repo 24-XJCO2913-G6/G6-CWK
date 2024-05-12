@@ -14,7 +14,7 @@ import axios from "axios";
 // };
 export const getUserList = () => {
   // 请替换成你的实际 API 地址
-  const url = "http://120.46.81.37:8080/admin/user";
+  const url = "http://120.46.81.37:8080/admin/users";
   return axios.get(url);
 };
 

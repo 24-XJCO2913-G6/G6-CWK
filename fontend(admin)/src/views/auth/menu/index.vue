@@ -62,24 +62,6 @@ const posts = ref([
     post_title: "Nice day to have a walk",
     post_state: "checked",
     track_id: "1"
-  },
-  {
-    id: 2,
-    name: "Veroooo",
-    post_time: "2024-04-13",
-    post_mode: "VIP only",
-    post_title: "Running on the playground",
-    post_state: "checked",
-    track_id: "2"
-  },
-  {
-    id: 3,
-    name: "Peace of summer",
-    post_time: "2024-04-06",
-    post_mode: "VIP only",
-    post_title: "I like lovely swan",
-    post_state: "checked",
-    track_id: "3"
   }
 ]);
 const selectedPost = ref(null);
@@ -125,12 +107,12 @@ const columns = reactive<ColumnProps<User.ResUserList>[]>([
   { type: "selection", fixed: "left", width: 70 },
 
   {
-    prop: "name",
+    prop: "Author",
     label: "User Name",
     search: { el: "input", tooltip: "我是搜索提示" }
   },
   {
-    prop: "post_time",
+    prop: "Pub_time",
     label: "Post time",
     // headerRender,
     width: 180,
@@ -141,28 +123,19 @@ const columns = reactive<ColumnProps<User.ResUserList>[]>([
       defaultValue: ["2022-11-12 11:35:00", "2022-12-12 11:35:00"]
     }
   },
-  { prop: "post_title", label: "Post title" },
+  { prop: "Title", label: "Post title" },
   {
     prop: "post_mode",
     label: "Post mode"
   },
-
-  {
-    prop: "post_state",
-    label: "Post state"
-  },
-  {
-    prop: "track_id",
-    label: "Track id"
-  },
-
   { prop: "operation", label: "Operations", fixed: "right", width: 200 }
 ]);
 
 // 从后端获取帖子数据的函数
 const fetchPosts = async () => {
   try {
-    const response = await axios.get("http://120.46.81.37:8080/admin/pending");
+    const response = await axios.get("http://120.46.81.37:8080/admin/pendings");
+    console.log(response.data);
     posts.value = response.data; // 假设返回的数据是帖子列表
   } catch (error) {
     console.error("Error fetching posts: ", error);

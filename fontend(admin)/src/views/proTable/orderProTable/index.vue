@@ -129,14 +129,29 @@ const proTable = ref<ProTableInstance>();
 // 表格配置项
 const columns = reactive<ColumnProps<User.ResUserList>[]>([
   { type: "selection", fixed: "left", width: 70 },
-
+  { prop: "Content", label: "Order content" },
   {
-    prop: "name",
-    label: "User Name",
+    prop: "Oid",
+    label: "Order Id",
     search: { el: "input", tooltip: "我是搜索提示" }
   },
   {
-    prop: "order_time",
+    prop: "Uid",
+    label: "User Id",
+    search: { el: "input", tooltip: "我是搜索提示" }
+  },
+  {
+    // 多级 prop
+    prop: "Price",
+    label: "Order price"
+  },
+
+  {
+    prop: "State",
+    label: "Order state"
+  },
+  {
+    prop: "Time",
     label: "Order time",
     // headerRender,
     width: 180,
@@ -146,17 +161,6 @@ const columns = reactive<ColumnProps<User.ResUserList>[]>([
       props: { type: "datetimerange", valueFormat: "YYYY-MM-DD HH:mm:ss" },
       defaultValue: ["2022-11-12 11:35:00", "2022-12-12 11:35:00"]
     }
-  },
-  { prop: "order_content", label: "Order content" },
-  {
-    // 多级 prop
-    prop: "order_price",
-    label: "Order price"
-  },
-
-  {
-    prop: "order_state",
-    label: "Order state"
   }
 ]);
 
@@ -164,7 +168,17 @@ const columns = reactive<ColumnProps<User.ResUserList>[]>([
 const loadOrders = async () => {
   try {
     const response = await getOrderList();
-    orders.value = response.data;
+    // console.log(response);
+    // orders.value = response.map(x => ({
+    //   Uid: x.Uid,
+    //   Time: x.Time,
+    //   Content: x.Content,
+    //   Price: x.Price,
+    //   State: x.State
+    // }));
+    // console.log(orders.value);
+    orders.value = response.orders;
+    console.log(orders.value);
   } catch (error) {
     ElMessage.error("Failed to load orders");
   }

@@ -33,7 +33,129 @@ const option2 = ref({});
 const option3 = ref({});
 
 // 初始 ECharts 配置项模板
-const baseOption = {
+const baseOption1 = {
+  title: {
+    text: "",
+    textStyle: {
+      color: "#a1a1a1"
+    }
+  },
+  tooltip: {
+    trigger: "axis",
+    axisPointer: {
+      type: "cross",
+      label: {
+        backgroundColor: "#6a7985"
+      }
+    }
+  },
+  legend: {
+    data: ["Revenue"],
+    textStyle: {
+      color: "#a1a1a1"
+    }
+  },
+  toolbox: {
+    feature: {
+      saveAsImage: {}
+    }
+  },
+  grid: {
+    left: "3%",
+    right: "4%",
+    bottom: "3%",
+    containLabel: true
+  },
+  xAxis: {
+    type: "category",
+    boundaryGap: false,
+    data: [],
+    axisLabel: {
+      color: "#a1a1a1"
+    }
+  },
+  yAxis: {
+    type: "value",
+    axisLabel: {
+      color: "#a1a1a1"
+    }
+  },
+  series: [
+    {
+      name: "Revenue",
+      type: "line",
+      stack: "Total",
+      areaStyle: {},
+      emphasis: {
+        focus: "series"
+      },
+      data: [] // 后端传递
+    }
+  ]
+};
+
+const baseOption2 = {
+  title: {
+    text: "",
+    textStyle: {
+      color: "#a1a1a1"
+    }
+  },
+  tooltip: {
+    trigger: "axis",
+    axisPointer: {
+      type: "cross",
+      label: {
+        backgroundColor: "#6a7985"
+      }
+    }
+  },
+  legend: {
+    data: ["Revenue"],
+    textStyle: {
+      color: "#a1a1a1"
+    }
+  },
+  toolbox: {
+    feature: {
+      saveAsImage: {}
+    }
+  },
+  grid: {
+    left: "3%",
+    right: "4%",
+    bottom: "3%",
+    containLabel: true
+  },
+  xAxis: {
+    type: "category",
+    boundaryGap: false,
+    data: [],
+    axisLabel: {
+      color: "#a1a1a1"
+    }
+  },
+  yAxis: {
+    type: "value",
+    axisLabel: {
+      color: "#a1a1a1"
+    }
+  },
+  series: [
+    {
+      name: "Revenue",
+      type: "line",
+      stack: "Total",
+      areaStyle: {},
+      emphasis: {
+        focus: "series"
+      },
+      data: [] // 后端传递
+    }
+  ]
+};
+
+const baseOption3 = {
   title: {
     text: "",
     textStyle: {
@@ -101,20 +223,32 @@ const xAxisDataYearly = ["Current Year", "The Second Year", "The Third Year"];
 
 // 初始化卡片的 ECharts 配置项
 onMounted(() => {
-  option1.value = { ...baseOption, title: { text: "Future revenue for one week" }, xAxis: { data: xAxisDataWeekly } };
-  option2.value = { ...baseOption, title: { text: "Future revenue for one month" }, xAxis: { data: xAxisDataMonthly } };
-  option3.value = { ...baseOption, title: { text: "Future revenue for one year" }, xAxis: { data: xAxisDataYearly } };
+  option1.value = { ...baseOption1, title: { text: "Future revenue for one week" }, xAxis: { data: xAxisDataWeekly } };
+  option2.value = { ...baseOption2, title: { text: "Future revenue for one month" }, xAxis: { data: xAxisDataMonthly } };
+  option3.value = { ...baseOption3, title: { text: "Future revenue for one year" }, xAxis: { data: xAxisDataYearly } };
   // 获取后端数据并更新 series
-  fetchData("http://120.46.81.37:8080/admin/week", option1);
-  fetchData("http://120.46.81.37:8080/admin/month", option2);
-  fetchData("http://120.46.81.37:8080/admin/year", option3);
+  fetchData("http://120.46.81.37:8080/admin/dashboard");
 });
 
 // 获取数据函数
-const fetchData = async (url, optionRef) => {
+const fetchData = async url => {
   try {
     const response = await axios.get(url);
-    optionRef.value.series[0].data = response.data; // 假设返回的数据是一个数组
+    console.log(response.data);
+    const monthData = response.data.month;
+    const weekData = response.data.week;
+    const yearData = response.data.year;
+    // 将 monthData 数组中的数值转换为整数
+    const weekDataInt = weekData.map(item => parseInt(item, 10));
+    const monthDataInt = monthData.map(item => parseInt(item, 10));
+    const yearDataInt = yearData.map(item => parseInt(item, 10));
+
+    // 更新 series 数据
+    // 假设您的 series 配置需要一个 data 数组
+    option1.value.series[0].data = weekDataInt;
+    option2.value.series[0].data = monthDataInt;
+    option3.value.series[0].data = yearDataInt;
+    console.log(option1, option2, option3); // 假设返回的数据是一个数组
   } catch (error) {
     console.error("Error fetching data:", error);
   }

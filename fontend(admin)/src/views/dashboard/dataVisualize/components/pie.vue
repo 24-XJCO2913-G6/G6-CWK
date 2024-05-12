@@ -12,9 +12,9 @@ import axios from "axios";
 
 // 使用 ref 创建一个响应式引用
 const pieData = ref([
-  { value: 0, name: "Running" },
-  { value: 0, name: "Driving" },
-  { value: 0, name: "Cycling" }
+  { value: 0, name: "runningCount" },
+  { value: 0, name: "drivingCount" },
+  { value: 0, name: "cyclingCOunt" }
 ]);
 
 // 定义获取数据的函数
@@ -22,7 +22,10 @@ const fetchData = async () => {
   try {
     const response = await axios.get("http://120.46.81.37:8080/admin/index");
     // 返回的数据格式为 [{ value: 20, name: "Running" }, ...]
-    pieData.value = response.data;
+    console.log(response.data);
+    pieData.value[0] = response.data.runningCount;
+    pieData.value[1] = response.data.drivingCount;
+    pieData.value[2] = response.data.cyclingCount;
   } catch (error) {
     console.error("Error fetching data:", error);
   }
