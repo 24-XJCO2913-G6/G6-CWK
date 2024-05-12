@@ -191,7 +191,6 @@ func main() {
 
 		// 收入预测
 		backGroup.GET("/dashboard", Dashboard)
-		//backGroup.POST("/blogCheck", ToPostCheck)
 
 		// 获取用户信息
 		backGroup.GET("/users", ToUsersInfo)

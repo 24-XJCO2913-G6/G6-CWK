@@ -275,8 +275,7 @@ func Dashboard(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"dataWeek":  IncomeW,
-		"dataMonth": IncomeM,
-		"dataYear":  IncomeY,
-	})
+		"week":  IncomeW,
+		"month": IncomeM,
+		"year":  IncomeY})
 }
