@@ -10,36 +10,30 @@ import (
 )
 
 func ToIndex(c *gin.Context) {
-	var Uid_tmp string
-	if c.GetHeader("aToken") == "" {
-		Uid_tmp = "-1"
-	} else {
-		aToken := c.GetHeader("aToken")
-		Claim, err := CheckToken(aToken)
-		if err != nil {
-			Uid_tmp = "-1"
-		} else {
-			Uid_tmp = Claim.Uid
-		}
-	}
-	Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
-	blogcount, _ := BlogCount(Uid)
-	followcount, _ := FollowCount(Uid)
-	followbycount, _ := FollowByCount(Uid)
-	signature, _ := SignatureCheck(Uid)
-	rank, _ := RankCheck(Uid)
-	blogs, _ := BlogDisplay(Uid)
+	//var Uid_tmp string
+	//if c.GetHeader("aToken") == "" {
+	//	Uid_tmp = "-1"
+	//} else {
+	//	aToken := c.GetHeader("aToken")
+	//	Claim, err := CheckToken(aToken)
+	//	if err != nil {
+	//		Uid_tmp = "-1"
+	//	} else {
+	//		Uid_tmp = Claim.Uid
+	//	}
+	//}
+	//Uid, _ := strconv.ParseInt(Uid_tmp, 10, 64)
+	//blogcount, _ := BlogCount(Uid)
+	//followcount, _ := FollowCount(Uid)
+	//followbycount, _ := FollowByCount(Uid)
+	//signature, _ := SignatureCheck(Uid)
+	//rank, _ := RankCheck(Uid)
+	blogs, _ := BlogDisplay(551)
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"message":     c.GetString("message"),
-		"aToken":      c.GetHeader("aToken"),
-		"rToken":      c.GetHeader("rToken"),
-		"Uid":         Uid,
-		"BlogCount":   blogcount,     //发帖数
-		"FollowCount": followcount,   //关注数
-		"FansCount":   followbycount, //粉丝数
-		"Signature":   signature,     //个签
-		"records":     rank,          //排名(降序) 距离：.Distance 用户名：.Name 头像：.Photo
-		"blogs":       blogs,         //所有blog 用户名：.Author 头像：.Photo 发布时间：.Pub_time 可见性：.Visibility 内容：.Content 图片：.Picture 标题：.Title
+		"message": c.GetString("message"),
+		"aToken":  c.GetHeader("aToken"),
+		"rToken":  c.GetHeader("rToken"),
+		"blogs":   blogs, //所有blog 用户名：.Author 头像：.Photo 发布时间：.Pub_time 可见性：.Visibility 内容：.Content 图片：.Picture 标题：.Title
 	})
 }
 
