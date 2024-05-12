@@ -61,6 +61,10 @@ func BuildModelBlog() {
 	if err != nil {
 		panic(err)
 	}
+	err = Db.Sync2(new(Vip_Blog))
+	if err != nil {
+		panic(err)
+	}
 }
 
 func AddBlog(Uid int64, Pub_time string, Visibility int64, Content string, Picture string, Title string, Tid int64) int64 {
