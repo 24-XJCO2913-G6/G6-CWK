@@ -107,12 +107,12 @@ const columns = reactive<ColumnProps<User.ResUserList>[]>([
   { type: "selection", fixed: "left", width: 70 },
 
   {
-    prop: "Author",
+    prop: "name",
     label: "User Name",
     search: { el: "input", tooltip: "我是搜索提示" }
   },
   {
-    prop: "Pub_time",
+    prop: "post_time",
     label: "Post time",
     // headerRender,
     width: 180,
@@ -123,10 +123,10 @@ const columns = reactive<ColumnProps<User.ResUserList>[]>([
       defaultValue: ["2022-11-12 11:35:00", "2022-12-12 11:35:00"]
     }
   },
-  { prop: "Title", label: "Post title" },
+  { prop: "title", label: "Post title" },
   {
-    prop: "post_mode",
-    label: "Post mode"
+    prop: "track_id",
+    label: "Track Id"
   },
   { prop: "operation", label: "Operations", fixed: "right", width: 200 }
 ]);
