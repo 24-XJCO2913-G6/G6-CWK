@@ -191,7 +191,7 @@ func ToOrdersInfo(c *gin.Context) {
 }
 
 func ToPendingsInfo(c *gin.Context) {
-	var blogs []Vip_Blog
+	var blogs []VipBlog
 	var pendingBlogs []PendingBlog
 
 	err := Db.Find(&blogs)
