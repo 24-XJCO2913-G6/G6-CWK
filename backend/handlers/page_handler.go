@@ -496,7 +496,7 @@ func ToVip_app(c *gin.Context) {
 	Vid := AddVip(Uid, timeString, endtime)
 	Oid := AddOrder(Uid, content, currentTime, price, "checking")
 	if Vid == -1 || LoId == -1 || Oid == -1 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Vip update unsuccessfully."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Vip update unsuccessfully.", "endDate": endTime})
 		return
 	}
 }
