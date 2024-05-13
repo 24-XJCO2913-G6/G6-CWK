@@ -11,7 +11,7 @@ type Blog struct {
 	Tid        int64
 }
 
-type Vip_Blog struct {
+type VipBlog struct {
 	Vid        int64 `xorm:"pk autoincr"` // 轨迹的唯一标识符，被标记为主键
 	Uid        int64 // 用户的唯一标识符
 	Pub_time   string
@@ -61,6 +61,10 @@ func BuildModelBlog() {
 	if err != nil {
 		panic(err)
 	}
+	err = Db.Sync2(new(VipBlog))
+	if err != nil {
+		panic(err)
+	}
 }
 
 func AddBlog(Uid int64, Pub_time string, Visibility int64, Content string, Picture string, Title string, Tid int64) int64 {
@@ -82,7 +86,7 @@ func AddBlog(Uid int64, Pub_time string, Visibility int64, Content string, Pictu
 }
 
 func AddVipBlog(Uid int64, Pub_time string, Visibility int64, Content string, Picture string, Title string, Tid int64) int64 {
-	blog := &Vip_Blog{
+	blog := &VipBlog{
 		Uid:        Uid,
 		Pub_time:   Pub_time,
 		Visibility: Visibility,
@@ -100,7 +104,7 @@ func AddVipBlog(Uid int64, Pub_time string, Visibility int64, Content string, Pi
 }
 
 func DeleteVipBlog(Vid int64) string {
-	VipBlog := &Vip_Blog{Vid: Vid}
+	VipBlog := &VipBlog{Vid: Vid}
 	has, err := Db.Get(VipBlog)
 	if !has || err != nil {
 		return "Delete failed"
@@ -113,7 +117,7 @@ func DeleteVipBlog(Vid int64) string {
 }
 
 func PassVipBlog(Vid int64) string {
-	VipBlog := &Vip_Blog{Vid: Vid}
+	VipBlog := &VipBlog{Vid: Vid}
 	has, err := Db.Get(VipBlog)
 	if !has || err != nil {
 		return "Pass failed"

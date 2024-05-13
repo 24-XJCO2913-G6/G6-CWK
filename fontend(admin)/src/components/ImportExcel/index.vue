@@ -45,32 +45,40 @@ const post = ref(props.post);
 
 // 通过审核的函数
 const approvePost = async () => {
-  try {
-    await axios.post("http://120.46.81.37:8080/admin/pending_res", {
-      postId: props.postId,
-      status: "approved"
+  axios({
+    method: "POST",
+    url: "http://120.46.81.37:8080/admin/pass/(${post.id})",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+  })
+    .then(function (response) {
+      // 关闭对话框
+      visible.value = false;
+      console.log(response);
+    })
+    .catch(function (error) {
+      errormsg.innerHTML = error.data.error;
     });
-    console.log("Post approved");
-    // 关闭对话框
-    visible.value = false;
-  } catch (error) {
-    console.error("Failed to approve post: ", error);
-  }
 };
 
 // 拒绝审核的函数
 const rejectPost = async () => {
-  try {
-    await axios.post("http://120.46.81.37:8080/admin/index", {
-      postId: props.postId,
-      status: "rejected"
+  axios({
+    method: "POST",
+    url: "http://120.46.81.37:8080/admin/delete/(${post.id})",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+  })
+    .then(function (response) {
+      // 关闭对话框
+      visible.value = false;
+      console.log(response);
+    })
+    .catch(function (error) {
+      errormsg.innerHTML = error.data.error;
     });
-    console.log("Post rejected");
-    // 关闭对话框
-    visible.value = false;
-  } catch (error) {
-    console.error("Failed to reject post: ", error);
-  }
 };
 
 // 引入高德地图 API
@@ -219,53 +227,44 @@ const dialogTitle = "Post Detail";
   padding: 20px;
   text-align: center;
 }
-
 .post-header {
   padding: 20px;
-  background-color: #f5f5f5;
   text-align: center;
+  background-color: #f5f5f5;
 }
-
 .post-title {
   margin: 0;
   font-size: 1.5rem;
-  color: #333;
+  color: #333333;
 }
-
 .post-author {
-  color: #888;
-  font-size: 0.9rem;
   margin: 0;
+  font-size: 0.9rem;
+  color: #888888;
 }
-
 .post-media img {
   width: 100%;
   max-height: 500px;
-  object-fit: cover;
   margin: 15px 0;
+  object-fit: cover;
 }
-
 .post-body {
   padding: 20px;
 }
-
 .post-content {
   word-wrap: break-word;
   white-space: pre-wrap;
 }
-
 .post-content p,
 .post-content h3,
 .post-content a {
   margin: 0.5rem 0;
   line-height: 1.5;
 }
-
 .post-content h3 {
   font-size: 1.2rem;
-  color: #333;
+  color: #333333;
 }
-
 .post-content a {
   color: #007bff;
   text-decoration: none;
@@ -277,7 +276,6 @@ const dialogTitle = "Post Detail";
   text-align: right;
   background-color: #f9f9f9;
 }
-
 .map-container {
   height: 500px;
 }

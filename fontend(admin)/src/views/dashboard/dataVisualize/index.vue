@@ -144,12 +144,12 @@ const columns = reactive<ColumnProps<User.ResUserList>[]>([
   { type: "selection", fixed: "left", width: 70 },
 
   {
-    prop: "date",
+    prop: "Time",
     label: "Date",
     search: { el: "input", tooltip: "我是搜索提示" }
   },
   {
-    prop: "ip_address",
+    prop: "IP",
     label: " IP address",
     // headerRender,
     width: 180,
@@ -160,25 +160,26 @@ const columns = reactive<ColumnProps<User.ResUserList>[]>([
       defaultValue: ["2022-11-12 11:35:00", "2022-12-12 11:35:00"]
     }
   },
-  { prop: "equipment", label: "Equipment" },
+  { prop: "Browser", label: "Equipment" },
   {
     // 多级 prop
-    prop: "user_id",
+    prop: "Uid",
     label: "User ID",
     formatter: row => {
       return row.is_vip ? `✔` : `❌`;
     }
   },
 
-  { prop: "function", label: "Function" },
+  { prop: "Ope", label: "Function" },
 
   { prop: "operation", label: "Operations", fixed: "right", width: 200 }
 ]);
 
 const fetchLogs = async () => {
   try {
-    const response = await axios.get("http://120.46.81.37:8080/admin/index");
-    users.value = response.data; // 假设返回的数据是日志列表
+    const response = await axios.get("http://120.46.81.37:8080/admin/logs");
+    console.log(response.data);
+    users.value = response.data.logs; // 假设返回的数据是日志列表
   } catch (error) {
     console.error("Error fetching logs: ", error);
     ElMessage.error("Failed to load logs");

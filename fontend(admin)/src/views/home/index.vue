@@ -72,7 +72,7 @@ const totalPosts = ref(0); // 总发帖数
 const fetchData = async () => {
   try {
     const response = await axios.get("http://120.46.81.37:8080/admin/index"); // 后端地址
-    totalIncome.value = response.data.totalIncome;
+    totalIncome.value = Number(response.data.totalIncome.toFixed(2));
     todayNewUsers.value = response.data.todayNewUsers;
     totalUsers.value = response.data.totalUsers;
     todayPosts.value = response.data.todayPosts;
@@ -89,18 +89,18 @@ onMounted(fetchData);
 <style scoped lang="scss">
 @import "../dashboard/dataVisualize/index.scss";
 .mysmall {
-  margin: 10px auto;
   width: 128px;
+  margin: 10px auto;
 }
 .mytext {
-  font-weight: bold;
-  font-size: 30px;
-  text-align: center;
-  background-color: rgb(245, 184, 41);
-  border-radius: 10px;
-  color: white;
   padding: 5px;
-  padding-left: 15px;
   padding-right: 15px;
+  padding-left: 15px;
+  font-size: 30px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  background-color: rgb(245 184 41);
+  border-radius: 10px;
 }
 </style>

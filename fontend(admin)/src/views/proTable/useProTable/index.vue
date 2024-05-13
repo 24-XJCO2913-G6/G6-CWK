@@ -15,11 +15,11 @@
       </template>
 
       <!-- 表格操作 -->
-      <template #operation="scope">
-        <el-button type="primary" :icon="Edit" @click="openDrawer('View', scope.row)">View Details</el-button>
-        <!-- <el-button type="primary" :icon="Refresh" @click="resetPass(scope.row)">Reset</el-button>
+      <!-- <template #operation="scope">
+        <el-button type="primary" :icon="Edit" @click="openDrawer('View', scope.row)">View Details</el-button> -->
+      <!-- <el-button type="primary" :icon="Refresh" @click="resetPass(scope.row)">Reset</el-button>
         <el-button type="primary" :icon="Delete" @click="deleteAccount(scope.row)">Del</el-button> -->
-      </template>
+      <!-- </template> -->
     </ProTable>
     <!-- <UserDrawer ref="drawerRef" /> -->
     <!-- <ImportExcel ref="dialogRef" /> -->
@@ -28,7 +28,7 @@
 
 <script setup lang="tsx" name="useProTable">
 import { ref, reactive, onMounted } from "vue";
-import { Delete, Edit } from "@element-plus/icons-vue";
+import { Delete } from "@element-plus/icons-vue";
 import { User } from "@/api/interface";
 import { useHandleData } from "@/hooks/useHandleData";
 // import { useDownload } from "@/hooks/useDownload";
@@ -37,13 +37,12 @@ import { useHandleData } from "@/hooks/useHandleData";
 import { ElMessage } from "element-plus";
 import ProTable from "@/components/ProTable/index.vue";
 // import ImportExcel from "@/components/ImportExcel/index.vue";
-import UserDrawer from "@/views/proTable/components/UserDrawer.vue";
+// import UserDrawer from "@/views/proTable/components/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 
 import {
   getUserList,
-  deleteUser,
-  getUserDetailById
+  deleteUser
 
   // getUserGender
 } from "@/api/modules/user";
@@ -96,9 +95,9 @@ const columns = reactive<ColumnProps<User.ResUserList>[]>([
     label: "Vip_expiry_date"
   },
 
-  { prop: "password", label: "Password" },
+  { prop: "password", label: "Password" }
 
-  { prop: "operation", label: "Operations", fixed: "right", width: 330 }
+  // { prop: "operation", label: "Operations", fixed: "right", width: 330 }
 ]);
 
 // ProTable 实例
@@ -126,6 +125,7 @@ const users = ref([
 const loadUsers = async () => {
   try {
     const response = await getUserList();
+
     users.value = response.data; // 假设返回的数据格式为 { data: [] }
     // proTable.value?.setTableData(response.data); // 假设 ProTable 组件有方法可以设置表格数据
   } catch (error) {
@@ -172,7 +172,7 @@ const batchDelete = async (id: string[]) => {
 // };
 
 // 打开 drawer(新增、查看、编辑)
-const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
+// const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
 // const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
 //   const params = {
 //     title,
@@ -183,17 +183,17 @@ const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
 //   };
 //   drawerRef.value?.acceptParams(params);
 // };
-const openDrawer = async (title: string, userId: number) => {
-  try {
-    // 假设获取用户详情的 API 需要用户 ID
-    const userDetail = await getUserDetailById(userId); // 替换为实际的 API 调用
-    drawerRef.value?.acceptParams({
-      title,
-      isView: true,
-      row: userDetail
-    });
-  } catch (error) {
-    ElMessage.error("Failed to load user details");
-  }
-};
+// const openDrawer = async (title: string, userId: number) => {
+//   try {
+//     // 假设获取用户详情的 API 需要用户 ID
+//     const userDetail = await getUserDetailById(userId); // 替换为实际的 API 调用
+//     drawerRef.value?.acceptParams({
+//       title,
+//       isView: true,
+//       row: userDetail
+//     });
+//   } catch (error) {
+//     ElMessage.error("Failed to load user details");
+//   }
+// };
 </script>

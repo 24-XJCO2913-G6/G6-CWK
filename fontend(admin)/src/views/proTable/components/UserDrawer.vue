@@ -29,28 +29,28 @@
       <el-form-item label="Nickname" prop="username">
         <el-input v-model="drawerProps.row.username" placeholder="请填写用户姓名" clearable></el-input>
       </el-form-item>
-      <el-form-item label="Sex" prop="gender">
+      <!-- <el-form-item label="Sex" prop="gender">
         <el-input v-model="drawerProps.row.gender" placeholder="请填写用户姓名" clearable></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <!-- <el-form-item label="Sex" prop="gender">
         <el-select v-model="drawerProps.row!.gender" placeholder="请选择性别" clearable>
           <el-option v-for="item in genderType" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item> -->
       <el-form-item label="Birthday" prop="birthday">
-        <el-input v-model="drawerProps.row.birthday" placeholder="请填写用户姓名" clearable></el-input>
+        <el-input v-model="drawerProps.row.Born" placeholder="请填写用户姓名" clearable></el-input>
       </el-form-item>
       <!-- <el-form-item label="身份证号" prop="idCard">
         <el-input v-model="drawerProps.row!.idCard" placeholder="请填写身份证号" clearable></el-input>
       </el-form-item> -->
       <el-form-item label="Status" prop="status">
-        <el-input v-model="drawerProps.row.status" placeholder="请填写邮箱" clearable></el-input>
+        <el-input v-model="drawerProps.row.Status" placeholder="请填写邮箱" clearable></el-input>
       </el-form-item>
       <el-form-item label="Job" prop="job">
-        <el-input v-model="drawerProps.row.job" placeholder="请填写邮箱" clearable></el-input>
+        <el-input v-model="drawerProps.row.Job" placeholder="请填写邮箱" clearable></el-input>
       </el-form-item>
       <el-form-item label="Hometown" prop="hometown">
-        <el-input v-model="drawerProps.row.hometown" placeholder="请填写居住地址" clearable></el-input>
+        <el-input v-model="drawerProps.row.LivesIn" placeholder="请填写居住地址" clearable></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -97,14 +97,13 @@ const drawerProps = ref<DrawerProps>({
   isView: true,
   row: {
     // 假数据：模拟的用户数据
-    id: 1,
+    Uid: 1,
     username: "JohnDoe",
     photo: "", // 头像
-    gender: "Male",
-    birthday: "1990-01-01",
-    status: "Single",
-    job: "Software Engineer",
-    hometown: "New York"
+    Born: "1990-01-01",
+    Status: "Single",
+    Job: "Software Engineer",
+    LivesIn: "New York"
   } as Partial<User.ResUserList>
 });
 

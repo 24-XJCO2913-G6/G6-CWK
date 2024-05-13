@@ -15,9 +15,9 @@ func UpdateTrack(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"error": "Track update unsuccessfully."})
 		return
 	}
-	Claims, _ := CheckToken(aToken)
-
-	Uid, _ := strconv.ParseInt(Claims.Uid, 10, 64)
+	//Claims, _ := CheckToken(aToken)
+	//Uid, _ := strconv.ParseInt(Claims.Uid, 10, 64)
+	Uid := int64(551)
 
 	StrDate := c.PostForm("StrDate")
 	StrTime := c.PostForm("StrTime")
